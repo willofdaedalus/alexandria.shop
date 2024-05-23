@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+    "strconv"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/timer"
@@ -24,7 +25,30 @@ type model struct {
 func initialModel() model {
 	m := model{
 		scrTimer: timer.NewWithInterval(startScrTimeout, time.Second),
+        authInputs: make([]textinput.Model, 3),
 	}
+
+    var t textinput.Model
+    for i := range m.authInputs {
+        t = textinput.New()
+        t.CharLimit = 16
+
+        switch i {
+        case 0:
+            t.Placeholder = "username"
+            t.Focus()
+        case 1:
+            t.Placeholder = "password"
+            t.EchoMode = textinput.EchoPassword
+            t.EchoCharacter = '*'
+        case 2:
+            t.Placeholder = "retype password"
+            t.EchoMode = textinput.EchoPassword
+            t.EchoCharacter = '*'
+        }
+
+        m.authInputs[i] = t
+    }
 
 	return m
 }
@@ -44,6 +68,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			m.view = 1
+        // debug purposes only
+        case "0", "1", "2":
+            m.view, _ = strconv.Atoi(msg.String())
 		}
 
 	case tea.WindowSizeMsg:
@@ -68,7 +95,7 @@ func (m model) View() string {
 	case 0:
 		v = m.initialScreen()
 	case 1:
-		v = m.authScreen()
+		v = m.loginScreen()
 	}
 
 	return v

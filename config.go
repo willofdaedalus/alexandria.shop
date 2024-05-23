@@ -15,6 +15,14 @@ var (
 	// style = lipgloss.NewStyle().Foreground(lipgloss.Color("#7D56F4")).Align(lipgloss.Center, lipgloss.Center)
 	faded = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffffff")).Faint(true)
 
+    topHeaderStyle = lipgloss.NewStyle().
+        Width(50).Height(5)
+
+    textBoxStyle = lipgloss.NewStyle().
+        Padding(0, 3).
+        Border(lipgloss.NormalBorder(), false, false, true, false).
+        BorderForeground(cyan.GetForeground())
+
 	buttonStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FFF7DB")).
 			Background(lipgloss.Color("#888B7E")).

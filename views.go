@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -53,4 +54,32 @@ func (m model) authScreen() string {
     doc.WriteString(dialog)
 
 	return doc.String()
+}
+
+func (m model) loginScreen() string {
+    var layout strings.Builder
+
+    usrText := fmt.Sprintf("username %s\n", m.authInputs[0].View())
+    pwdText := fmt.Sprintf("password %s", m.authInputs[1].View())
+
+    login := magenta.Render(usrText)
+    pwd := magenta.Render(pwdText)
+
+	prompt := lipgloss.NewStyle().
+        Width(45).Height(5).
+        Align(lipgloss.Center).Render("login to begin")
+
+    textFields := lipgloss.JoinVertical(lipgloss.Center, login, pwd)
+    ui := lipgloss.JoinVertical(lipgloss.Center, prompt, textFields)
+
+	dialog := lipgloss.Place(m.termWidth, m.termHeight,
+		lipgloss.Center, lipgloss.Center,
+		dialogBoxStyle.Render(ui),
+		lipgloss.WithWhitespaceChars("ox"),
+		lipgloss.WithWhitespaceForeground(subtle),
+	)
+
+    layout.WriteString(dialog)
+
+    return layout.String()
 }
