@@ -28,8 +28,8 @@ var (
 
 	dialogBoxStyle = lipgloss.NewStyle().
 			Border(lipgloss.NormalBorder()).
-            Padding(1, 0).
-            BorderForeground(magenta.GetForeground())
+			Padding(1, 0).
+			BorderForeground(magenta.GetForeground())
 		// BorderBackground(magenta.GetForeground())
 
 	subtle    = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}

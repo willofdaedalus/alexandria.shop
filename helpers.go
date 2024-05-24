@@ -1,21 +1,8 @@
 package main
 
 import (
-	"strings"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
-
-
-func trimTextInput(s string) string {
-    nS := ""
-    if strings.Contains(s, "> ") {
-        nS, _ = strings.CutSuffix(s, "> ")
-    }
-
-    return nS
-}
-
 
 func (m *model) updateInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.authInputs))

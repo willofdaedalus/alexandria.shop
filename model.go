@@ -35,11 +35,11 @@ func initialModel() model {
 	for i := range m.authInputs {
 		t = textinput.New()
 		t.CharLimit = 16
+		t.Prompt = "" // added prompt here but renders no input
 
 		switch i {
 		case 0:
 			t.Focus()
-			t.Prompt = "" // added prompt here but renders no input
 		case 1:
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '*'
