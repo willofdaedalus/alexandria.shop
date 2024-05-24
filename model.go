@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/timer"
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,9 +11,11 @@ import (
 
 type model struct {
 	// login/sign up text inputs
-	authInputs   []textinput.Model
-	authCurField int
-	cursor       cursor.Mode
+	loginInputs   []textinput.Model
+	loginCurField int
+	// sign up text inputs
+	signupInputs      []textinput.Model
+	signupScrCurField int
 
 	// scrTimer to transition to login
 	scrTimer timer.Model
@@ -27,28 +28,9 @@ type model struct {
 
 func initialModel() model {
 	m := model{
-		scrTimer:   timer.NewWithInterval(startScrTimeout, time.Second),
-		authInputs: make([]textinput.Model, 3),
-	}
-
-	var t textinput.Model
-	for i := range m.authInputs {
-		t = textinput.New()
-		t.CharLimit = 16
-		t.Prompt = "" // added prompt here but renders no input
-
-		switch i {
-		case 0:
-			t.Focus()
-		case 1:
-			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '*'
-		case 2:
-			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '*'
-		}
-
-		m.authInputs[i] = t
+		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
+		loginInputs:  readyInputsFor(2),
+		signupInputs: readyInputsFor(3),
 	}
 
 	return m
@@ -77,40 +59,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.view, _ = strconv.Atoi(msg.String())
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
+			var field *int
+			var inputs []textinput.Model
 
 			if m.view == login {
-				if i == "tab" || i == "down" {
-					if m.authCurField < 1 {
-						m.authCurField++
-					} else {
-						m.authCurField = 0
-					}
-				} else {
-					if m.authCurField > 0 {
-						m.authCurField--
-					} else {
-						m.authCurField = 1
-					}
-				}
-
-				cmds := make([]tea.Cmd, len(m.authInputs))
-				for i := 0; i <= len(m.authInputs)-1; i++ {
-					if i == m.authCurField {
-						// Set focused state
-						cmds[i] = m.authInputs[i].Focus()
-						m.authInputs[i].PromptStyle = magenta
-						m.authInputs[i].TextStyle = magenta
-
-						continue
-					}
-					// Remove focused state
-					m.authInputs[i].Blur()
-					m.authInputs[i].PromptStyle = faded
-					m.authInputs[i].TextStyle = faded
-				}
-
-				return m, tea.Batch(cmds...)
+				field = &m.loginCurField
+				inputs = m.loginInputs
+			} else if m.view == signUp {
+				field = &m.signupScrCurField
+				inputs = m.signupInputs
 			}
+
+			if i == "tab" || i == "down" {
+				nextInput(field, len(inputs))
+			} else {
+				prevInput(field, len(inputs))
+			}
+
+			cmds := focusFields(field, inputs)
+
+			return m, tea.Batch(cmds...)
 		}
 
 	case tea.WindowSizeMsg:
@@ -138,6 +106,8 @@ func (m model) View() string {
 		v = m.initialScreen()
 	case 1:
 		v = m.loginScreen()
+	case 2:
+		v = m.signUpScreen()
 	}
 
 	return v
