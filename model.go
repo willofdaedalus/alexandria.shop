@@ -1,8 +1,8 @@
 package main
 
 import (
+	"strconv"
 	"time"
-    "strconv"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/timer"
@@ -11,7 +11,8 @@ import (
 
 type model struct {
 	// login/sign up text inputs
-	authInputs []textinput.Model
+	authInputs   []textinput.Model
+	authCurField int
 
 	// scrTimer to transition to login
 	scrTimer timer.Model
@@ -24,38 +25,35 @@ type model struct {
 
 func initialModel() model {
 	m := model{
-		scrTimer: timer.NewWithInterval(startScrTimeout, time.Second),
-        authInputs: make([]textinput.Model, 3),
+		scrTimer:   timer.NewWithInterval(startScrTimeout, time.Second),
+		authInputs: make([]textinput.Model, 3),
 	}
 
-    var t textinput.Model
-    for i := range m.authInputs {
-        t = textinput.New()
-        t.CharLimit = 16
+	var t textinput.Model
+	for i := range m.authInputs {
+		t = textinput.New()
+		t.CharLimit = 16
 
-        switch i {
-        case 0:
-            t.Placeholder = "username"
-            t.Focus()
-        case 1:
-            t.Placeholder = "password"
-            t.EchoMode = textinput.EchoPassword
-            t.EchoCharacter = '*'
-        case 2:
-            t.Placeholder = "retype password"
-            t.EchoMode = textinput.EchoPassword
-            t.EchoCharacter = '*'
-        }
+		switch i {
+		case 0:
+			t.Focus()
+		case 1:
+			t.EchoMode = textinput.EchoPassword
+			t.EchoCharacter = '*'
+		case 2:
+			t.EchoMode = textinput.EchoPassword
+			t.EchoCharacter = '*'
+		}
 
-        m.authInputs[i] = t
-    }
+		m.authInputs[i] = t
+	}
 
 	return m
 }
 
 func (m model) Init() tea.Cmd {
 	// Start the timer when the program initializes
-	return m.scrTimer.Init()
+	return tea.Batch(m.scrTimer.Init(), textinput.Blink)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -68,9 +66,46 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			m.view = 1
-        // debug purposes only
-        case "0", "1", "2":
-            m.view, _ = strconv.Atoi(msg.String())
+		// debug purposes only
+		case "0", "1", "2":
+			m.view, _ = strconv.Atoi(msg.String())
+		case "tab", "shift+tab", "up", "down":
+			i := msg.String()
+
+			if m.view == login {
+				if i == "tab" || i == "down" {
+					if m.authCurField < 1 {
+						m.authCurField++
+					} else {
+						m.authCurField = 0
+					}
+				} else {
+					if m.authCurField > 0 {
+						m.authCurField--
+					} else {
+						m.authCurField = 1
+					}
+
+				}
+
+				cmds := make([]tea.Cmd, len(m.authInputs))
+				for i := 0; i <= len(m.authInputs)-1; i++ {
+					if i == m.authCurField {
+						// Set focused state
+						cmds[i] = m.authInputs[i].Focus()
+						m.authInputs[i].PromptStyle = magenta
+						m.authInputs[i].TextStyle = magenta
+
+						continue
+					}
+					// Remove focused state
+					m.authInputs[i].Blur()
+						m.authInputs[i].PromptStyle = faded
+						m.authInputs[i].TextStyle = faded
+				}
+
+				return m, tea.Batch(cmds...)
+			}
 		}
 
 	case tea.WindowSizeMsg:
@@ -85,7 +120,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.view = 1
 	}
 
-	return m, nil
+	cmd = m.updateInputs(msg)
+
+	return m, cmd
 }
 
 func (m model) View() string {
