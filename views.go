@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -30,16 +31,16 @@ func (m model) signUpScreen() string {
 		Render(signUpText)
 
     // variables for the username and password prompt boxes
-	loginRender := renderBoxDesc("username", 0, m)
-	pwdRender := renderBoxDesc("password", 1, m)
-	rePwdRender := renderBoxDesc("retype password", 1, m)
+	loginRender := renderBoxDesc("username", 0, m.signupInputs)
+	pwdRender := renderBoxDesc("password", 1, m.signupInputs)
+	rePwdRender := renderBoxDesc("username", 2, m.signupInputs)
 
     // change the color of each render based on the current focus
-	if m.loginCurField == 0 {
+	if m.signupScrCurField == 0 {
 		login = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
 		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
 		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
-	} else if m.loginCurField == 1 {
+	} else if m.signupScrCurField == 1 {
 		login = faded.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
 		pwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
 		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
@@ -87,8 +88,8 @@ func (m model) loginScreen() string {
 		Render(loginText)
 
 		// variables for the username and password prompt boxes
-	loginRender := renderBoxDesc("username", 0, m)
-	pwdRender := renderBoxDesc("password", 1, m)
+	loginRender := renderBoxDesc("username", 0, m.loginInputs)
+	pwdRender := renderBoxDesc("password", 1, m.loginInputs)
 
 	// change the color of each render based on the current focus
 	if m.loginCurField == 0 {
@@ -122,9 +123,9 @@ func (m model) loginScreen() string {
 }
 
 // function to return a nicely formatted description and input box
-func renderBoxDesc(s string, idx int, m model) string {
+func renderBoxDesc(s string, idx int, inputs []textinput.Model) string {
 	desc := noBorderStyle.Render(s)
-	inputBox := textBoxStyle.Render(m.loginInputs[idx].View())
+	inputBox := textBoxStyle.Render(inputs[idx].View())
 	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
 
 	return finalRender

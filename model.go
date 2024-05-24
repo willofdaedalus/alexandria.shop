@@ -41,7 +41,11 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
+	var (
+		cmd    tea.Cmd
+		field  *int
+		inputs []textinput.Model
+	)
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -59,8 +63,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.view, _ = strconv.Atoi(msg.String())
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
-			var field *int
-			var inputs []textinput.Model
 
 			if m.view == login {
 				field = &m.loginCurField
@@ -93,7 +95,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.view = 1
 	}
 
-	cmd = m.updateInputs(msg)
+	// update the current inputs' focus based on the view
+	if m.view == login {
+		inputs = m.loginInputs
+	} else if m.view == signUp {
+		inputs = m.signupInputs
+	}
+	cmd = m.updateInputs(msg, inputs)
 
 	return m, cmd
 }
