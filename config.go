@@ -18,28 +18,19 @@ var (
 	topHeaderStyle = lipgloss.NewStyle().
 			Width(50).Height(5)
 
+	noBorderStyle = lipgloss.NewStyle().
+			Width(10).
+			Border(lipgloss.HiddenBorder())
+
 	textBoxStyle = lipgloss.NewStyle().
-			Padding(0, 3).
-			Border(lipgloss.NormalBorder(), false, false, true, false).
-			BorderForeground(cyan.GetForeground())
-
-	buttonStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFF7DB")).
-			Background(lipgloss.Color("#888B7E")).
-			Padding(0, 3).
-			MarginTop(1)
-
-	activeButtonStyle = buttonStyle.Copy().
-				Foreground(lipgloss.Color("#FFF7DB")).
-				Background(lipgloss.Color("#F25D94")).
-				MarginRight(2).
-				Underline(true)
+			Width(20).
+			Border(lipgloss.NormalBorder())
 
 	dialogBoxStyle = lipgloss.NewStyle().
-			Border(lipgloss.DoubleBorder()).
-		// BorderForeground(magenta.GetForeground()).
-		BorderBackground(magenta.GetForeground()).
-		Padding(1, 0)
+			Border(lipgloss.NormalBorder()).
+            Padding(1, 0).
+            BorderForeground(magenta.GetForeground())
+		// BorderBackground(magenta.GetForeground())
 
 	subtle    = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
 	highlight = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
@@ -57,4 +48,31 @@ const (
 	welcome = iota
 	login
 	signUp
+)
+
+const (
+	welcomeAscii = `
+██     ██ ███████ ██       ██████  ██████  ███    ███ ███████     ████████  ██████  
+██     ██ ██      ██      ██      ██    ██ ████  ████ ██             ██    ██    ██ 
+██  █  ██ █████   ██      ██      ██    ██ ██ ████ ██ █████          ██    ██    ██ 
+██ ███ ██ ██      ██      ██      ██    ██ ██  ██  ██ ██             ██    ██    ██ 
+ ███ ███  ███████ ███████  ██████  ██████  ██      ██ ███████        ██     ██████  
+                                                                                    
+                                                                                    
+ █████  ██      ███████ ██   ██  █████  ███    ██ ██████  ██████  ██  █████         
+██   ██ ██      ██       ██ ██  ██   ██ ████   ██ ██   ██ ██   ██ ██ ██   ██        
+███████ ██      █████     ███   ███████ ██ ██  ██ ██   ██ ██████  ██ ███████        
+██   ██ ██      ██       ██ ██  ██   ██ ██  ██ ██ ██   ██ ██   ██ ██ ██   ██        
+██   ██ ███████ ███████ ██   ██ ██   ██ ██   ████ ██████  ██   ██ ██ ██   ██        
+`
+
+	loginText = `
+██       ██████   ██████  ██ ███    ██ 
+██      ██    ██ ██       ██ ████   ██ 
+██      ██    ██ ██   ███ ██ ██ ██  ██ 
+██      ██    ██ ██    ██ ██ ██  ██ ██ 
+███████  ██████   ██████  ██ ██   ████ 
+
+
+`
 )

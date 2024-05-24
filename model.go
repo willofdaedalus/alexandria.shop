@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/timer"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,6 +14,7 @@ type model struct {
 	// login/sign up text inputs
 	authInputs   []textinput.Model
 	authCurField int
+    cursor cursor.Mode
 
 	// scrTimer to transition to login
 	scrTimer timer.Model
