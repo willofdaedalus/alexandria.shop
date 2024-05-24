@@ -7,9 +7,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-
 func main() {
-    m := initialModel()
+	m := initialModel()
 
 	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
 		fmt.Println(err)
