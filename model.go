@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -47,16 +48,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		inputs []textinput.Model
 	)
 
+	// update the current inputs' focus based on the view
+	if m.view == login {
+		inputs = m.loginInputs
+	} else if m.view == signUp {
+		inputs = m.signupInputs
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "ctrl+d":
 			return m, tea.Quit
+		case "ctrl+s":
+			if m.view == login {
+				m.view = signUp
+			}
+		case "ctrl+l":
+			if m.view == signUp {
+				m.view = login
+			}
 		case "enter":
 			if m.view == welcome {
 				m.view = 1
-			} else if m.view == login || m.view == signUp {
-				// validate the inputs here
+				// stop the timer on enter
+				return m, m.scrTimer.Toggle()
+			} else if m.view == login {
+				username = inputs[0].Value()
+				password = inputs[1].Value()
+			} else if m.view == signUp {
+				username = inputs[0].Value()
+				password = inputs[1].Value()
+				rePassword = inputs[2].Value()
 			}
 		// debug purposes only
 		case "0", "1", "2":
@@ -79,7 +102,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			cmds := focusFields(field, inputs)
-
 			return m, tea.Batch(cmds...)
 		}
 
@@ -95,12 +117,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.view = 1
 	}
 
-	// update the current inputs' focus based on the view
-	if m.view == login {
-		inputs = m.loginInputs
-	} else if m.view == signUp {
-		inputs = m.signupInputs
-	}
 	cmd = m.updateInputs(msg, inputs)
 
 	return m, cmd
