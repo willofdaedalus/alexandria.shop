@@ -14,7 +14,7 @@ type model struct {
 	// login/sign up text inputs
 	authInputs   []textinput.Model
 	authCurField int
-    cursor cursor.Mode
+	cursor       cursor.Mode
 
 	// scrTimer to transition to login
 	scrTimer timer.Model
@@ -39,6 +39,7 @@ func initialModel() model {
 		switch i {
 		case 0:
 			t.Focus()
+			t.Prompt = "" // added prompt here but renders no input
 		case 1:
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '*'
@@ -54,7 +55,6 @@ func initialModel() model {
 }
 
 func (m model) Init() tea.Cmd {
-	// Start the timer when the program initializes
 	return tea.Batch(m.scrTimer.Init(), textinput.Blink)
 }
 
@@ -67,7 +67,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "ctrl+d":
 			return m, tea.Quit
 		case "enter":
-			m.view = 1
+			if m.view == welcome {
+				m.view = 1
+			} else if m.view == login || m.view == signUp {
+				// validate the inputs here
+			}
 		// debug purposes only
 		case "0", "1", "2":
 			m.view, _ = strconv.Atoi(msg.String())
@@ -87,7 +91,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					} else {
 						m.authCurField = 1
 					}
-
 				}
 
 				cmds := make([]tea.Cmd, len(m.authInputs))
@@ -102,8 +105,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					// Remove focused state
 					m.authInputs[i].Blur()
-						m.authInputs[i].PromptStyle = faded
-						m.authInputs[i].TextStyle = faded
+					m.authInputs[i].PromptStyle = faded
+					m.authInputs[i].TextStyle = faded
 				}
 
 				return m, tea.Batch(cmds...)

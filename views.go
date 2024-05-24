@@ -22,25 +22,25 @@ func (m model) authScreen() string {
 	return doc.String()
 }
 
+// renders the login screen
 func (m model) loginScreen() string {
 	var (
 		layout     strings.Builder
 		login, pwd string
 	)
 
-	helpText := "press ctrl+s to sign up | press ctrl+c to quit"
-    helpBox := noBorderStyle.PaddingTop(2).Width(50).Align(lipgloss.Bottom).Render(helpText)
+    // the big "LOGIN" text at the top
+	loginPrompt := lipgloss.NewStyle().
+		Foreground(cyan.GetForeground()).
+		Width(55).Height(5).
+		Align(lipgloss.Center).
+		Render(loginText)
 
-	loginTextt := noBorderStyle.Render("username")
-	loginBox := textBoxStyle.
-        Foreground(cyan.GetForeground()).
-        Render(trimTextInput(m.authInputs[0].View()))
-	loginRender := lipgloss.JoinHorizontal(lipgloss.Left, loginTextt, loginBox)
+    // variables for the username and password prompt boxes
+	loginRender := renderBoxDesc("username", 0, m)
+	pwdRender := renderBoxDesc("password", 1, m)
 
-	pwdTextt := noBorderStyle.Render("password")
-	pwdBox := textBoxStyle.Render(trimTextInput(m.authInputs[1].View()))
-	pwdRender := lipgloss.JoinHorizontal(lipgloss.Left, pwdTextt, pwdBox)
-
+    // change the color of each render based on the current focus
 	if m.authCurField == 0 {
 		login = magenta.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(loginRender)
 		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(pwdRender)
@@ -49,22 +49,34 @@ func (m model) loginScreen() string {
 		pwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(pwdRender)
 	}
 
-	prompt := lipgloss.NewStyle().
-		Foreground(cyan.GetForeground()).
-		Width(55).Height(5).
-		Align(lipgloss.Center).
-		Render(loginText)
+    // footer/help message render
+	helpText := "press ctrl+s to sign up | press ctrl+c to quit"
+	helpBox := noBorderStyle.PaddingTop(1).Width(50).Align(lipgloss.Bottom).Render(helpText)
 
+    // join the various fields together;
+    // first the input boxes and then those and the login prompt
 	textFields := lipgloss.JoinVertical(lipgloss.Left, login, pwd, helpBox)
-	ui := lipgloss.JoinVertical(lipgloss.Left, prompt, textFields)
+	ui := lipgloss.JoinVertical(lipgloss.Left, loginPrompt, textFields)
 
+
+    // render the actual with dialogBoxStyle but this simply "puts" the render
+    // in the center of the screen no matter what
 	dialog := lipgloss.Place(
 		m.termWidth, m.termHeight,
 		lipgloss.Center, lipgloss.Center,
 		dialogBoxStyle.Render(ui),
 	)
 
+    // everything onscreen is a string so tie it up nice with a bow and return a string
 	layout.WriteString(dialog)
-
 	return layout.String()
+}
+
+// function to return a nicely formatted description and input box
+func renderBoxDesc(s string, idx int, m model) string {
+	desc := noBorderStyle.Render(s)
+	inputBox := textBoxStyle.Render(trimTextInput(m.authInputs[idx].View()))
+	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
+
+	return finalRender
 }
