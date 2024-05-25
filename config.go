@@ -8,16 +8,14 @@ import (
 
 const (
 	startScrTimeout = time.Second * 5
-    noPwd = "please enter a password"
-    noUsr = "please enter a username"
-    noRePwd = "please re-enter your password"
-    nothing = "please enter your credentials"
 )
 
+// views tracker
 const (
 	welcome = iota
 	login
 	signUp
+    credErr
 )
 
 const (

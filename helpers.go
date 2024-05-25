@@ -70,7 +70,7 @@ func readyInputsFor(size int) []textinput.Model {
 		case 1:
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '*'
-		case 2:
+		case 2: // doesn't matter if login won't reach here; it's a switch-case statement after all
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '*'
 		}
@@ -79,4 +79,10 @@ func readyInputsFor(size int) []textinput.Model {
 	}
 
 	return ret
+}
+
+func transitionView(m *model, to int) {
+	prev := m.view
+	m.view = to
+	m.prevView = prev
 }

@@ -7,6 +7,11 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+// type authScreen struct {
+//     inputs []textinput.Model
+//     boxes []string
+// }
+
 // the initial screen to display when the program first runs
 func (m model) initialScreen() string {
 	// Center the ASCII art within the terminal window
@@ -19,28 +24,28 @@ func (m model) initialScreen() string {
 
 func (m model) signUpScreen() string {
 	var (
-		layout     strings.Builder
+		layout            strings.Builder
 		login, pwd, rePwd string
 	)
 
-    // the big "LOGIN" text at the top
+	// the big "LOGIN" text at the top
 	loginPrompt := lipgloss.NewStyle().
 		Foreground(cyan.GetForeground()).
 		Width(55).Height(5).
 		Align(lipgloss.Center).
 		Render(signUpText)
 
-    // variables for the username and password prompt boxes
+		// variables for the username and password prompt boxes
 	loginRender := renderBoxDesc("username", 0, m.signupInputs)
 	pwdRender := renderBoxDesc("password", 1, m.signupInputs)
 	rePwdRender := renderBoxDesc("username", 2, m.signupInputs)
 
-    // change the color of each render based on the current focus
-	if m.signupScrCurField == 0 {
+	// change the color of each render based on the current focus
+	if m.signupCurField == 0 {
 		login = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
 		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
 		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
-	} else if m.signupScrCurField == 1 {
+	} else if m.signupCurField == 1 {
 		login = faded.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
 		pwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
 		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
@@ -48,27 +53,26 @@ func (m model) signUpScreen() string {
 		login = faded.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
 		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
 		rePwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
-    }
+	}
 
-    // footer/help message render
+	// footer/help message render
 	helpText := "press ctrl+l to log in | press ctrl+c to quit"
 	helpBox := noBorderStyle.PaddingTop(1).Width(50).Align(lipgloss.Bottom).Render(helpText)
 
-    // join the various fields together;
-    // first the input boxes and then those and the login prompt
+	// join the various fields together;
+	// first the input boxes and then those and the login prompt
 	textFields := lipgloss.JoinVertical(lipgloss.Left, login, pwd, rePwd, helpBox)
 	ui := lipgloss.JoinVertical(lipgloss.Left, loginPrompt, textFields)
 
-
-    // render the actual with dialogBoxStyle but this simply "puts" the render
-    // in the center of the screen no matter what
+	// render the actual with dialogBoxStyle but this simply "puts" the render
+	// in the center of the screen no matter what
 	dialog := lipgloss.Place(
 		m.termWidth, m.termHeight,
 		lipgloss.Center, lipgloss.Center,
 		dialogBoxStyle.Render(ui),
 	)
 
-    // everything onscreen is a string so tie it up nice with a bow and return a string
+	// everything onscreen is a string so tie it up nice with a bow and return a string
 	layout.WriteString(dialog)
 	return layout.String()
 }
@@ -102,7 +106,7 @@ func (m model) loginScreen() string {
 
 	// footer/help message render
 	helpText := "press ctrl+s to sign up | press ctrl+c to quit"
-	helpBox := noBorderStyle.PaddingTop(1).Width(50).Align(lipgloss.Bottom).Render(helpText)
+	helpBox := noBorderStyle.Width(50).Height(1).Align(lipgloss.Bottom).Render(helpText)
 
 	// join the various fields together;
 	// first the input boxes and then those and the login prompt
@@ -120,6 +124,25 @@ func (m model) loginScreen() string {
 	// everything onscreen is a string so tie it up nice with a bow and return a string
 	layout.WriteString(dialog)
 	return layout.String()
+}
+
+func (m model) errorScreen() string {
+	errRender := noBorderStyle.
+		PaddingTop(1).
+		Width(50).Height(3).
+		Align(lipgloss.Center).Render(m.authErr.Error())
+
+	// footer/help message render
+	// helpText := "press enter"
+	// helpBox := noBorderStyle.Width(50).Height(1).Align(lipgloss.Bottom).Render(helpText)
+
+	dialog := lipgloss.Place(
+		m.termWidth, m.termHeight,
+		lipgloss.Center, lipgloss.Center,
+		dialogBoxStyle.Width(50).Render(errRender),
+	)
+
+	return dialog
 }
 
 // function to return a nicely formatted description and input box
