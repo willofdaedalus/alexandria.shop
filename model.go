@@ -81,8 +81,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, m.scrTimer.Toggle()
 			case login:
 				m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value())
+				if m.authErr != nil {
+					transitionView(&m, credErr)
+				}
 			case signUp:
 				m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value(), inputs[2].Value())
+				if m.authErr != nil {
+					transitionView(&m, credErr)
+				}
 			case credErr:
 				transitionView(&m, m.prevView)
 			}
@@ -123,10 +129,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	v := ""
 
-	if m.authErr != nil {
-		transitionView(&m, credErr)
-	}
-
 	switch m.view {
 	case welcome:
 		v = m.initialScreen()
@@ -155,7 +157,7 @@ func (m model) checkUserCreds(creds ...string) error {
 			case 2:
 				result += "please re-enter your new password\n"
 			}
-			err = fmt.Errorf(result)
+			err = fmt.Errorf("%s\npress enter to continue", result)
 		}
 	}
 
