@@ -7,11 +7,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// type authScreen struct {
-//     inputs []textinput.Model
-//     boxes []string
-// }
-
 // the initial screen to display when the program first runs
 func (m model) initialScreen() string {
 	// Center the ASCII art within the terminal window

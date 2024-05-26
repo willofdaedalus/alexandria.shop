@@ -55,7 +55,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		field  *int              // this determines the field depending on what auth screen we're on
 		inputs []textinput.Model // this determines the input fields also depending on the auth screen
 
-		uName  string // this stores the user name they entered
+		uName  string // this stores the name the user entered
 		uPwd   string // this stores the password the user entered
 		uRePwd string // this stores the password confirmation the user entered at signup
 	)
@@ -174,8 +174,14 @@ func (m model) View() string {
 		v = m.signUpScreen()
 	case vCredErr:
 		v = m.infoScreen(m.authErr.Error())
+		m.resetFields()
+		m.loginCurField = 0
+		m.signupCurField = 0
 	case vSuccess:
 		v = m.infoScreen("sign up successful!\n\npress enter to login now")
+		m.resetFields()
+		m.loginCurField = 0
+		m.signupCurField = 0
 	}
 
 	return v
@@ -183,9 +189,12 @@ func (m model) View() string {
 
 // validates the input fields before sending to the db for authentication
 func (m model) validateCreds(creds ...string) error {
-	result := ""
-	var err error = nil
-	var emptyFields bool
+	var (
+		result      string = ""
+		err         error  = nil
+		emptyFields bool
+		shortFields bool
+	)
 
 	// check for empty fields
 	for i := range creds {
@@ -207,6 +216,27 @@ func (m model) validateCreds(creds ...string) error {
 		return err
 	}
 
+	// check for credentials shorter than 5 characters
+	for i := range creds {
+		if len(creds[i]) < 5 {
+			switch i {
+			case 0:
+				result += "username must be at least 5 characters \n"
+			case 1:
+				result += "password must be at least 5 characters long\n"
+			case 2:
+				result += "re-entered password must be at least 5 characters\n"
+			}
+			err = fmt.Errorf("%s\npress enter to continue", result)
+			shortFields = true
+		}
+	}
+
+	// return if there are short fields
+	if shortFields {
+		return err
+	}
+
 	// we display the error message
 	if m.view == vSignUp {
 		if creds[1] != creds[2] {
@@ -218,6 +248,7 @@ func (m model) validateCreds(creds ...string) error {
 	return err
 }
 
+// actual db authentication handler
 func (m model) authUser(creds ...string) error {
 	u := user{
 		username: creds[0],
@@ -233,4 +264,18 @@ func (m model) authUser(creds ...string) error {
 	}
 
 	return nil
+}
+
+func (m model) resetFields() {
+	for i := range m.loginInputs {
+		m.loginInputs[i].Reset()
+	}
+
+	for i := range m.signupInputs {
+		m.signupInputs[i].Reset()
+	}
+
+	m.loginCurField = 0
+	m.signupCurField = 0
+
 }
