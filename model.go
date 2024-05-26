@@ -31,7 +31,7 @@ type model struct {
 	termWidth  int
 	termHeight int
 
-    db *sql.DB
+	db *sql.DB
 }
 
 func initialModel(db *sql.DB) model {
@@ -39,7 +39,7 @@ func initialModel(db *sql.DB) model {
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
 		loginInputs:  readyInputsFor(2),
 		signupInputs: readyInputsFor(3),
-        db: db,
+		db:           db,
 	}
 
 	return m
@@ -151,10 +151,13 @@ func (m model) View() string {
 	return v
 }
 
+// checks the input fields before sending to the db for authentication
 func (m model) checkUserCreds(creds ...string) error {
 	result := ""
 	var err error = nil
+	var emptyFields bool
 
+    // check for empty fields
 	for i := range creds {
 		if creds[i] == "" {
 			switch i {
@@ -166,8 +169,25 @@ func (m model) checkUserCreds(creds ...string) error {
 				result += "please re-enter your new password\n"
 			}
 			err = fmt.Errorf("%s\npress enter to continue", result)
+			emptyFields = true
+		}
+	}
+
+	if emptyFields {
+		return err
+	}
+
+	if m.view == signUp {
+		if creds[1] != creds[2] {
+			result = "your new passwords don't match"
+			err = fmt.Errorf("%s\n\npress enter to continue", result)
 		}
 	}
 
 	return err
 }
+
+// func (m model) authUser(usrname, pwd string) error {
+// 	u := user{username: usrname, password: pwd}
+//
+// }

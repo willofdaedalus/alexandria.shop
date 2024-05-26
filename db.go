@@ -35,23 +35,27 @@ func signupUser(db *sql.DB, newUser user) error {
 
 // login handler
 func loginUser(db *sql.DB, authUser user) error {
-	// maybe this is overkill but we're really trying to preventing sql injection attacks
-	// see more here: https://go.dev/doc/database/sql-injection
-	query := `SELECT passwordHash FROM users WHERE username=?`
-
+	// Check if the user exists
 	var storedHash string
-    err := db.QueryRow(query, authUser.username).Scan(&storedHash)
+	query := `SELECT passwordHash FROM users WHERE username=?`
+	err := db.QueryRow(query, authUser.username).Scan(&storedHash)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return fmt.Errorf("user doesn't exist. consider signing up, it's free")
+			// User doesn't exist
+			return fmt.Errorf("user doesn't exist. signup it's free")
 		}
+		// Another error occurred
 		return fmt.Errorf("error querying user: %w", err)
 	}
 
+	// Compare the provided password with the stored hash
 	err = bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(authUser.password))
 	if err != nil {
-		return fmt.Errorf("invalid password or username")
+		// Incorrect password
+		return fmt.Errorf("invalid password")
 	}
 
-	return err
+	// Successful login
+	return nil
 }
+
