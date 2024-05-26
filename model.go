@@ -57,10 +57,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	)
 
 	// update the current inputs' focus based on the view
-	if m.view == login {
+	if m.view == vLogin {
 		field = &m.loginCurField
 		inputs = m.loginInputs
-	} else if m.view == signUp {
+	} else if m.view == vSignUp {
 		field = &m.signupCurField
 		inputs = m.signupInputs
 	}
@@ -72,32 +72,32 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "ctrl+s":
-			if m.view == login {
-				transitionView(&m, signUp)
+			if m.view == vLogin {
+				transitionView(&m, vSignUp)
 			}
 		case "ctrl+l":
-			if m.view == signUp {
-				transitionView(&m, login)
+			if m.view == vSignUp {
+				transitionView(&m, vLogin)
 			}
 
 		case "enter":
 			switch m.view {
-			case welcome:
-				transitionView(&m, login)
+			case vWelcome:
+				transitionView(&m, vLogin)
 				return m, m.scrTimer.Toggle()
-			case login:
-				m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value())
+			case vLogin, vSignUp:
+                // pass the user's inputs for validation checks
+				if m.view == vLogin {
+					m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value())
+				} else {
+					m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value(), inputs[2].Value())
+				}
+                // transition to the authentication view on err
 				if m.authErr != nil {
-					transitionView(&m, credErr)
+					transitionView(&m, vCredErr)
 				}
 				// pass the information to the dbHandler to process
-			case signUp:
-				m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value(), inputs[2].Value())
-				if m.authErr != nil {
-					transitionView(&m, credErr)
-				}
-				// pass the information to the dbHandler to process
-			case credErr:
+			case vCredErr:
 				transitionView(&m, m.prevView)
 			}
 		// debug purposes only
@@ -126,7 +126,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case timer.TimeoutMsg:
 		// transition to the login screen on timer up
-		transitionView(&m, login)
+		transitionView(&m, vLogin)
 	}
 
 	cmd = m.updateInputs(msg, inputs)
@@ -138,13 +138,13 @@ func (m model) View() string {
 	v := ""
 
 	switch m.view {
-	case welcome:
+	case vWelcome:
 		v = m.initialScreen()
-	case login:
+	case vLogin:
 		v = m.loginScreen()
-	case signUp:
+	case vSignUp:
 		v = m.signUpScreen()
-	case credErr:
+	case vCredErr:
 		v = m.errorScreen()
 	}
 
@@ -157,7 +157,7 @@ func (m model) checkUserCreds(creds ...string) error {
 	var err error = nil
 	var emptyFields bool
 
-    // check for empty fields
+	// check for empty fields
 	for i := range creds {
 		if creds[i] == "" {
 			switch i {
@@ -177,7 +177,8 @@ func (m model) checkUserCreds(creds ...string) error {
 		return err
 	}
 
-	if m.view == signUp {
+	// we display the error message
+	if m.view == vSignUp {
 		if creds[1] != creds[2] {
 			result = "your new passwords don't match"
 			err = fmt.Errorf("%s\n\npress enter to continue", result)
@@ -187,7 +188,7 @@ func (m model) checkUserCreds(creds ...string) error {
 	return err
 }
 
-// func (m model) authUser(usrname, pwd string) error {
-// 	u := user{username: usrname, password: pwd}
+// func (m model) authUser(creds ...string) error {
 //
+// 	return nil
 // }

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
-    _ "github.com/mattn/go-sqlite3"
 )
 
 func createUsersTable(db *sql.DB) error {
@@ -35,27 +35,25 @@ func signupUser(db *sql.DB, newUser user) error {
 
 // login handler
 func loginUser(db *sql.DB, authUser user) error {
-	// Check if the user exists
+	// check if the user exists
 	var storedHash string
 	query := `SELECT passwordHash FROM users WHERE username=?`
 	err := db.QueryRow(query, authUser.username).Scan(&storedHash)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			// User doesn't exist
+			// user doesn't exist
 			return fmt.Errorf("user doesn't exist. signup it's free")
 		}
-		// Another error occurred
+		// another error occurred
 		return fmt.Errorf("error querying user: %w", err)
 	}
 
-	// Compare the provided password with the stored hash
+	// compare the provided password with the stored hash
 	err = bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(authUser.password))
 	if err != nil {
-		// Incorrect password
+		// incorrect password
 		return fmt.Errorf("invalid password")
 	}
 
-	// Successful login
 	return nil
 }
-

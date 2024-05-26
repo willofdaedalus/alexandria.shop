@@ -12,10 +12,10 @@ const (
 
 // views tracker
 const (
-	welcome = iota
-	login
-	signUp
-	credErr
+	vWelcome = iota
+	vLogin
+	vSignUp
+	vCredErr
 )
 
 const (
