@@ -42,7 +42,7 @@ func loginUser(db *sql.DB, authUser user) error {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// user doesn't exist
-			return fmt.Errorf("user doesn't exist. signup it's free")
+			return fmt.Errorf("user doesn't exist.\n\npress enter to continue")
 		}
 		// another error occurred
 		return fmt.Errorf("error querying user: %w", err)
@@ -52,7 +52,7 @@ func loginUser(db *sql.DB, authUser user) error {
 	err = bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(authUser.password))
 	if err != nil {
 		// incorrect password
-		return fmt.Errorf("invalid password")
+		return fmt.Errorf("invalid password for user\n\npress enter to continue")
 	}
 
 	return nil

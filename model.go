@@ -54,6 +54,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmd    tea.Cmd
 		field  *int              // this determines the field depending on what auth screen we're on
 		inputs []textinput.Model // this determines the input fields also depending on the auth screen
+
+		uName  string // this stores the user name they entered
+		uPwd   string // this stores the password the user entered
+		uRePwd string // this stores the password confirmation the user entered at signup
 	)
 
 	// update the current inputs' focus based on the view
@@ -85,18 +89,40 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case vWelcome:
 				transitionView(&m, vLogin)
 				return m, m.scrTimer.Toggle()
+
 			case vLogin, vSignUp:
-                // pass the user's inputs for validation checks
+				// this section could use a refactor if possible
+				uName = inputs[0].Value()
+				uPwd = inputs[1].Value()
+
+				// pass the user's inputs for validation checks
 				if m.view == vLogin {
-					m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value())
+					m.authErr = m.validateCreds(uName, uPwd)
 				} else {
-					m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value(), inputs[2].Value())
+					uRePwd = inputs[2].Value() // we only need rePwd to check against pwd at signup
+					m.authErr = m.validateCreds(uName, uPwd, uRePwd)
 				}
-                // transition to the authentication view on err
+				// transition to the authentication view on err
 				if m.authErr != nil {
 					transitionView(&m, vCredErr)
+					return m, nil
 				}
-				// pass the information to the dbHandler to process
+
+				// actual db authentication happens below
+				m.authErr = m.authUser(uName, uPwd)
+				// transition to the authentication view on err
+				if m.authErr != nil {
+					transitionView(&m, vCredErr)
+					return m, nil
+				}
+				// only show the success screen when at the signup screen
+				if m.view == vSignUp {
+					transitionView(&m, vSuccess)
+				}
+
+			case vSuccess:
+				transitionView(&m, vLogin)
+
 			case vCredErr:
 				transitionView(&m, m.prevView)
 			}
@@ -106,10 +132,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
 
-			if i == "tab" || i == "down" {
-				nextInput(field, len(inputs))
-			} else {
-				prevInput(field, len(inputs))
+			if m.view == vLogin || m.view == vSignUp {
+				if i == "tab" || i == "down" {
+					nextInput(field, len(inputs))
+				} else {
+					prevInput(field, len(inputs))
+				}
 			}
 
 			cmds := focusFields(field, inputs)
@@ -145,14 +173,16 @@ func (m model) View() string {
 	case vSignUp:
 		v = m.signUpScreen()
 	case vCredErr:
-		v = m.errorScreen()
+		v = m.infoScreen(m.authErr.Error())
+	case vSuccess:
+		v = m.infoScreen("sign up successful!\n\npress enter to login now")
 	}
 
 	return v
 }
 
-// checks the input fields before sending to the db for authentication
-func (m model) checkUserCreds(creds ...string) error {
+// validates the input fields before sending to the db for authentication
+func (m model) validateCreds(creds ...string) error {
 	result := ""
 	var err error = nil
 	var emptyFields bool
@@ -188,7 +218,19 @@ func (m model) checkUserCreds(creds ...string) error {
 	return err
 }
 
-// func (m model) authUser(creds ...string) error {
-//
-// 	return nil
-// }
+func (m model) authUser(creds ...string) error {
+	u := user{
+		username: creds[0],
+		password: creds[1],
+	}
+
+	if m.view == vLogin {
+		return loginUser(m.db, u)
+	} else if m.view == vSignUp {
+		// since we've checked both new password and retype password fields are valid
+		// there's no worry of sending the wrong information to the signup process
+		return signupUser(m.db, u)
+	}
+
+	return nil
+}

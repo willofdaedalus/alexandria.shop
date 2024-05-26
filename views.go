@@ -126,11 +126,11 @@ func (m model) loginScreen() string {
 	return layout.String()
 }
 
-func (m model) errorScreen() string {
-	errRender := noBorderStyle.
+func (m model) infoScreen(info string) string {
+	infoRender := noBorderStyle.
 		PaddingTop(1).
 		Width(50).Height(3).
-		Align(lipgloss.Center).Render(m.authErr.Error())
+		Align(lipgloss.Center).Render(info)
 
 	// footer/help message render
 	// helpText := "press enter"
@@ -139,7 +139,7 @@ func (m model) errorScreen() string {
 	dialog := lipgloss.Place(
 		m.termWidth, m.termHeight,
 		lipgloss.Center, lipgloss.Center,
-		dialogBoxStyle.Width(50).Render(errRender),
+		dialogBoxStyle.Width(50).Render(infoRender),
 	)
 
 	return dialog

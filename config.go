@@ -16,6 +16,7 @@ const (
 	vLogin
 	vSignUp
 	vCredErr
+    vSuccess
 )
 
 const (
