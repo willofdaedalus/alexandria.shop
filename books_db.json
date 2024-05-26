@@ -1,0 +1,82 @@
+[
+    {
+        "title": "Harry Potter and The Philosopher's Stone",
+        "author": "J.K Rowling",
+        "description": "Harry Potter has no idea how famous he is. That's because he's being raised by his miserable aunt and uncle who are terrified Harry will learn that he's really a wizard, just as his parents were. But everything changes when Harry is summoned to attend an infamous school for wizards, and he begins to discover some clues about his illustrious birthright.",
+        "pub_year": 1997,
+        "genre": "fantasy, children, magic",
+        "price": 11.99
+    },
+    {
+        "title": "The Lord of The Rings",
+        "author": "J.R.R Tolkien",
+        "description": "The One Ring, created by the Dark Lord Sauron to control all other Rings of Power, is lost for ages until it is found by the hobbit Bilbo Baggins. Sauron seeks to reclaim the Ring to conquer Middle-earth, but Bilbo bequeaths it to his cousin Frodo. Frodo, with the Fellowship of the Ring, embarks on a perilous quest to destroy the Ring by casting it into the Cracks of Mt. Doom.",
+        "pub_year": 1954,
+        "genre": "fantasy, classics, adventure",
+        "price": 16.99
+    },
+    {
+        "title": "The Lion, The Witch and The Wardrobe",
+        "author": "C.S Lewis",
+        "description": "Lucy is the first to find the secret of the wardrobe in the professor's mysterious old house. Not believing her at first, her siblings, Edmund, Peter and Susan soon step through the wardrobe themselves. In Narnia they find a country buried under the evil enchantment of the White Witch. When they meet the Lion Aslan, they realize they've been called to a great adventure and join the battle to free Narnia from the Witch's spell.",
+        "pub_year": 1950,
+        "genre": "fantasy, children, adventure",
+        "price": 15.99
+    },
+    {
+        "title": "The Mists of Avalon",
+        "author": "Marrion Zimmer Bradley",
+        "description": "Here is the magical legend of King Arthur, vividly retold through the eyes and lives of the women who wielded power from behind the throne. A spellbinding novel, an extraordinary literary achievement, THE MISTS OF AVALON will stay with you for a long time to come....",
+        "pub_year": 1982,
+        "genre": "fantasy, classics, magic",
+        "price": 10.99
+    },
+    {
+        "title": "The Neverending Story",
+        "author": "Michael Ende",
+        "description": "The story begins with a lonely boy named Bastian and the strange book that draws him into the beautiful but doomed world of Fantastica. Only a human can save this enchanted place by giving its ruler, the Childlike Empress, a new name. But the journey to her tower leads through lands of dragons, giants, monsters, and magic, and once Bastian begins his quest, he may never return.",
+        "pub_year": 1979,
+        "genre": "fantasy, classics, children",
+        "price": 8.99
+    },
+    {
+        "title": "Dune",
+        "author": "Frank Herbert",
+        "description": "Set on the desert planet Arrakis, Dune follows Paul Atreides, heir to a noble family tasked with ruling a world where the valuable spice melange is found. After House Atreides is betrayed, Paul embarks on a journey that leads him to become the enigmatic Muad'Dib. Blending adventure, mysticism, environmentalism, and politics, Paul's destiny unfolds, achieving humankind's ancient dream.",
+        "pub_year": 1965,
+        "genre": "sci-fi, space, war",
+        "price": 14.99
+    },
+    {
+        "title": "The Hitchhiker's Guide to The Galaxy",
+        "author": "Douglas Adams",
+        "description": "Arthur Dent is saved from Earth's destruction by Ford Prefect, who poses as an actor but is actually a researcher for The Hitchhiker's Guide. They embark on a space journey with colorful characters like Zaphod Beeblebrox, the eccentric president, Trillian, Zaphod's girlfriend, and Marvin, a depressed robot. Along the way, they ponder life's big questions and encounter absurdity, guided by The Hitchhiker's Guide and the wisdom of carrying a towel.",
+        "pub_year": 1979,
+        "genre": "sci-fi, comedy, adventure",
+        "price": 16.99
+    },
+    {
+        "title": "1984",
+        "author": "George Orwell",
+        "description": "1984 depicts a dystopian world ruled by totalitarianism and bureaucracy. It follows one individual's struggle for individuality amidst pervasive surveillance and manipulation. Orwell's foresight into modern life, including the influence of media and the corruption of language, contributes to the novel's enduring relevance and status as a terrifying masterpiece, essential for readers of all ages.",
+        "pub_year": 1949,
+        "genre": "sci-fi, dystopia, politics",
+        "price": 16.99
+    },
+    {
+        "title": "Neuromancer",
+        "author": "William Gibson",
+        "description": "A novel that tells the story of a washed-up computer hacker hired for one last job: to pull off the ultimate hack.",
+        "pub_year": 1984,
+        "genre": "sci-fi, dystopia, cyberpunk",
+        "price": 8.99
+    },
+    {
+        "title": "Foundation",
+        "author": "Isaac Asimov",
+        "description": "As the Old Empire crumbles into barbarism throughout the million worlds of the galaxy, Hari Seldon and his band of psychologists must create a new entity, the Foundation-dedicated to art, science, and technology-as the beginning of a new empire.",
+        "price": 8.49,
+        "stock": 12,
+        "genre": "sci-fi"
+    }
+]

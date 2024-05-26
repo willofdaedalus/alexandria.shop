@@ -86,17 +86,3 @@ func transitionView(m *model, to int) {
 	m.view = to
 	m.prevView = prev
 }
-
-func resetFields(m *model) {
-	for i := range m.loginInputs {
-		m.loginInputs[i].Reset()
-	}
-
-	for i := range m.signupInputs {
-		m.signupInputs[i].Reset()
-	}
-
-	m.loginCurField = 0
-	m.signupCurField = 0
-
-}

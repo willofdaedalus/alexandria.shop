@@ -11,29 +11,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type model struct {
-	// LOGIN/SIGN UP VALUES
-	// login text inputs
-	loginInputs   []textinput.Model
-	loginCurField int
-	// sign up text inputs
-	signupInputs   []textinput.Model
-	signupCurField int
-	authErr        error
-
-	// scrTimer to transition to login
-	scrTimer timer.Model
-
-	// used to transition between different views
-	view     int
-	prevView int
-
-	termWidth  int
-	termHeight int
-
-	db *sql.DB
-}
-
 func initialModel(db *sql.DB) model {
 	m := model{
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
@@ -121,9 +98,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 
 			case vSuccess:
+				m.resetFields()
 				transitionView(&m, vLogin)
 
 			case vCredErr:
+				m.resetFields()
 				transitionView(&m, m.prevView)
 			}
 		// debug purposes only
@@ -174,14 +153,8 @@ func (m model) View() string {
 		v = m.signUpScreen()
 	case vCredErr:
 		v = m.infoScreen(m.authErr.Error())
-		m.resetFields()
-		m.loginCurField = 0
-		m.signupCurField = 0
 	case vSuccess:
 		v = m.infoScreen("sign up successful!\n\npress enter to login now")
-		m.resetFields()
-		m.loginCurField = 0
-		m.signupCurField = 0
 	}
 
 	return v
@@ -218,14 +191,14 @@ func (m model) validateCreds(creds ...string) error {
 
 	// check for credentials shorter than 5 characters
 	for i := range creds {
-		if len(creds[i]) < 5 {
+		if len(creds[i]) < 4 {
 			switch i {
 			case 0:
-				result += "username must be at least 5 characters \n"
+				result += "username must be at least 4 characters \n"
 			case 1:
-				result += "password must be at least 5 characters long\n"
+				result += "password must be at least 4 characters long\n"
 			case 2:
-				result += "re-entered password must be at least 5 characters\n"
+				result += "re-entered password must be at least 4 characters\n"
 			}
 			err = fmt.Errorf("%s\npress enter to continue", result)
 			shortFields = true
@@ -275,6 +248,8 @@ func (m model) resetFields() {
 		m.signupInputs[i].Reset()
 	}
 
+    // code below doesn't work some reason
+    // find out why!
 	m.loginCurField = 0
 	m.signupCurField = 0
 

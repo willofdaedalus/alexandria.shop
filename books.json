@@ -1,0 +1,242 @@
+[
+    {
+        "title": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "description": "A novel about the serious issues of rape and racial inequality.",
+        "year": 1960,
+        "genre": "classics, fiction",
+        "price": 10.99
+    },
+    {
+        "title": "1984",
+        "author": "George Orwell",
+        "description": "A dystopian social science fiction novel and cautionary tale about the future.",
+        "year": 1949,
+        "genre": "classics, sci-fi, dystopia",
+        "price": 9.99
+    },
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "description": "A story about the young and mysterious millionaire Jay Gatsby and his quixotic passion for the beautiful Daisy Buchanan.",
+        "year": 1925,
+        "genre": "classics, fiction",
+        "price": 10.49
+    },
+    {
+        "title": "Brave New World",
+        "author": "Aldous Huxley",
+        "description": "A novel that anticipates developments in reproductive technology, sleep-learning, psychological manipulation, and classical conditioning.",
+        "year": 1932,
+        "genre": "classics, sci-fi, dystopia",
+        "price": 12.99
+    },
+    {
+        "title": "Catch-22",
+        "author": "Joseph Heller",
+        "description": "A satirical war novel about the absurdities of war and military life.",
+        "year": 1961,
+        "genre": "classics, fiction, satire",
+        "price": 11.49
+    },
+    {
+        "title": "Dune",
+        "author": "Frank Herbert",
+        "description": "A science fiction novel about the young Paul Atreides, whose noble family accepts the stewardship of the desert planet Arrakis.",
+        "year": 1965,
+        "genre": "sci-fi, adventure, space",
+        "price": 14.99
+    },
+    {
+        "title": "Foundation",
+        "author": "Isaac Asimov",
+        "description": "A science fiction series about the fall and rise of civilizations.",
+        "year": 1951,
+        "genre": "sci-fi, space opera",
+        "price": 13.99
+    },
+    {
+        "title": "Neuromancer",
+        "author": "William Gibson",
+        "description": "A science fiction novel that tells the story of a washed-up computer hacker hired for one last job.",
+        "year": 1984,
+        "genre": "sci-fi, cyberpunk",
+        "price": 10.99
+    },
+    {
+        "title": "The Left Hand of Darkness",
+        "author": "Ursula K. Le Guin",
+        "description": "A science fiction novel that explores themes of gender and sexuality.",
+        "year": 1969,
+        "genre": "sci-fi, speculative fiction",
+        "price": 12.49
+    },
+    {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "description": "A science fiction novel set in a future America where a computer virus can infect humans.",
+        "year": 1992,
+        "genre": "sci-fi, cyberpunk",
+        "price": 11.99
+    },
+    {
+        "title": "Harry Potter and the Philosopher's Stone",
+        "author": "J.K. Rowling",
+        "description": "A young boy discovers he is a wizard and attends a magical school.",
+        "year": 1997,
+        "genre": "fantasy, children, magic",
+        "price": 11.99
+    },
+    {
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "description": "A hobbit embarks on a quest to reclaim a lost kingdom from a dragon.",
+        "year": 1937,
+        "genre": "fantasy, adventure",
+        "price": 10.99
+    },
+    {
+        "title": "The Fellowship of the Ring",
+        "author": "J.R.R. Tolkien",
+        "description": "The first part of the epic fantasy series about the quest to destroy a powerful ring.",
+        "year": 1954,
+        "genre": "fantasy, epic",
+        "price": 12.99
+    },
+    {
+        "title": "A Game of Thrones",
+        "author": "George R.R. Martin",
+        "description": "Noble families vie for control of the Iron Throne in a fantasy world.",
+        "year": 1996,
+        "genre": "fantasy, epic",
+        "price": 14.99
+    },
+    {
+        "title": "The Lion, the Witch and the Wardrobe",
+        "author": "C.S. Lewis",
+        "description": "Children discover a magical world inside a wardrobe.",
+        "year": 1950,
+        "genre": "fantasy, children",
+        "price": 9.99
+    },
+    {
+        "title": "A Brief History of Time",
+        "author": "Stephen Hawking",
+        "description": "A landmark volume in science writing by one of the great minds of our time.",
+        "year": 1988,
+        "genre": "non-fiction, science",
+        "price": 15.99
+    },
+    {
+        "title": "The Diary of a Young Girl",
+        "author": "Anne Frank",
+        "description": "The wartime diary of a young girl hiding from the Nazis.",
+        "year": 1947,
+        "genre": "non-fiction, biography",
+        "price": 12.99
+    },
+    {
+        "title": "Guns, Germs, and Steel",
+        "author": "Jared Diamond",
+        "description": "A historical analysis of the factors that influenced the modern world.",
+        "year": 1997,
+        "genre": "non-fiction, history",
+        "price": 16.99
+    },
+    {
+        "title": "The Immortal Life of Henrietta Lacks",
+        "author": "Rebecca Skloot",
+        "description": "The story of the woman behind the first immortal human cells grown in culture.",
+        "year": 2010,
+        "genre": "non-fiction, science, biography",
+        "price": 13.99
+    },
+    {
+        "title": "Into the Wild",
+        "author": "Jon Krakauer",
+        "description": "The true story of Chris McCandless, who walked into the Alaskan wilderness and perished.",
+        "year": 1996,
+        "genre": "non-fiction, adventure",
+        "price": 10.99
+    },
+    {
+        "title": "Where the Wild Things Are",
+        "author": "Maurice Sendak",
+        "description": "A story about a young boy who sails to an island inhabited by creatures.",
+        "year": 1963,
+        "genre": "children, fantasy",
+        "price": 8.99
+    },
+    {
+        "title": "Goodnight Moon",
+        "author": "Margaret Wise Brown",
+        "description": "A classic bedtime story about a bunny saying goodnight to everything.",
+        "year": 1947,
+        "genre": "children, bedtime",
+        "price": 6.99
+    },
+    {
+        "title": "The Very Hungry Caterpillar",
+        "author": "Eric Carle",
+        "description": "A story about a caterpillar eating his way through food before becoming a butterfly.",
+        "year": 1969,
+        "genre": "children, educational",
+        "price": 7.99
+    },
+    {
+        "title": "Charlotte's Web",
+        "author": "E.B. White",
+        "description": "A story about the friendship between a pig named Wilbur and a spider named Charlotte.",
+        "year": 1952,
+        "genre": "children, classic",
+        "price": 9.99
+    },
+    {
+        "title": "The Cat in the Hat",
+        "author": "Dr. Seuss",
+        "description": "A mischievous cat in a tall striped hat visits two children.",
+        "year": 1957,
+        "genre": "children, adventure",
+        "price": 7.99
+    },
+    {
+        "title": "The Republic",
+        "author": "Plato",
+        "description": "A Socratic dialogue concerning justice and the ideal city-state.",
+        "year": -380,
+        "genre": "philosophy, political",
+        "price": 10.99
+    },
+    {
+        "title": "Nicomachean Ethics",
+        "author": "Aristotle",
+        "description": "Aristotle's best-known work on ethics.",
+        "year": -350,
+        "genre": "philosophy, ethics",
+        "price": 11.99
+    },
+    {
+        "title": "Beyond Good and Evil",
+        "author": "Friedrich Nietzsche",
+        "description": "A book that challenges traditional views on morality.",
+        "year": 1886,
+        "genre": "philosophy, ethics",
+        "price": 12.99
+    },
+    {
+        "title": "Meditations",
+        "author": "Marcus Aurelius",
+        "description": "A series of personal writings by the Roman Emperor on Stoic philosophy.",
+        "year": 180,
+        "genre": "philosophy, stoicism",
+        "price": 9.99
+    },
+    {
+        "title": "Being and Time",
+        "author": "Martin Heidegger",
+        "description": "A fundamental text on existential philosophy.",
+        "year": 1927,
+        "genre": "philosophy, existentialism",
+        "price": 14.99
+    }
+]
