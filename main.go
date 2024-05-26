@@ -1,28 +1,32 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"os"
-    "database/sql"
-
-	tea "github.com/charmbracelet/bubbletea"
-	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 func main() {
-    db, err := sql.Open("sqlite3", "./users.db")
+    db, err  := sql.Open("sqlite3", "./users.db")
     if err != nil {
-        fmt.Println("there was an err: ", err)
-        os.Exit(1)
+        log.Fatalf("open err: %s", err.Error())
     }
-    defer db.Close()
 
-    fmt.Println(db)
+    err = createUsersTable(db)
+    if err != nil {
+        log.Fatalf("table err: %s", err.Error())
+    }
 
-	m := initialModel(db)
+    myUser := user{username: "manny", password: "mypassword"}
+    err = signupUser(db, myUser)
+    if err != nil {
+        log.Fatalf("signup err: %s", err.Error())
+    }
+    fmt.Print("created new user\n")
 
-	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+    err = loginUser(db, myUser)
+    if err != nil {
+        log.Fatalf("signup login: %s", err.Error())
+    }
+    fmt.Print("user logged in successfully")
 }
