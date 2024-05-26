@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"strconv"
 	"time"
@@ -29,13 +30,16 @@ type model struct {
 
 	termWidth  int
 	termHeight int
+
+    db *sql.DB
 }
 
-func initialModel() model {
+func initialModel(db *sql.DB) model {
 	m := model{
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
 		loginInputs:  readyInputsFor(2),
 		signupInputs: readyInputsFor(3),
+        db: db,
 	}
 
 	return m
@@ -48,8 +52,8 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd    tea.Cmd
-		field  *int
-		inputs []textinput.Model
+		field  *int              // this determines the field depending on what auth screen we're on
+		inputs []textinput.Model // this determines the input fields also depending on the auth screen
 	)
 
 	// update the current inputs' focus based on the view
@@ -66,6 +70,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "ctrl+d":
 			return m, tea.Quit
+
 		case "ctrl+s":
 			if m.view == login {
 				transitionView(&m, signUp)
@@ -74,6 +79,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.view == signUp {
 				transitionView(&m, login)
 			}
+
 		case "enter":
 			switch m.view {
 			case welcome:
@@ -84,11 +90,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.authErr != nil {
 					transitionView(&m, credErr)
 				}
+				// pass the information to the dbHandler to process
 			case signUp:
 				m.authErr = m.checkUserCreds(inputs[0].Value(), inputs[1].Value(), inputs[2].Value())
 				if m.authErr != nil {
 					transitionView(&m, credErr)
 				}
+				// pass the information to the dbHandler to process
 			case credErr:
 				transitionView(&m, m.prevView)
 			}

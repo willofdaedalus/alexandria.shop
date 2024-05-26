@@ -38,7 +38,7 @@ func (m model) signUpScreen() string {
 		// variables for the username and password prompt boxes
 	loginRender := renderBoxDesc("username", 0, m.signupInputs)
 	pwdRender := renderBoxDesc("password", 1, m.signupInputs)
-	rePwdRender := renderBoxDesc("username", 2, m.signupInputs)
+	rePwdRender := renderBoxDesc("password", 2, m.signupInputs)
 
 	// change the color of each render based on the current focus
 	if m.signupCurField == 0 {

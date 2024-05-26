@@ -1,1 +1,22 @@
 * function to check the various input fields
+
+# database layout
+user = {
+    userID (int),
+    name (text),
+    passwordHash (text),
+    lastLogin (date),
+}
+
+orderHistory = {
+    userID (int),
+    bookTitle (text),
+    receipt (text),
+    datePurchased (date)
+}
+
+cartItems = {
+    userID (int),
+    bookTitle (text),
+    dateAdded (date),
+}

@@ -15,7 +15,7 @@ const (
 	welcome = iota
 	login
 	signUp
-    credErr
+	credErr
 )
 
 const (
@@ -77,7 +77,7 @@ var (
 )
 
 var (
-	username string
-	password string
-    rePassword string
+	username   string
+	password   string
+	rePassword string
 )
