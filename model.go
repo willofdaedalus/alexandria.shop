@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -210,6 +211,11 @@ func (m model) validateCreds(creds ...string) error {
 		return err
 	}
 
+
+	if strings.Contains(creds[0], " ") {
+		return fmt.Errorf("usernames shouldn't contain any spaces\n\npress enter to continue")
+	}
+
 	// we display the error message
 	if m.view == vSignUp {
 		if creds[1] != creds[2] {
@@ -248,8 +254,8 @@ func (m model) resetFields() {
 		m.signupInputs[i].Reset()
 	}
 
-    // code below doesn't work some reason
-    // find out why!
+	// code below doesn't work some reason
+	// find out why!
 	m.loginCurField = 0
 	m.signupCurField = 0
 
