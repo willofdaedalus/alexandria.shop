@@ -26,15 +26,32 @@ func createUsersTable(db *sql.DB) error {
 
 // add a new user to the database
 func signupUser(db *sql.DB, newUser user) error {
+	var userExists string
+
+	// check if the user already exists
+	query := `SELECT username FROM users WHERE username=?`
+	err := db.QueryRow(query, newUser.username).Scan(&userExists)
+	if err != nil && err != sql.ErrNoRows {
+		return fmt.Errorf("error checking if user exists: %w", err)
+	}
+	if userExists != "" {
+		return fmt.Errorf("user %q already exists", newUser.username)
+	}
+
 	// generate the password hash from the user's password
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(newUser.password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	query := `INSERT INTO users(username, passwordHash) VALUES (?, ?);`
-	_, err = db.Exec(query, newUser.username, hashedPwd)
 
-	return err
+	// insert the new user into the database
+	query = `INSERT INTO users (username, passwordHash) VALUES (?, ?)`
+	_, err = db.Exec(query, newUser.username, hashedPwd)
+	if err != nil {
+		return fmt.Errorf("error inserting new user: %w", err)
+	}
+
+	return nil
 }
 
 // login handler
