@@ -142,12 +142,18 @@ func (m model) infoScreen(info string) string {
 }
 
 func (m model) catalogueScreen() string {
-    headerRender := renderHeaders("iamdaedalus", "29-05-24", "cart [16]")
-    return headerRender
+    headerRender := renderHeaders("I am Manny", "29-05-24", "cart [16]")
+    catalogueView := dialogBoxStyle.Width(80).Height(10).Render("this is the main view")
+    footer := textBoxStyle.Width(80).Render("this is the footer")
+
+    cFinalRender := lipgloss.JoinVertical(lipgloss.Center, headerRender, catalogueView, footer)
+    return cFinalRender
 }
 
 func renderHeaders(curUser, timeDate, cart string) string {
-    tops := [][]string {{curUser, timeDate, cart}}
+    tops := [][]string {
+        {curUser, timeDate, cart},  // actual headers
+    }
 
     return table.New().
     Border(lipgloss.NormalBorder()).
@@ -171,8 +177,4 @@ func renderBoxDesc(s string, idx int, inputs []textinput.Model) string {
 	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
 
 	return finalRender
-}
-
-func renderItemBox() {
-
 }
