@@ -96,14 +96,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// only show the success screen when at the signup screen
 				if m.view == vSignUp {
 					transitionView(&m, vSuccess)
+					return m, nil
 				}
+				// at this point user has been authenticated so we can safely do this
+				m.curUser.username = m.loginInputs[0].Value()
+				transitionView(&m, vCatalogue)
 
 			case vSuccess:
-				m.resetFields()
+				// m.resetFields()
 				transitionView(&m, vLogin)
 
 			case vCredErr:
-				m.resetFields()
+				// m.resetFields()
 				transitionView(&m, m.prevView)
 			}
 		// debug purposes only
@@ -145,7 +149,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	v := ""
 
-	v = m.catalogueScreen()
+    v = m.catalogueScreen("daedalus")
 
 	// switch m.view {
 	// case vWelcome:
@@ -158,6 +162,9 @@ func (m model) View() string {
 	// 	v = m.infoScreen(m.authErr.Error())
 	// case vSuccess:
 	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now")
+	// case vCatalogue:
+	// 	v = m.catalogueScreen(m.curUser.username)
+	//
 	// }
 
 	return v
@@ -222,6 +229,11 @@ func (m model) validateCreds(creds ...string) error {
 	if m.view == vSignUp {
 		if creds[1] != creds[2] {
 			result = "your new passwords don't match"
+			err = fmt.Errorf("%s\n\npress enter to continue", result)
+		} else if creds[0] == creds[1] {
+			// make sure the password doesn't match the username; no need to check for the other field
+			// because if they don't match the password will be rejected before the code here gets run
+			result = "username and password are the same. please use a different password"
 			err = fmt.Errorf("%s\n\npress enter to continue", result)
 		}
 	}

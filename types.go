@@ -41,5 +41,8 @@ type model struct {
 	termWidth  int
 	termHeight int
 
+    // current session user
+    curUser user
+    // db handler
 	db *sql.DB
 }

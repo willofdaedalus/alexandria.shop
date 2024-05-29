@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -141,49 +142,84 @@ func (m model) infoScreen(info string) string {
 	return dialog
 }
 
-func (m model) catalogueScreen() string {
-	renderWidth := m.termWidth - 2
+// this renders the entire catalogue view
+// big thanks to @its_gaurav on the Charm CLI Discord!
+func (m model) catalogueScreen(curUser string) string {
+	// renderWidth := m.termWidth - 22
+	renderWidth := 110
 	if renderWidth < 0 {
 		renderWidth = 0
 	}
 
-	headerRender := m.renderHeaders("I am Manny", "29-05-24", "cart [16]")
+	headerRender := m.renderHeaders(curUser, "29-05-24", "cart [16]")
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
 		Width(renderWidth).
-		Render("this is the footer")
+		Align(lipgloss.Center).
+		Render("ctrl+c to exit  |  vim or arrow keys to navigate  |  c for cart  |  ? for help/details")
+
+	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1
+    offset := 4
+
+    item := renderItemDisplay(renderWidth, mainHeight / offset)
+    item1 := renderItemDisplay(renderWidth, mainHeight / offset)
+    item2 := renderItemDisplay(renderWidth, mainHeight / offset)
+
+	itemsRender := lipgloss.JoinVertical(lipgloss.Center, item, item1, item2)
+
 	catalogueView := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
 		BorderBottom(false).
 		Width(renderWidth).
-		Height(m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1).
-		Render("this is the main view")
+		Align(lipgloss.Center).
+		Render(itemsRender)
 
 	seperator := "├" + strings.Repeat("─", renderWidth) + "┤"
 
 	headerRenderModified := strings.ReplaceAll(headerRender, "└", "├")
 	headerRenderModified = strings.ReplaceAll(headerRenderModified, "┘", "┤")
 
-	cFinalRender := lipgloss.JoinVertical(
+	catalogueRender := lipgloss.JoinVertical(
 		lipgloss.Bottom,
 		headerRenderModified,
 		catalogueView,
 		seperator,
 		footer,
 	)
+
+	cFinalRender := lipgloss.Place(
+		m.termWidth, m.termHeight,
+		lipgloss.Center, lipgloss.Center,
+		catalogueRender,
+	)
+
 	return cFinalRender
 }
 
+func renderItemDisplay(renderWidth, offset int) string {
+	return lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		Width(renderWidth - 5).Height(offset).
+		Render("this is item 1")
+}
+
 func (m model) renderHeaders(curUser, timeDate, cart string) string {
+
 	tops := [][]string{
-		{curUser, timeDate, cart}, // actual headers
+		{
+			"alexandria.shop",
+			fmt.Sprintf("welcome, %s", curUser),
+			fmt.Sprintf("current date is %s", timeDate),
+			cart,
+		}, // actual headers
+
 	}
 
 	headerTable := table.New().
 		Border(lipgloss.NormalBorder()).
-		Width(m.termWidth).
+		Width(112).
 		StyleFunc(table.StyleFunc(func(row, col int) lipgloss.Style {
 			return lipgloss.NewStyle().AlignHorizontal(lipgloss.Center)
 		})).

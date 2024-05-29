@@ -17,6 +17,7 @@ const (
 	vSignUp
 	vCredErr
 	vSuccess
+    vCatalogue
 )
 
 const (
