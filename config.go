@@ -16,7 +16,7 @@ const (
 	vLogin
 	vSignUp
 	vCredErr
-    vSuccess
+	vSuccess
 )
 
 const (
@@ -71,9 +71,13 @@ var (
 			Width(20).
 			Border(lipgloss.NormalBorder())
 
+	headerBoxStyle = lipgloss.NewStyle().
+			Width(20).Height(1).
+			Border(lipgloss.NormalBorder())
+
 	dialogBoxStyle = lipgloss.NewStyle().
 			Border(lipgloss.NormalBorder()).
-			Padding(1, 0).
+			// Padding(1, 0).
 			BorderForeground(magenta.GetForeground())
 )
 

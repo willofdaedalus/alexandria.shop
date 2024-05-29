@@ -5,6 +5,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 )
 
 // the initial screen to display when the program first runs
@@ -140,11 +141,38 @@ func (m model) infoScreen(info string) string {
 	return dialog
 }
 
+func (m model) catalogueScreen() string {
+    headerRender := renderHeaders("iamdaedalus", "29-05-24", "cart [16]")
+    return headerRender
+}
+
+func renderHeaders(curUser, timeDate, cart string) string {
+    tops := [][]string {{curUser, timeDate, cart}}
+
+    return table.New().
+    Border(lipgloss.NormalBorder()).
+    BorderRow(true).
+    Width(80).
+    Rows(tops...).Render()
+}
+
+func renderHeaderBox(s string) string {
+	return headerBoxStyle.
+		Width(20).Margin(-1).
+		Align(lipgloss.Center).
+		Render(s)
+}
+
 // function to return a nicely formatted description and input box
 func renderBoxDesc(s string, idx int, inputs []textinput.Model) string {
 	desc := noBorderStyle.Render(s)
+	// this is the content from the input box as we type
 	inputBox := textBoxStyle.Render(inputs[idx].View())
 	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
 
 	return finalRender
+}
+
+func renderItemBox() {
+
 }

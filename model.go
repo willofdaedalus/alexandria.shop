@@ -145,24 +145,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	v := ""
 
-	switch m.view {
-	case vWelcome:
-		v = m.initialScreen()
-	case vLogin:
-		v = m.loginScreen()
-	case vSignUp:
-		v = m.signUpScreen()
-	case vCredErr:
-		v = m.infoScreen(m.authErr.Error())
-	case vSuccess:
-		v = m.infoScreen("sign up successful!\n\npress enter to login now")
-	}
+    v = m.catalogueScreen()
+
+	// switch m.view {
+	// case vWelcome:
+	// 	v = m.initialScreen()
+	// case vLogin:
+	// 	v = m.loginScreen()
+	// case vSignUp:
+	// 	v = m.signUpScreen()
+	// case vCredErr:
+	// 	v = m.infoScreen(m.authErr.Error())
+	// case vSuccess:
+	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now")
+	// }
 
 	return v
 }
 
 // validates the input fields before sending to the db for authentication
 func (m model) validateCreds(creds ...string) error {
+    // probably a better way to structure this function
 	var (
 		result      string = ""
 		err         error  = nil
