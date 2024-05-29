@@ -142,26 +142,55 @@ func (m model) infoScreen(info string) string {
 }
 
 func (m model) catalogueScreen() string {
-	headerRender := renderHeaders("I am Manny", "29-05-24", "cart [16]")
-	catalogueView := dialogBoxStyle.Width(80).Height(10).Render("this is the main view")
-	footer := textBoxStyle.Width(80).Render("this is the footer")
+	renderWidth := m.termWidth - 2
+	if renderWidth < 0 {
+		renderWidth = 0
+	}
 
-	cFinalRender := lipgloss.JoinVertical(lipgloss.Center, headerRender, catalogueView, footer)
+	headerRender := m.renderHeaders("I am Manny", "29-05-24", "cart [16]")
+	footer := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderTop(false).
+		Width(renderWidth).
+		Render("this is the footer")
+	catalogueView := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderTop(false).
+		BorderBottom(false).
+		Width(renderWidth).
+		Height(m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1).
+		Render("this is the main view")
+
+	seperator := "├" + strings.Repeat("─", renderWidth) + "┤"
+
+	headerRenderModified := strings.ReplaceAll(headerRender, "└", "├")
+	headerRenderModified = strings.ReplaceAll(headerRenderModified, "┘", "┤")
+
+	cFinalRender := lipgloss.JoinVertical(
+		lipgloss.Bottom,
+		headerRenderModified,
+		catalogueView,
+		seperator,
+		footer,
+	)
 	return cFinalRender
 }
 
-func renderHeaders(curUser, timeDate, cart string) string {
+func (m model) renderHeaders(curUser, timeDate, cart string) string {
 	tops := [][]string{
 		{curUser, timeDate, cart}, // actual headers
 	}
 
-	return table.New().
+	headerTable := table.New().
 		Border(lipgloss.NormalBorder()).
-		BorderRow(true).
-		Width(80).
-		Rows(tops...).Render()
-}
+		Width(m.termWidth).
+		StyleFunc(table.StyleFunc(func(row, col int) lipgloss.Style {
+			return lipgloss.NewStyle().AlignHorizontal(lipgloss.Center)
+		})).
+		Rows(tops...)
 
+	return headerTable.Render()
+}
 func renderHeaderBox(s string) string {
 	return headerBoxStyle.
 		Width(20).Margin(-1).
