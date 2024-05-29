@@ -145,7 +145,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	v := ""
 
-    v = m.catalogueScreen()
+	v = m.catalogueScreen()
 
 	// switch m.view {
 	// case vWelcome:
@@ -165,7 +165,7 @@ func (m model) View() string {
 
 // validates the input fields before sending to the db for authentication
 func (m model) validateCreds(creds ...string) error {
-    // probably a better way to structure this function
+	// probably a better way to structure this function
 	var (
 		result      string = ""
 		err         error  = nil
@@ -213,7 +213,6 @@ func (m model) validateCreds(creds ...string) error {
 	if shortFields {
 		return err
 	}
-
 
 	if strings.Contains(creds[0], " ") {
 		return fmt.Errorf("usernames shouldn't contain any spaces\n\npress enter to continue")

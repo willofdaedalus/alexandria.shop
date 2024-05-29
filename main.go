@@ -53,8 +53,8 @@ func main() {
 
 // function to check if a table exists in the database
 func tableExists(db *sql.DB, tableName string) bool {
-    // https://www.quora.com/How-can-you-check-if-a-table-exists-in-SQLite
-    query := `SELECT name FROM sqlite_master WHERE type='table' AND name=?`
+	// https://www.quora.com/How-can-you-check-if-a-table-exists-in-SQLite
+	query := `SELECT name FROM sqlite_master WHERE type='table' AND name=?`
 	rows, err := db.Query(query, tableName)
 	if err != nil {
 		log.Fatalf("error checking if table exists: %s", err.Error())

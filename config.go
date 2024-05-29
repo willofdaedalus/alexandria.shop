@@ -77,8 +77,8 @@ var (
 
 	dialogBoxStyle = lipgloss.NewStyle().
 			Border(lipgloss.NormalBorder()).
-			// Padding(1, 0).
-			BorderForeground(magenta.GetForeground())
+		// Padding(1, 0).
+		BorderForeground(magenta.GetForeground())
 )
 
 var (

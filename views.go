@@ -142,24 +142,24 @@ func (m model) infoScreen(info string) string {
 }
 
 func (m model) catalogueScreen() string {
-    headerRender := renderHeaders("I am Manny", "29-05-24", "cart [16]")
-    catalogueView := dialogBoxStyle.Width(80).Height(10).Render("this is the main view")
-    footer := textBoxStyle.Width(80).Render("this is the footer")
+	headerRender := renderHeaders("I am Manny", "29-05-24", "cart [16]")
+	catalogueView := dialogBoxStyle.Width(80).Height(10).Render("this is the main view")
+	footer := textBoxStyle.Width(80).Render("this is the footer")
 
-    cFinalRender := lipgloss.JoinVertical(lipgloss.Center, headerRender, catalogueView, footer)
-    return cFinalRender
+	cFinalRender := lipgloss.JoinVertical(lipgloss.Center, headerRender, catalogueView, footer)
+	return cFinalRender
 }
 
 func renderHeaders(curUser, timeDate, cart string) string {
-    tops := [][]string {
-        {curUser, timeDate, cart},  // actual headers
-    }
+	tops := [][]string{
+		{curUser, timeDate, cart}, // actual headers
+	}
 
-    return table.New().
-    Border(lipgloss.NormalBorder()).
-    BorderRow(true).
-    Width(80).
-    Rows(tops...).Render()
+	return table.New().
+		Border(lipgloss.NormalBorder()).
+		BorderRow(true).
+		Width(80).
+		Rows(tops...).Render()
 }
 
 func renderHeaderBox(s string) string {
