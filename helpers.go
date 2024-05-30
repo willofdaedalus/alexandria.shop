@@ -6,20 +6,24 @@ import (
 )
 
 // go back to the next field
-func nextInput(field *int, size int) {
+func nextInput(field *int, size int, wrap bool) {
 	if *field < size-1 {
 		*field++
 	} else {
-		*field = 0
+		if wrap {
+			*field = 0
+		}
 	}
 }
 
 // go back to the previous field
-func prevInput(field *int, size int) {
+func prevInput(field *int, size int, wrap bool) {
 	if *field > 0 {
 		*field--
 	} else {
-		*field = size - 1
+		if wrap {
+			*field = size - 1
+		}
 	}
 }
 

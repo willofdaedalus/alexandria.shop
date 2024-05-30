@@ -38,11 +38,15 @@ type model struct {
 	view     int
 	prevView int
 
+	// get the current terminal's width and height
 	termWidth  int
 	termHeight int
 
-    // current session user
-    curUser user
-    // db handler
+	itemsOnDisplay []string
+	curItem        int
+
+	// current session user
+	curUser user
+	// db handler
 	db *sql.DB
 }

@@ -156,8 +156,9 @@ func (m model) catalogueScreen(curUser string) string {
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
 		Width(renderWidth).
+        Height(2).
 		Align(lipgloss.Center).
-		Render("ctrl+c to exit  |  vim or arrow keys to navigate  |  c for cart  |  ? for help/details")
+		Render("ctrl+c to exit  |  vim or arrow keys to navigate\nc for cart  |  ? for help/details")
 
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1
     offset := 4
@@ -165,6 +166,9 @@ func (m model) catalogueScreen(curUser string) string {
     item := renderItemDisplay(renderWidth, mainHeight / offset)
     item1 := renderItemDisplay(renderWidth, mainHeight / offset)
     item2 := renderItemDisplay(renderWidth, mainHeight / offset)
+    item3 := renderItemDisplay(renderWidth, mainHeight / offset)
+
+    m.itemsOnDisplay = append(m.itemsOnDisplay, item, item1, item2, item3)
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, item, item1, item2)
 
@@ -214,7 +218,6 @@ func (m model) renderHeaders(curUser, timeDate, cart string) string {
 			fmt.Sprintf("current date is %s", timeDate),
 			cart,
 		}, // actual headers
-
 	}
 
 	headerTable := table.New().

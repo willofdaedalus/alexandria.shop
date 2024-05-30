@@ -112,7 +112,34 @@ func addBook(db *sql.DB, b book) error {
 	return err
 }
 
-func getAllBooks() ([]book, error) {
+func getBooksForPage(db *sql.DB, pageNum, pageItems int) ([]book, error) {
+	var (
+		books []book
+		b     book
+	)
+
+	offset := (pageNum - 1) * pageItems // three being the number of items on display in the catalogue
+	query := `SELECT title, author, description, price, genre FROM books LIMIT ? OFFSET ?`
+	rows, err := db.Query(query, pageItems, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		for rows.Next() {
+			err := rows.Scan(&b.Title, &b.Author, &b.Description, &b.Price, &b.Genre)
+			if err != nil {
+				return nil, err
+			}
+			books = append(books, b)
+		}
+	}
+
+	return books, nil
+}
+
+func readBooksFromJson() ([]book, error) {
 	// slices get resized by golang but this is a good start
 	var books []book = make([]book, 20)
 

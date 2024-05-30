@@ -2,9 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
-	tea "github.com/charmbracelet/bubbletea"
+	// tea "github.com/charmbracelet/bubbletea"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -31,7 +32,7 @@ func main() {
 		}
 
 		// populate books table only if it's newly created
-		books, err := getAllBooks()
+		books, err := readBooksFromJson()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -44,12 +45,17 @@ func main() {
 		}
 	}
 
-	m := initialModel(db)
+    for i := 1; i <= 10; i++ {
+        fmt.Println(getBooksForPage(db, i, 3))
+    }
 
-	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
-		log.Fatalf("tea program err: %s", err.Error())
-	}
+	// m := initialModel(db)
+	//
+	// if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
+	// 	log.Fatalf("tea program err: %s", err.Error())
+	// }
 }
+
 
 // function to check if a table exists in the database
 func tableExists(db *sql.DB, tableName string) bool {

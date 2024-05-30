@@ -36,16 +36,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		uName  string // this stores the name the user entered
 		uPwd   string // this stores the password the user entered
 		uRePwd string // this stores the password confirmation the user entered at signup
+
+        scrCtxLen int // this stores the len of all input fields, items and such depending on the screen
 	)
 
 	// update the current inputs' focus based on the view
 	if m.view == vLogin {
 		field = &m.loginCurField
 		inputs = m.loginInputs
+        scrCtxLen = len(m.loginInputs)
 	} else if m.view == vSignUp {
 		field = &m.signupCurField
 		inputs = m.signupInputs
-	}
+        scrCtxLen = len(m.signupInputs)
+	} else if m.view == vCatalogue {
+        field = &m.curItem
+        scrCtxLen = len(m.itemsOnDisplay)
+    }
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -116,12 +123,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
 
-			if m.view == vLogin || m.view == vSignUp {
-				if i == "tab" || i == "down" {
-					nextInput(field, len(inputs))
-				} else {
-					prevInput(field, len(inputs))
-				}
+			if i == "tab" || i == "down" {
+				nextInput(field, scrCtxLen, true)
+			} else {
+				prevInput(field, scrCtxLen, true)
 			}
 
 			cmds := focusFields(field, inputs)
@@ -149,23 +154,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	v := ""
 
-    v = m.catalogueScreen("daedalus")
+	// v = m.catalogueScreen("daedalus")
 
-	// switch m.view {
-	// case vWelcome:
-	// 	v = m.initialScreen()
-	// case vLogin:
-	// 	v = m.loginScreen()
-	// case vSignUp:
-	// 	v = m.signUpScreen()
-	// case vCredErr:
-	// 	v = m.infoScreen(m.authErr.Error())
-	// case vSuccess:
-	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now")
-	// case vCatalogue:
-	// 	v = m.catalogueScreen(m.curUser.username)
-	//
-	// }
+	switch m.view {
+	case vWelcome:
+		v = m.initialScreen()
+	case vLogin:
+		v = m.loginScreen()
+	case vSignUp:
+		v = m.signUpScreen()
+	case vCredErr:
+		v = m.infoScreen(m.authErr.Error())
+	case vSuccess:
+		v = m.infoScreen("sign up successful!\n\npress enter to login now")
+	case vCatalogue:
+		v = m.catalogueScreen(m.curUser.username)
+
+	}
 
 	return v
 }
