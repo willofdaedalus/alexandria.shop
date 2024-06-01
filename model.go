@@ -37,22 +37,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		uPwd   string // this stores the password the user entered
 		uRePwd string // this stores the password confirmation the user entered at signup
 
-        scrCtxLen int // this stores the len of all input fields, items and such depending on the screen
+		wrap      bool // wraps input
+		scrCtxLen int  // this stores the len of all input fields, items and such depending on the screen
 	)
 
 	// update the current inputs' focus based on the view
 	if m.view == vLogin {
 		field = &m.loginCurField
 		inputs = m.loginInputs
-        scrCtxLen = len(m.loginInputs)
+		wrap = true
+		scrCtxLen = len(m.loginInputs)
 	} else if m.view == vSignUp {
 		field = &m.signupCurField
 		inputs = m.signupInputs
-        scrCtxLen = len(m.signupInputs)
+		wrap = true
+		scrCtxLen = len(m.signupInputs)
 	} else if m.view == vCatalogue {
-        field = &m.curItem
-        scrCtxLen = len(m.itemsOnDisplay)
-    }
+		field = &m.curItem
+		wrap = false
+		scrCtxLen = 3
+	}
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -123,10 +127,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
 
-			if i == "tab" || i == "down" {
-				nextInput(field, scrCtxLen, true)
-			} else {
-				prevInput(field, scrCtxLen, true)
+			if m.view > vWelcome {
+				if i == "tab" || i == "down" {
+					nextInput(field, scrCtxLen, wrap)
+				} else {
+					prevInput(field, scrCtxLen, wrap)
+				}
 			}
 
 			cmds := focusFields(field, inputs)
@@ -169,7 +175,6 @@ func (m model) View() string {
 		v = m.infoScreen("sign up successful!\n\npress enter to login now")
 	case vCatalogue:
 		v = m.catalogueScreen(m.curUser.username)
-
 	}
 
 	return v

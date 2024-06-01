@@ -2,10 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
-	// tea "github.com/charmbracelet/bubbletea"
+	tea "github.com/charmbracelet/bubbletea"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -45,15 +44,11 @@ func main() {
 		}
 	}
 
-    for i := 1; i <= 10; i++ {
-        fmt.Println(getBooksForPage(db, i, 3))
-    }
+	m := initialModel(db)
 
-	// m := initialModel(db)
-	//
-	// if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
-	// 	log.Fatalf("tea program err: %s", err.Error())
-	// }
+	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
+		log.Fatalf("tea program err: %s", err.Error())
+	}
 }
 
 

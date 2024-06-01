@@ -32,7 +32,7 @@ func (m model) signUpScreen() string {
 		Align(lipgloss.Center).
 		Render(signUpText)
 
-		// variables for the username and password prompt boxes
+	// variables for the username and password prompt boxes
 	loginRender := renderBoxDesc("username", 0, m.signupInputs)
 	pwdRender := renderBoxDesc("password", 1, m.signupInputs)
 	rePwdRender := renderBoxDesc("password", 2, m.signupInputs)
@@ -145,6 +145,12 @@ func (m model) infoScreen(info string) string {
 // this renders the entire catalogue view
 // big thanks to @its_gaurav on the Charm CLI Discord!
 func (m model) catalogueScreen(curUser string) string {
+	var (
+		top string
+		mid string
+		bot string
+	)
+
 	// renderWidth := m.termWidth - 22
 	renderWidth := 110
 	if renderWidth < 0 {
@@ -156,21 +162,28 @@ func (m model) catalogueScreen(curUser string) string {
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
 		Width(renderWidth).
-        Height(2).
+		Height(2).
 		Align(lipgloss.Center).
 		Render("ctrl+c to exit  |  vim or arrow keys to navigate\nc for cart  |  ? for help/details")
 
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1
-    offset := 4
+	offset := 4
 
-    item := renderItemDisplay(renderWidth, mainHeight / offset)
-    item1 := renderItemDisplay(renderWidth, mainHeight / offset)
-    item2 := renderItemDisplay(renderWidth, mainHeight / offset)
-    item3 := renderItemDisplay(renderWidth, mainHeight / offset)
+	if m.curItem == 0 {
+		top = renderItemDisplay(renderWidth, mainHeight/offset, true)
+		mid = renderItemDisplay(renderWidth, mainHeight/offset, false)
+		bot = renderItemDisplay(renderWidth, mainHeight/offset, false)
+	} else if m.curItem == 1 {
+		top = renderItemDisplay(renderWidth, mainHeight/offset, false)
+		mid = renderItemDisplay(renderWidth, mainHeight/offset, true)
+		bot = renderItemDisplay(renderWidth, mainHeight/offset, false)
+	} else if m.curItem == 2 {
+		top = renderItemDisplay(renderWidth, mainHeight/offset, false)
+		mid = renderItemDisplay(renderWidth, mainHeight/offset, false)
+		bot = renderItemDisplay(renderWidth, mainHeight/offset, true)
+	}
 
-    m.itemsOnDisplay = append(m.itemsOnDisplay, item, item1, item2, item3)
-
-	itemsRender := lipgloss.JoinVertical(lipgloss.Center, item, item1, item2)
+	itemsRender := lipgloss.JoinVertical(lipgloss.Center, top, mid, bot)
 
 	catalogueView := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
@@ -202,11 +215,31 @@ func (m model) catalogueScreen(curUser string) string {
 	return cFinalRender
 }
 
-func renderItemDisplay(renderWidth, offset int) string {
+// renders an item in the catalogue view
+func renderItemDisplay(renderWidth, offset int, selected bool) string {
+	selectedColour := lipgloss.NewStyle().Foreground(faded.GetForeground())
+
+	if selected {
+		selectedColour = lipgloss.NewStyle().Foreground(magenta.GetForeground())
+	}
+
+	itemContent := lipgloss.NewStyle().
+		Border(lipgloss.HiddenBorder()).
+		Foreground(selectedColour.GetForeground()).
+		Render("book name here  |  author name here  |  pub date here  ")
+
+	itemDesc := lipgloss.NewStyle().
+		Border(lipgloss.HiddenBorder()).
+		Foreground(selectedColour.GetForeground()).
+		Render("the description comes in here right now")
+
+	contentRender := lipgloss.JoinVertical(lipgloss.Top, itemContent, itemDesc)
+
 	return lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(selectedColour.GetForeground()).
 		Width(renderWidth - 5).Height(offset).
-		Render("this is item 1")
+		Render(contentRender)
 }
 
 func (m model) renderHeaders(curUser, timeDate, cart string) string {
