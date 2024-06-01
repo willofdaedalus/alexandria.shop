@@ -19,108 +19,71 @@ func (m model) initialScreen() string {
 	)
 }
 
-func (m model) signUpScreen() string {
-	var (
-		layout            strings.Builder
-		login, pwd, rePwd string
-	)
+func (m model) renderInputBox(label string, index int, inputs []textinput.Model, focused bool) string {
+	render := renderBoxDesc(label, index, inputs)
+	if focused {
+		return magenta.PaddingLeft(8).Align(lipgloss.Left).Render(render)
+	}
+	return faded.PaddingLeft(8).Align(lipgloss.Left).Render(render)
+}
 
-	// the big "LOGIN" text at the top
-	loginPrompt := lipgloss.NewStyle().
+func (m model) renderAuthScreen(title, helpText string, inputs []textinput.Model, curField int) string {
+	var layout strings.Builder
+
+	// render the title at the top
+	titleRender := lipgloss.NewStyle().
 		Foreground(cyan.GetForeground()).
 		Width(55).Height(5).
 		Align(lipgloss.Center).
-		Render(signUpText)
+		Render(title)
 
-	// variables for the username and password prompt boxes
-	loginRender := renderBoxDesc("username", 0, m.signupInputs)
-	pwdRender := renderBoxDesc("password", 1, m.signupInputs)
-	rePwdRender := renderBoxDesc("password", 2, m.signupInputs)
-
-	// change the color of each render based on the current focus
-	if m.signupCurField == 0 {
-		login = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
-		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
-		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
-	} else if m.signupCurField == 1 {
-		login = faded.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
-		pwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
-		rePwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
-	} else {
-		login = faded.PaddingLeft(8).Align(lipgloss.Left).Render(loginRender)
-		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Render(pwdRender)
-		rePwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Render(rePwdRender)
+	// render input boxes
+	var inputRenders []string
+	for i, label := range []string{"username", "password", "password"} {
+		if i >= len(inputs) {
+			break
+		}
+		inputRenders = append(inputRenders, m.renderInputBox(label, i, inputs, curField == i))
 	}
 
-	// footer/help message render
-	helpText := "press ctrl+l to log in | press ctrl+c to quit"
+	// render the help text at the bottom
 	helpBox := noBorderStyle.PaddingTop(1).Width(50).Align(lipgloss.Bottom).Render(helpText)
 
-	// join the various fields together;
-	// first the input boxes and then those and the login prompt
-	textFields := lipgloss.JoinVertical(lipgloss.Left, login, pwd, rePwd, helpBox)
-	ui := lipgloss.JoinVertical(lipgloss.Left, loginPrompt, textFields)
+	// join the input fields and help text
+	textFields := lipgloss.JoinVertical(lipgloss.Left, inputRenders...)
+	textFields = lipgloss.JoinVertical(lipgloss.Left, textFields, helpBox)
 
-	// render the actual with dialogBoxStyle but this simply "puts" the render
-	// in the center of the screen no matter what
+	// combine the title and input fields
+	ui := lipgloss.JoinVertical(lipgloss.Left, titleRender, textFields)
+
+	// place the ui in the center of the screen
 	dialog := lipgloss.Place(
 		m.termWidth, m.termHeight,
 		lipgloss.Center, lipgloss.Center,
 		dialogBoxStyle.Render(ui),
 	)
 
-	// everything onscreen is a string so tie it up nice with a bow and return a string
+	// return the final rendered layout
 	layout.WriteString(dialog)
 	return layout.String()
 }
 
-// renders the login screen
+func (m model) signUpScreen() string {
+	return m.renderAuthScreen(
+		signUpText,
+		"press ctrl+l to log in | press ctrl+c to quit",
+		m.signupInputs,
+		m.signupCurField,
+	)
+}
+
 func (m model) loginScreen() string {
-	var (
-		layout     strings.Builder
-		login, pwd string
+	return m.renderAuthScreen(
+		loginText,
+		"press ctrl+s to sign up | press ctrl+c to quit",
+		m.loginInputs,
+		m.loginCurField,
 	)
-
-	// the big "LOGIN" text at the top
-	loginPrompt := lipgloss.NewStyle().
-		Foreground(cyan.GetForeground()).
-		Width(55).Height(5).
-		Align(lipgloss.Center).
-		Render(loginText)
-
-		// variables for the username and password prompt boxes
-	loginRender := renderBoxDesc("username", 0, m.loginInputs)
-	pwdRender := renderBoxDesc("password", 1, m.loginInputs)
-
-	// change the color of each render based on the current focus
-	if m.loginCurField == 0 {
-		login = magenta.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(loginRender)
-		pwd = faded.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(pwdRender)
-	} else {
-		login = faded.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(loginRender)
-		pwd = magenta.PaddingLeft(8).Align(lipgloss.Left).Bold(true).Render(pwdRender)
-	}
-
-	// footer/help message render
-	helpText := "press ctrl+s to sign up | press ctrl+c to quit"
-	helpBox := noBorderStyle.Width(50).Height(1).Align(lipgloss.Bottom).Render(helpText)
-
-	// join the various fields together;
-	// first the input boxes and then those and the login prompt
-	textFields := lipgloss.JoinVertical(lipgloss.Left, login, pwd, helpBox)
-	ui := lipgloss.JoinVertical(lipgloss.Left, loginPrompt, textFields)
-
-	// render the actual with dialogBoxStyle but this simply "puts" the render
-	// in the center of the screen no matter what
-	dialog := lipgloss.Place(
-		m.termWidth, m.termHeight,
-		lipgloss.Center, lipgloss.Center,
-		dialogBoxStyle.Render(ui),
-	)
-
-	// everything onscreen is a string so tie it up nice with a bow and return a string
-	layout.WriteString(dialog)
-	return layout.String()
 }
 
 func (m model) infoScreen(info string) string {
@@ -145,13 +108,7 @@ func (m model) infoScreen(info string) string {
 // this renders the entire catalogue view
 // big thanks to @its_gaurav on the Charm CLI Discord!
 func (m model) catalogueScreen(curUser string) string {
-	var (
-		top string
-		mid string
-		bot string
-	)
-
-	// renderWidth := m.termWidth - 22
+	// Initialize variables
 	renderWidth := 110
 	if renderWidth < 0 {
 		renderWidth = 0
@@ -169,21 +126,16 @@ func (m model) catalogueScreen(curUser string) string {
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1
 	offset := 4
 
-	if m.curItem == 0 {
-		top = renderItemDisplay(renderWidth, mainHeight/offset, true)
-		mid = renderItemDisplay(renderWidth, mainHeight/offset, false)
-		bot = renderItemDisplay(renderWidth, mainHeight/offset, false)
-	} else if m.curItem == 1 {
-		top = renderItemDisplay(renderWidth, mainHeight/offset, false)
-		mid = renderItemDisplay(renderWidth, mainHeight/offset, true)
-		bot = renderItemDisplay(renderWidth, mainHeight/offset, false)
-	} else if m.curItem == 2 {
-		top = renderItemDisplay(renderWidth, mainHeight/offset, false)
-		mid = renderItemDisplay(renderWidth, mainHeight/offset, false)
-		bot = renderItemDisplay(renderWidth, mainHeight/offset, true)
+	// function to determine if an item is highlighted
+	isHighlighted := func(index int) bool {
+		return m.curItem == index
 	}
 
-	itemsRender := lipgloss.JoinVertical(lipgloss.Center, top, mid, bot)
+	// render the top, mid, and bot items based on current item
+	var itemsRender []string
+	for i := 0; i < 3; i++ {
+		itemsRender = append(itemsRender, renderItemDisplay(renderWidth, mainHeight/offset, isHighlighted(i)))
+	}
 
 	catalogueView := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
@@ -191,7 +143,7 @@ func (m model) catalogueScreen(curUser string) string {
 		BorderBottom(false).
 		Width(renderWidth).
 		Align(lipgloss.Center).
-		Render(itemsRender)
+		Render(lipgloss.JoinVertical(lipgloss.Center, itemsRender...))
 
 	seperator := "├" + strings.Repeat("─", renderWidth) + "┤"
 
@@ -217,27 +169,31 @@ func (m model) catalogueScreen(curUser string) string {
 
 // renders an item in the catalogue view
 func renderItemDisplay(renderWidth, offset int, selected bool) string {
-	selectedColour := lipgloss.NewStyle().Foreground(faded.GetForeground())
+	selectProperties := lipgloss.NewStyle().
+		Foreground(faded.GetForeground()).
+		Border(lipgloss.NormalBorder())
 
 	if selected {
-		selectedColour = lipgloss.NewStyle().Foreground(magenta.GetForeground())
+		selectProperties = lipgloss.NewStyle().
+			Foreground(magenta.GetForeground()).
+			Border(lipgloss.ThickBorder())
 	}
 
 	itemContent := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder()).
-		Foreground(selectedColour.GetForeground()).
+		Foreground(selectProperties.GetForeground()).
 		Render("book name here  |  author name here  |  pub date here  ")
 
 	itemDesc := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder()).
-		Foreground(selectedColour.GetForeground()).
+		Foreground(selectProperties.GetForeground()).
 		Render("the description comes in here right now")
 
 	contentRender := lipgloss.JoinVertical(lipgloss.Top, itemContent, itemDesc)
 
 	return lipgloss.NewStyle().
-		Border(lipgloss.NormalBorder()).
-		BorderForeground(selectedColour.GetForeground()).
+		Border(selectProperties.GetBorder()).
+		BorderForeground(selectProperties.GetForeground()).
 		Width(renderWidth - 5).Height(offset).
 		Render(contentRender)
 }
