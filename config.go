@@ -7,8 +7,9 @@ import (
 )
 
 const (
+    magicNum = 3    // the num of items to display, to query
 	startScrTimeout = time.Second * 5
-    catalogueHelpMsg = "ctrl+c to exit  |  tab/shift+tab or arrow keys to select books  |  c for cart\n? for help/details"
+    catalogueHelpMsg = "ctrl+c to exit  |  tab/shift+tab or arrow keys to move"
 )
 
 // views tracker
@@ -84,7 +85,5 @@ var (
 )
 
 var (
-	username   string
-	password   string
-	rePassword string
+    selectedBook book
 )

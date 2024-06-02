@@ -25,7 +25,7 @@ func initialModel(db *sql.DB) model {
 		signupInputs: readyInputsFor(3),
 		db:           db,
 		curPage:      1,
-		curBooks:     books,
+		curBooks:     books, // initialise the books for initial rendering
 	}
 
 	return m
@@ -84,6 +84,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			switch m.view {
 			case vWelcome:
+				// skip the "WELCOME TO ALEXANDRIA" screen when we hit enter
 				transitionView(&m, vLogin)
 				return m, m.scrTimer.Toggle()
 
@@ -128,6 +129,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case vCredErr:
 				// m.resetFields()
 				transitionView(&m, m.prevView)
+
+            case vCatalogue:
+
 			}
 		// debug purposes only
 		case "0", "1", "2":
@@ -167,7 +171,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 						// assign the new books to render and then display their length
 						m.curBooks = books
-						m.curItem = len(m.curBooks) - 1
+						m.curItem = len(m.curBooks) - 1 // put the selector on the last entry on the page
 						m.curPage--
 					}
 				}
@@ -196,24 +200,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	v := ""
+    v := ""
+	// renderWidth := m.termWidth/2
+ //    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
+	// v +=  "├" + strings.Repeat("─", renderWidth) + "┤"
 
-	// v = m.catalogueScreen("daedalus")
+	v = m.catalogueScreen("daedalus")
 
-	switch m.view {
-	case vWelcome:
-		v = m.initialScreen()
-	case vLogin:
-		v = m.loginScreen()
-	case vSignUp:
-		v = m.signUpScreen()
-	case vCredErr:
-		v = m.infoScreen(m.authErr.Error())
-	case vSuccess:
-		v = m.infoScreen("sign up successful!\n\npress enter to login now")
-	case vCatalogue:
-		v = m.catalogueScreen(m.curUser.username)
-	}
+	// switch m.view {
+	// case vWelcome:
+	// 	v = m.initialScreen()
+	// case vLogin:
+	// 	v = m.loginScreen()
+	// case vSignUp:
+	// 	v = m.signUpScreen()
+	// case vCredErr:
+	// 	v = m.infoScreen(m.authErr.Error())
+	// case vSuccess:
+	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now")
+	// case vCatalogue:
+	// 	v = m.catalogueScreen(m.curUser.username)
+	// }
 
 	return v
 }
