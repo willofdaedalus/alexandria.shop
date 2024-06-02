@@ -16,9 +16,9 @@ type book struct {
 	Title       string  `json:"title"`
 	Author      string  `json:"author"`
 	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	Year        int     `json:"year"`
+    Year        int     `json:"year"`
 	Genre       string  `json:"genre"`
+    Price       float64 `json:"price"`
 }
 
 type model struct {
@@ -37,6 +37,9 @@ type model struct {
 	// used to transition between different views
 	view     int
 	prevView int
+
+	curBooks []book
+	curPage  int
 
 	// get the current terminal's width and height
 	termWidth  int

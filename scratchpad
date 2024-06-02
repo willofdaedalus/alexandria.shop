@@ -20,3 +20,6 @@ cartItems = {
     bookTitle (text),
     dateAdded (date),
 }
+
+if we're at the bottom and hit still hit tab, query the database for the next 
+page and if we get something back, we can reset that selector and render the new books. then update the page counter

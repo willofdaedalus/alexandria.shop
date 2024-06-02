@@ -11,7 +11,7 @@ import (
 
 // the initial screen to display when the program first runs
 func (m model) initialScreen() string {
-	// Center the ASCII art within the terminal window
+	// center the ascii art within the terminal window
 	return lipgloss.Place(
 		m.termWidth, m.termHeight,
 		lipgloss.Center, lipgloss.Center,
@@ -20,7 +20,7 @@ func (m model) initialScreen() string {
 }
 
 func (m model) renderInputBox(label string, index int, inputs []textinput.Model, focused bool) string {
-	render := renderBoxDesc(label, index, inputs)
+	render := renderBoxDesc(label, index, focused, inputs)
 	if focused {
 		return magenta.PaddingLeft(8).Align(lipgloss.Left).Render(render)
 	}
@@ -121,7 +121,7 @@ func (m model) catalogueScreen(curUser string) string {
 		Width(renderWidth).
 		Height(2).
 		Align(lipgloss.Center).
-		Render("ctrl+c to exit  |  vim or arrow keys to navigate\nc for cart  |  ? for help/details")
+		Render(catalogueHelpMsg)
 
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer) - 1
 	offset := 4
@@ -134,7 +134,7 @@ func (m model) catalogueScreen(curUser string) string {
 	// render the top, mid, and bot items based on current item
 	var itemsRender []string
 	for i := 0; i < 3; i++ {
-		itemsRender = append(itemsRender, renderItemDisplay(renderWidth, mainHeight/offset, isHighlighted(i)))
+		itemsRender = append(itemsRender, renderItemDisplay(renderWidth, mainHeight/offset, isHighlighted(i), m.curBooks[i]))
 	}
 
 	catalogueView := lipgloss.NewStyle().
@@ -168,7 +168,7 @@ func (m model) catalogueScreen(curUser string) string {
 }
 
 // renders an item in the catalogue view
-func renderItemDisplay(renderWidth, offset int, selected bool) string {
+func renderItemDisplay(renderWidth, offset int, selected bool, b book) string {
 	selectProperties := lipgloss.NewStyle().
 		Foreground(faded.GetForeground()).
 		Border(lipgloss.NormalBorder())
@@ -182,12 +182,12 @@ func renderItemDisplay(renderWidth, offset int, selected bool) string {
 	itemContent := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder()).
 		Foreground(selectProperties.GetForeground()).
-		Render("book name here  |  author name here  |  pub date here  ")
+        Render(fmt.Sprintf("%s  |  %s  |  %d  |  %s", b.Title, b.Author, b.Year, b.Genre))
 
 	itemDesc := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder()).
 		Foreground(selectProperties.GetForeground()).
-		Render("the description comes in here right now")
+		Render(b.Description)
 
 	contentRender := lipgloss.JoinVertical(lipgloss.Top, itemContent, itemDesc)
 
@@ -198,8 +198,8 @@ func renderItemDisplay(renderWidth, offset int, selected bool) string {
 		Render(contentRender)
 }
 
+// render the headers at the top of the catalogue page
 func (m model) renderHeaders(curUser, timeDate, cart string) string {
-
 	tops := [][]string{
 		{
 			"alexandria.shop",
@@ -227,9 +227,10 @@ func renderHeaderBox(s string) string {
 }
 
 // function to return a nicely formatted description and input box
-func renderBoxDesc(s string, idx int, inputs []textinput.Model) string {
-	desc := noBorderStyle.Render(s)
+func renderBoxDesc(s string, idx int, focused bool, inputs []textinput.Model) string {
+	desc := noBorderStyle.Bold(focused).Render(s)
 	// this is the content from the input box as we type
+    // side not find a way to render the textbox thicker
 	inputBox := textBoxStyle.Render(inputs[idx].View())
 	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
 

@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -13,11 +14,18 @@ import (
 )
 
 func initialModel(db *sql.DB) model {
+	books, _ := getBooksForPage(db, 1, 4)
+	if books == nil {
+		log.Fatalf("no books found")
+	}
+
 	m := model{
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
 		loginInputs:  readyInputsFor(2),
 		signupInputs: readyInputsFor(3),
 		db:           db,
+		curPage:      1,
+		curBooks:     books,
 	}
 
 	return m
@@ -129,9 +137,35 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			if m.view > vWelcome {
 				if i == "tab" || i == "down" {
-					nextInput(field, scrCtxLen, wrap)
+					atEnd := nextInput(field, scrCtxLen, wrap)
+
+					// check if we're at the end of the list and if we're, simply request
+					// the next set of pages needed to render
+					if atEnd && m.view == vCatalogue {
+						books, err := getBooksForPage(m.db, m.curPage+1, 4)
+						if err != nil {
+							return m, nil
+						}
+
+						m.curBooks = books
+						m.curItem = 0
+						m.curPage++
+					}
 				} else {
-					prevInput(field, scrCtxLen, wrap)
+					atStart := prevInput(field, scrCtxLen, wrap)
+
+					// check if we're at the start of the list and if we're, simply request
+					// the next set of pages needed to render
+					if atStart && m.view == vCatalogue {
+						books, err := getBooksForPage(m.db, m.curPage-1, 4)
+						if err != nil {
+							return m, nil
+						}
+
+						m.curBooks = books
+						m.curItem = len(m.curBooks) - 1
+						m.curPage--
+					}
 				}
 			}
 

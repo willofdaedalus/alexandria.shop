@@ -92,8 +92,9 @@ func createBooksTable(db *sql.DB) error {
         title TEXT NOT NULL UNIQUE,
         author TEXT NOT NULL,
         description TEXT NOT NULL,
-        price REAL NOT NULL,
-        genre TEXT NOT NULL
+        year INTEGER NOT NULL,
+        genre TEXT NOT NULL,
+        price REAL NOT NULL
     );
     `
 	_, err := db.Exec(query)
@@ -103,12 +104,12 @@ func createBooksTable(db *sql.DB) error {
 func addBook(db *sql.DB, b book) error {
 	query := `
     INSERT INTO books (
-        title, author, description, price, genre
+        title, author, description, year, genre, price
     ) VALUES (
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?
     );`
 
-	_, err := db.Exec(query, b.Title, b.Author, b.Description, b.Price, b.Genre)
+	_, err := db.Exec(query, b.Title, b.Author, b.Description, b.Year, b.Genre, b.Price)
 	return err
 }
 
@@ -119,7 +120,7 @@ func getBooksForPage(db *sql.DB, pageNum, pageItems int) ([]book, error) {
 	)
 
 	offset := (pageNum - 1) * pageItems // three being the number of items on display in the catalogue
-	query := `SELECT title, author, description, price, genre FROM books LIMIT ? OFFSET ?`
+	query := `SELECT title, author, description, year, genre, price FROM books LIMIT ? OFFSET ?`
 	rows, err := db.Query(query, pageItems, offset)
 	if err != nil {
 		return nil, err
@@ -128,7 +129,7 @@ func getBooksForPage(db *sql.DB, pageNum, pageItems int) ([]book, error) {
 
 	for rows.Next() {
 		for rows.Next() {
-			err := rows.Scan(&b.Title, &b.Author, &b.Description, &b.Price, &b.Genre)
+			err := rows.Scan(&b.Title, &b.Author, &b.Description, &b.Year, &b.Genre, &b.Price)
 			if err != nil {
 				return nil, err
 			}

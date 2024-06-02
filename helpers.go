@@ -6,25 +6,29 @@ import (
 )
 
 // go back to the next field
-func nextInput(field *int, size int, wrap bool) {
+func nextInput(field *int, size int, wrap bool) bool {
 	if *field < size-1 {
 		*field++
 	} else {
 		if wrap {
 			*field = 0
 		}
+		return true
 	}
+	return false
 }
 
 // go back to the previous field
-func prevInput(field *int, size int, wrap bool) {
+func prevInput(field *int, size int, wrap bool) bool {
 	if *field > 0 {
 		*field--
 	} else {
 		if wrap {
 			*field = size - 1
 		}
+		return true
 	}
+	return false
 }
 
 func focusFields(field *int, inputs []textinput.Model) []tea.Cmd {

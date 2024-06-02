@@ -8,6 +8,7 @@ import (
 
 const (
 	startScrTimeout = time.Second * 5
+    catalogueHelpMsg = "ctrl+c to exit  |  tab/shift+tab or arrow keys to select books  |  c for cart\n? for help/details"
 )
 
 // views tracker

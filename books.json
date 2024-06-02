@@ -203,7 +203,7 @@
         "title": "The Republic",
         "author": "Plato",
         "description": "A Socratic dialogue concerning justice and the ideal city-state.",
-        "year": -380,
+        "year": 380,
         "genre": "philosophy, political",
         "price": 10.99
     },
@@ -211,7 +211,7 @@
         "title": "Nicomachean Ethics",
         "author": "Aristotle",
         "description": "Aristotle's best-known work on ethics.",
-        "year": -350,
+        "year": 350,
         "genre": "philosophy, ethics",
         "price": 11.99
     },
