@@ -142,8 +142,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atEnd && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.curPage+1, 4)
-						if err != nil {
+						books, err := getBooksForPage(m.db, m.curPage+1, 3)
+						if err != nil || books == nil {
 							return m, nil
 						}
 
@@ -157,11 +157,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atStart && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.curPage-1, 4)
-						if err != nil {
+						books, err := getBooksForPage(m.db, m.curPage-1, 3)
+
+						// make check to determine the incoming books are the same as the rendered
+						// ones before moving the selector up to the next page
+						if err != nil || slicesEqual(books, m.curBooks) {
 							return m, nil
 						}
 
+						// assign the new books to render and then display their length
 						m.curBooks = books
 						m.curItem = len(m.curBooks) - 1
 						m.curPage--

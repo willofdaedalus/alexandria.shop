@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -37,13 +36,11 @@ func main() {
 			log.Fatal(err)
 		}
 
-        fmt.Println("adding books now")
 		for _, book := range books {
 			err = addBook(db, book)
 			if err != nil {
 				log.Fatalf("book insert err: %s", err.Error())
 			}
-			log.Println(book)
 		}
 	}
 

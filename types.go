@@ -16,9 +16,10 @@ type book struct {
 	Title       string  `json:"title"`
 	Author      string  `json:"author"`
 	Description string  `json:"description"`
-    Year        int     `json:"year"`
+	LongDesc    string  `json:"long_description"`
+	Year        int     `json:"year"`
 	Genre       string  `json:"genre"`
-    Price       float64 `json:"price"`
+	Price       float64 `json:"price"`
 }
 
 type model struct {

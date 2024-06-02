@@ -94,3 +94,15 @@ func transitionView(m *model, to int) {
 	m.view = to
 	m.prevView = prev
 }
+
+func slicesEqual(a, b []book) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}

@@ -3,6 +3,7 @@
         "title": "To Kill a Mockingbird",
         "author": "Harper Lee",
         "description": "A novel about the serious issues of rape and racial inequality.",
+        "long_description": "Set in the 1930s, 'To Kill a Mockingbird' follows Scout Finch, her brother Jem, and their father Atticus, a lawyer, who stands against racial injustice in the deep South. The story portrays the serious issues of racial inequality and rape while showcasing the innocence and growth of a child amidst the chaos.",
         "year": 1960,
         "genre": "classics, fiction",
         "price": 10.99
@@ -11,6 +12,7 @@
         "title": "1984",
         "author": "George Orwell",
         "description": "A dystopian social science fiction novel and cautionary tale about the future.",
+        "long_description": "George Orwell's '1984' is set in a totalitarian society ruled by Big Brother. The protagonist, Winston Smith, works for the Party rewriting history, but he secretly hates the regime and dreams of rebellion. The novel delves into the terrifying mechanisms of a repressive government and the impact on individual freedom.",
         "year": 1949,
         "genre": "classics, sci-fi, dystopia",
         "price": 9.99
@@ -18,7 +20,8 @@
     {
         "title": "The Great Gatsby",
         "author": "F. Scott Fitzgerald",
-        "description": "A story about the young and mysterious millionaire Jay Gatsby and his quixotic passion for the beautiful Daisy Buchanan.",
+        "description": "A story about a young mysterious millionaire and his passion for the beautiful Daisy Buchanan.",
+        "long_description": "F. Scott Fitzgerald's 'The Great Gatsby' captures the decadence and excess of the Jazz Age. The novel tells the story of Jay Gatsby, a wealthy man who throws lavish parties in the hope of reuniting with his lost love, Daisy Buchanan. Through the eyes of narrator Nick Carraway, the novel explores themes of ambition, love, and disillusionment.",
         "year": 1925,
         "genre": "classics, fiction",
         "price": 10.49
@@ -26,23 +29,26 @@
     {
         "title": "Brave New World",
         "author": "Aldous Huxley",
-        "description": "A novel that anticipates developments in reproductive technology, sleep-learning, psychological manipulation, and classical conditioning.",
+        "description": "A novel that anticipates developments in sleep-learning, manipulation, and classical conditioning.",
+        "long_description": "In 'Brave New World,' Aldous Huxley imagines a future where humans are engineered in hatcheries and conditioned to accept their roles in society. The novel explores the impact of technology on human relationships, individuality, and freedom through the experiences of characters like Bernard Marx and John the Savage.",
         "year": 1932,
         "genre": "classics, sci-fi, dystopia",
         "price": 12.99
     },
     {
-        "title": "Catch-22",
-        "author": "Joseph Heller",
-        "description": "A satirical war novel about the absurdities of war and military life.",
-        "year": 1961,
-        "genre": "classics, fiction, satire",
-        "price": 11.49
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "description": "A witty commentary on love and social standing.",
+        "long_description": "Jane Austen's 'Pride and Prejudice' follows Elizabeth Bennet as she navigates issues of manners, upbringing, and marriage in early 19th-century England. The novel's sharp wit and enduring romance between Elizabeth and Mr. Darcy make it a beloved classic that critiques social structures and gender roles.",
+        "year": 1813,
+        "genre": "classics, fiction, romance",
+        "price": 6.99
     },
     {
         "title": "Dune",
         "author": "Frank Herbert",
-        "description": "A science fiction novel about the young Paul Atreides, whose noble family accepts the stewardship of the desert planet Arrakis.",
+        "description": "A science fiction novel about the young Paul Atreides, whose family accepts the stewardship Arrakis.",
+        "long_description": "Set on the desert planet of Arrakis, 'Dune' follows Paul Atreides as he navigates a world of political intrigue, rebellion, and mysticism. The novel explores themes of power, religion, and survival, with richly developed characters and a complex, immersive universe. It is widely regarded as one of the greatest science fiction novels of all time.",
         "year": 1965,
         "genre": "sci-fi, adventure, space",
         "price": 14.99
@@ -51,6 +57,7 @@
         "title": "Foundation",
         "author": "Isaac Asimov",
         "description": "A science fiction series about the fall and rise of civilizations.",
+        "long_description": "Isaac Asimov's 'Foundation' series begins with the story of Hari Seldon, a mathematician who develops the science of psychohistory to predict the future. As the Galactic Empire declines, Seldon establishes a Foundation to preserve knowledge and shorten the impending dark age. The novel explores themes of destiny, power, and resilience.",
         "year": 1951,
         "genre": "sci-fi, space opera",
         "price": 13.99
@@ -59,6 +66,7 @@
         "title": "Neuromancer",
         "author": "William Gibson",
         "description": "A science fiction novel that tells the story of a washed-up computer hacker hired for one last job.",
+        "long_description": "William Gibson's 'Neuromancer' is a seminal work in the cyberpunk genre. The story follows Case, a disgraced hacker, who is recruited by a mysterious employer for a final job that involves hacking an advanced AI. The novel's gritty portrayal of a high-tech, low-life world and its exploration of artificial intelligence and cyberspace have made it a classic.",
         "year": 1984,
         "genre": "sci-fi, cyberpunk",
         "price": 10.99
@@ -67,30 +75,34 @@
         "title": "The Left Hand of Darkness",
         "author": "Ursula K. Le Guin",
         "description": "A science fiction novel that explores themes of gender and sexuality.",
+        "long_description": "In 'The Left Hand of Darkness,' Ursula K. Le Guin explores themes of gender and identity through the story of Genly Ai, an envoy sent to the planet Gethen. The inhabitants of Gethen can change sex, challenging Genly's perceptions of gender. The novel is a profound exploration of human relationships, politics, and the nature of humanity.",
         "year": 1969,
         "genre": "sci-fi, speculative fiction",
         "price": 12.49
     },
     {
-        "title": "Snow Crash",
-        "author": "Neal Stephenson",
-        "description": "A science fiction novel set in a future America where a computer virus can infect humans.",
-        "year": 1992,
-        "genre": "sci-fi, cyberpunk",
-        "price": 11.99
+        "title": "A Wizard of Earthsea",
+        "author": "Ursula K. Le Guin",
+        "description": "A young wizard's journey to master his powers.",
+        "long_description": "In 'A Wizard of Earthsea,' Ursula K. Le Guin introduces Ged, a young boy with great magical potential. As he learns to control his powers, Ged faces his inner demons and external threats. The novel is a profound exploration of identity, power, and personal growth, set in a richly imagined world.",
+        "year": 1968,
+        "genre": "fantasy, fiction, adventure",
+        "price": 8.99
     },
     {
-        "title": "Harry Potter and the Philosopher's Stone",
-        "author": "J.K. Rowling",
-        "description": "A young boy discovers he is a wizard and attends a magical school.",
-        "year": 1997,
-        "genre": "fantasy, children, magic",
-        "price": 11.99
+        "title": "The Eye of the World",
+        "author": "Robert Jordan",
+        "description": "A farm boy discovers his destiny to save the world.",
+        "long_description": "Robert Jordan's 'The Eye of the World' is the first book in the 'Wheel of Time' series. The novel follows Rand al'Thor, a young man who discovers he is destined to confront the Dark One. Accompanied by friends and mentors, Rand embarks on a journey filled with danger, magic, and prophecy. The series is renowned for its intricate world-building and epic scope.",
+        "year": 1990,
+        "genre": "fantasy, fiction, adventure",
+        "price": 9.99
     },
     {
         "title": "The Hobbit",
         "author": "J.R.R. Tolkien",
         "description": "A hobbit embarks on a quest to reclaim a lost kingdom from a dragon.",
+        "long_description": "J.R.R. Tolkien's 'The Hobbit' follows Bilbo Baggins, a hobbit who is reluctantly drawn into an epic quest to reclaim the lost Kingdom of Erebor from the dragon Smaug. Alongside a group of dwarves and the wizard Gandalf, Bilbo faces numerous challenges and discovers his own bravery. The novel is a prelude to the renowned 'Lord of the Rings' trilogy.",
         "year": 1937,
         "genre": "fantasy, adventure",
         "price": 10.99
@@ -99,6 +111,7 @@
         "title": "The Fellowship of the Ring",
         "author": "J.R.R. Tolkien",
         "description": "The first part of the epic fantasy series about the quest to destroy a powerful ring.",
+        "long_description": "In 'The Fellowship of the Ring,' the first volume of 'The Lord of the Rings' trilogy, J.R.R. Tolkien introduces readers to Middle-earth. Frodo Baggins inherits the One Ring and embarks on a perilous journey to destroy it, accompanied by a fellowship of diverse characters. The novel explores themes of friendship, sacrifice, and the struggle between good and evil.",
         "year": 1954,
         "genre": "fantasy, epic",
         "price": 12.99
@@ -107,6 +120,7 @@
         "title": "A Game of Thrones",
         "author": "George R.R. Martin",
         "description": "Noble families vie for control of the Iron Throne in a fantasy world.",
+        "long_description": "Sweeping from a harsh land of cold to a summertime kingdom of epicurean plenty, A Game of Thrones tells a tale of lords and ladies, soldiers and sorcerers, assassins and bastards, who come together in a time of grim omens. Here an enigmatic band of warriors bear swords of no human metal; a tribe of fierce wildlings carry men off into madness; a cruel young dragon prince barters his sister to win back his throne; a child is lost in the twilight between life and death; and a determined woman undertakes a treacherous journey to protect all she holds dear. Amid plots and counter-plots, tragedy and betrayal, victory and terror, allies and enemies, the fate of the Starks hangs perilously in the balance, as each side endeavors to win that deadliest of conflicts: the game of thrones.",
         "year": 1996,
         "genre": "fantasy, epic",
         "price": 14.99
@@ -115,6 +129,7 @@
         "title": "The Lion, the Witch and the Wardrobe",
         "author": "C.S. Lewis",
         "description": "Children discover a magical world inside a wardrobe.",
+        "long_description": "C.S. Lewis's 'The Lion, the Witch and the Wardrobe' transports readers to the magical land of Narnia, where four siblings discover their destiny. Guided by the lion Aslan, they must defeat the White Witch and restore peace to the land. The novel is a beloved classic that explores themes of bravery, redemption, and the power of imagination.",
         "year": 1950,
         "genre": "fantasy, children",
         "price": 9.99
@@ -123,6 +138,7 @@
         "title": "A Brief History of Time",
         "author": "Stephen Hawking",
         "description": "A landmark volume in science writing by one of the great minds of our time.",
+        "long_description": "In 'A Brief History of Time,' Stephen Hawking explores fundamental questions about the universe, such as the nature of time, the Big Bang, black holes, and the fate of the cosmos. Written for a general audience, the book provides insights into complex scientific concepts without requiring advanced knowledge in physics.",
         "year": 1988,
         "genre": "non-fiction, science",
         "price": 15.99
@@ -131,14 +147,16 @@
         "title": "The Diary of a Young Girl",
         "author": "Anne Frank",
         "description": "The wartime diary of a young girl hiding from the Nazis.",
+        "long_description": "Anne Frank's 'The Diary of a Young Girl' chronicles her life in hiding from the Nazis during World War II. Written between 1942 and 1944, the diary provides a poignant and intimate glimpse into the thoughts and experiences of a young Jewish girl. It remains a powerful testament to the human spirit and the horrors of war.",
         "year": 1947,
         "genre": "non-fiction, biography",
         "price": 12.99
     },
     {
-        "title": "Guns, Germs, and Steel",
+        "title": "Guns, Germs, and Steel: The Fates of Human Societies",
         "author": "Jared Diamond",
         "description": "A historical analysis of the factors that influenced the modern world.",
+        "long_description": "In this artful, informative, and delightful book, Jared Diamond convincingly argues that geographical and environmental factors shaped the modern world. Societies that had a head start in food production advanced beyond the hunter-gatherer stage, and then developed writing, technology, government, and organized religion—as well as nasty germs and potent weapons of war—and adventured on sea and land to conquer and decimate preliterate cultures. A major advance in our understanding of human societies, Guns, Germs, and Steel chronicles the way that the modern world came to be and stunningly dismantles racially based theories of human history.",
         "year": 1997,
         "genre": "non-fiction, history",
         "price": 16.99
@@ -147,6 +165,7 @@
         "title": "The Immortal Life of Henrietta Lacks",
         "author": "Rebecca Skloot",
         "description": "The story of the woman behind the first immortal human cells grown in culture.",
+        "long_description": "Her name was Henrietta Lacks, but scientists know her as HeLa. She was a poor Southern tobacco farmer who worked the same land as her enslaved ancestors, yet her cells—taken without her knowledge—became one of the most important tools in medicine. The first “immortal” human cells grown in culture, they are still alive today, though she has been dead for more than sixty years. If you could pile all HeLa cells ever grown onto a scale, they’d weigh more than 50 million metric tons—as much as a hundred Empire State Buildings. HeLa cells were vital for developing the polio vaccine; uncovered secrets of cancer, viruses, and the atom bomb’s effects; helped lead to important advances like in vitro fertilization, cloning, and gene mapping; and have been bought and sold by the billions.",
         "year": 2010,
         "genre": "non-fiction, science, biography",
         "price": 13.99
@@ -155,6 +174,7 @@
         "title": "Into the Wild",
         "author": "Jon Krakauer",
         "description": "The true story of Chris McCandless, who walked into the Alaskan wilderness and perished.",
+        "long_description": "In April 1992 a young man from a well-to-do family hitchhiked to Alaska and walked alone into the wilderness north of Mt. McKinley. He had given $25,000 in savings to charity, abandoned his car and most of his possessions, burned all the cash in his wallet, and invented a new life for himself. Four months later, his decomposed body was found by a moose hunter. How Christopher Johnson McCandless came to die is the unforgettable story of Into the Wild.",
         "year": 1996,
         "genre": "non-fiction, adventure",
         "price": 10.99
@@ -163,6 +183,7 @@
         "title": "Where the Wild Things Are",
         "author": "Maurice Sendak",
         "description": "A story about a young boy who sails to an island inhabited by creatures.",
+        "long_description": "Maurice Sendak's 'Where the Wild Things Are' follows Max, a young boy who sails to an island inhabited by wild creatures after being sent to bed without supper. As he becomes the king of the Wild Things, Max explores themes of imagination, anger, and the desire for home. The book is renowned for its rich illustrations and emotional depth.",
         "year": 1963,
         "genre": "children, fantasy",
         "price": 8.99
@@ -171,6 +192,7 @@
         "title": "Goodnight Moon",
         "author": "Margaret Wise Brown",
         "description": "A classic bedtime story about a bunny saying goodnight to everything.",
+        "long_description": "Margaret Wise Brown's 'Goodnight Moon' is a gentle bedtime story that follows a young rabbit saying goodnight to everything in his room. The soothing text and cozy illustrations by Clement Hurd create a calming atmosphere, making it a beloved classic for generations of children and parents.",
         "year": 1947,
         "genre": "children, bedtime",
         "price": 6.99
@@ -179,6 +201,7 @@
         "title": "The Very Hungry Caterpillar",
         "author": "Eric Carle",
         "description": "A story about a caterpillar eating his way through food before becoming a butterfly.",
+        "long_description": "Eric Carle's 'The Very Hungry Caterpillar' follows the story of a caterpillar eating his way through a variety of foods before transforming into a beautiful butterfly. The book's vibrant illustrations, simple text, and engaging story make it a favorite among young readers, teaching them about numbers, days of the week, and the life cycle of a butterfly.",
         "year": 1969,
         "genre": "children, educational",
         "price": 7.99
@@ -187,6 +210,7 @@
         "title": "Charlotte's Web",
         "author": "E.B. White",
         "description": "A story about the friendship between a pig named Wilbur and a spider named Charlotte.",
+        "long_description": "E.B. White's 'Charlotte's Web' tells the story of Wilbur, a pig, and his friendship with Charlotte, a spider who saves him from being slaughtered. Through her web, Charlotte writes messages that make Wilbur famous. The novel explores themes of friendship, loyalty, and the cycle of life, making it a cherished children's classic.",
         "year": 1952,
         "genre": "children, classic",
         "price": 9.99
@@ -195,6 +219,7 @@
         "title": "The Cat in the Hat",
         "author": "Dr. Seuss",
         "description": "A mischievous cat in a tall striped hat visits two children.",
+        "long_description": "A dreary day turns into a wild romp when this beloved story introduces readers to the Cat in the Hat and his troublemaking friends, Thing 1 and Thing 2 – And don't forget Fish! A favorite among kids, parents and teachers, this story uses simple words and basic rhyme to encourage and delight beginning readers.",
         "year": 1957,
         "genre": "children, adventure",
         "price": 7.99
@@ -203,6 +228,7 @@
         "title": "The Republic",
         "author": "Plato",
         "description": "A Socratic dialogue concerning justice and the ideal city-state.",
+        "long_description": "Plato's 'The Republic' is a foundational text in Western philosophy and political theory. Through dialogues led by Socrates, the book explores the meaning of justice, the role of individuals in society, and the concept of the ideal state. It introduces key ideas such as the theory of forms, the allegory of the cave, and the philosopher-king.",
         "year": 380,
         "genre": "philosophy, political",
         "price": 10.99
@@ -211,6 +237,7 @@
         "title": "Nicomachean Ethics",
         "author": "Aristotle",
         "description": "Aristotle's best-known work on ethics.",
+        "long_description": "In the Nicomachean Ethics, Aristotle sets out to examine the nature of happiness. He argues that happiness consists in ‘activity of the soul in accordance with virtue’, for example with moral virtues, such as courage, generosity and justice, and intellectual virtues, such as knowledge, wisdom and insight. The Ethics also discusses the nature of practical reasoning, the value and the objects of pleasure, the different forms of friendship, and the relationship between individual virtue, society and the State. Aristotle’s work has had a profound and lasting influence on all subsequent Western thought about ethical matters.",
         "year": 350,
         "genre": "philosophy, ethics",
         "price": 11.99
@@ -219,6 +246,7 @@
         "title": "Beyond Good and Evil",
         "author": "Friedrich Nietzsche",
         "description": "A book that challenges traditional views on morality.",
+        "long_description": "Friedrich Nietzsche's 'Beyond Good and Evil' challenges conventional notions of morality and truth, arguing for a revaluation of values. Nietzsche critiques past philosophers for their lack of critical perspective and introduces his ideas on the will to power, perspectivism, and the 'Übermensch.' The book remains a cornerstone of existential and postmodern philosophy.",
         "year": 1886,
         "genre": "philosophy, ethics",
         "price": 12.99
@@ -227,16 +255,18 @@
         "title": "Meditations",
         "author": "Marcus Aurelius",
         "description": "A series of personal writings by the Roman Emperor on Stoic philosophy.",
+        "long_description": "In 'Meditations,' Marcus Aurelius, a Roman emperor, shares his personal reflections on Stoic philosophy. Written as a series of notes to himself, the work offers timeless wisdom on resilience, self-discipline, and the nature of human existence. The book provides insights into living a virtuous life and remains influential in both philosophy and self-help literature.",
         "year": 180,
         "genre": "philosophy, stoicism",
         "price": 9.99
     },
     {
-        "title": "Being and Time",
-        "author": "Martin Heidegger",
-        "description": "A fundamental text on existential philosophy.",
-        "year": 1927,
-        "genre": "philosophy, existentialism",
-        "price": 14.99
+        "title": "Fahrenheit 451",
+        "author": "Ray Bradbury",
+        "description": "A firefighter discovers the power of books in a censored society.",
+        "long_description": "In 'Fahrenheit 451,' Ray Bradbury imagines a future where books are banned, and firefighters burn them. The protagonist, Guy Montag, begins to question this society after meeting a free-spirited neighbor and secretly reading forbidden books. The novel explores themes of censorship, conformity, and the transformative power of literature.",
+        "year": 1953,
+        "genre": "scifi, fiction, dystopia",
+        "price": 7.99
     }
 ]
