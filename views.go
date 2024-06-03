@@ -105,16 +105,98 @@ func (m model) infoScreen(info string) string {
 	return dialog
 }
 
-// this renders the entire catalogue view
-// big thanks to @its_gaurav on the Charm CLI Discord!
-func (m model) catalogueScreen(curUser string) string {
+// renders a text in a particular way with colours and styling
+func styleTextWith(t string, col lipgloss.TerminalColor, bold bool) string {
+	return lipgloss.NewStyle().
+		Bold(bold).
+		Foreground(col).
+		Render(t)
+}
+
+func (m model) bookDetailsScreen(header1 string) string {
 	// Initialize variables
 	renderWidth := (m.termWidth / 2) + 10
 	if renderWidth < 0 {
 		renderWidth = 0
 	}
 
-	headerRender := m.renderHeaders(curUser, "c cart [16]", renderWidth)
+	booksDetailsRender := lipgloss.NewStyle().
+		Foreground(yellow.GetForeground()).
+		Render(fmt.Sprintf("%s %s\n%s %s\n%s %s \n%s %s",
+			styleTextWith(selectedBook.Title, yellow.GetForeground(), true),
+			styleTextWith(fmt.Sprintf("by %s", selectedBook.Author), cyan.GetForeground(), true),
+
+			styleTextWith("PRICE:", magenta.GetForeground(), false),
+			styleTextWith(fmt.Sprintf("$%.2f", selectedBook.Price), cyan.GetForeground(), true),
+
+			styleTextWith("YEAR:", magenta.GetForeground(), false),
+			styleTextWith(fmt.Sprintf("by %d", selectedBook.Year), cyan.GetForeground(), true),
+
+			styleTextWith("TAGS:", magenta.GetForeground(), false),
+			styleTextWith(fmt.Sprintf("by %s", selectedBook.Genre), cyan.GetForeground(), true),
+		))
+
+	longDescRender := lipgloss.NewStyle().
+		Border(lipgloss.HiddenBorder(), true, false, false, false).
+		Height(4).
+		Render(selectedBook.LongDesc)
+
+	fBookRender := lipgloss.JoinVertical(
+		lipgloss.Top,
+		booksDetailsRender,
+		longDescRender,
+	)
+
+	headerRender := m.renderHeaders(header1, "c cart [16]", renderWidth)
+	footer := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderTop(false).
+		Width(renderWidth).
+		Align(lipgloss.Center).
+		Render(catalogueHelpMsg)
+
+	catalogueView := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderTop(false).
+		Padding(3, 2, 0, 2).
+		BorderBottom(false).
+		Width(renderWidth).
+		Height(catalogueViewHeight - 8).
+		Align(lipgloss.Left).
+		Render(fBookRender)
+
+	seperator := "├" + strings.Repeat("─", renderWidth) + "┤"
+
+	headerRenderModified := strings.ReplaceAll(headerRender, "└", "├")
+	headerRenderModified = strings.ReplaceAll(headerRenderModified, "┘", "┤")
+
+	catalogueRender := lipgloss.JoinVertical(
+		lipgloss.Center,
+		headerRenderModified,
+		catalogueView,
+		seperator,
+		footer,
+	)
+
+	cFinalRender := lipgloss.Place(
+		m.termWidth, m.termHeight,
+		lipgloss.Center, lipgloss.Center,
+		catalogueRender,
+	)
+
+	return cFinalRender
+}
+
+// this renders the entire catalogue view
+// big thanks to @its_gaurav on the Charm CLI Discord!
+func (m model) catalogueScreen(header1 string) string {
+	// Initialize variables
+	renderWidth := (m.termWidth / 2) + 10
+	if renderWidth < 0 {
+		renderWidth = 0
+	}
+
+	headerRender := m.renderHeaders(header1, "c cart [16]", renderWidth)
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
@@ -123,6 +205,7 @@ func (m model) catalogueScreen(curUser string) string {
 		Render(catalogueHelpMsg)
 
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer)
+	catalogueViewHeight = mainHeight
 	offset := (mainHeight - 20) / 3
 	// function to determine if an item is highlighted
 	isHighlighted := func(index int) bool {
@@ -182,13 +265,12 @@ func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) str
 	}
 
 	itemContent := lipgloss.NewStyle().
-		Border(lipgloss.HiddenBorder(), false, true, false, true).
+		Border(lipgloss.HiddenBorder(), false, true, true, true).
 		Foreground(selectProperties.GetForeground()).
 		Render(fmt.Sprintf("%s  |  %s  |  $%.2f", b.Title, b.Author, b.Price))
 
 	itemDesc := lipgloss.NewStyle().
-		Border(lipgloss.HiddenBorder(), false, true, false, true).
-		Border(lipgloss.HiddenBorder()).
+		Border(lipgloss.HiddenBorder(), true, true, false, true).
 		Foreground(selectProperties.GetForeground()).
 		Render(b.Description)
 
@@ -197,18 +279,18 @@ func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) str
 	return lipgloss.NewStyle().
 		Border(selectProperties.GetBorder()).
 		BorderForeground(selectProperties.GetForeground()).
-		Width(renderWidth - 5).Height(renderHeight).
+		Width(renderWidth - 5).Height(renderHeight + 3).
 		Render(contentRender)
 }
 
 // render the headers at the top of the catalogue page
-func (m model) renderHeaders(curUser, cart string, renderWidth int) string {
+func (m model) renderHeaders(header1, cart string, renderWidth int) string {
 	tops := [][]string{
 		{
-			"alexandria.shop",
-			fmt.Sprintf("welcome, %s", curUser),
-			fmt.Sprintf("? for help and details"),
-			cart,
+			styleTextWith(header1, magenta.GetBackground(), true),
+			styleTextWith(fmt.Sprintf("welcome, %s", m.curUser.username), cyan.GetForeground(), true),
+			styleTextWith("? for help and details", cyan.GetBackground(), true),
+			styleTextWith(cart, cyan.GetBackground(), true),
 		}, // actual headers
 	}
 
