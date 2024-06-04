@@ -10,9 +10,8 @@ const (
 	magicNum         = 3 // the num of items to display, to query
 	startScrTimeout  = time.Second * 5
 	catalogueHelpMsg = "ctrl+c to exit  |  tab/shift+tab or arrow keys to move"
-	bookDetailMsg = "+ to add book to cart  |  - to remove book from cart"
-    addToCart = "+ to add book to cart"
-    removeFromCart = "- to remove book from cart"
+    addToCartMsg = "+ to add book to cart"
+    removeFromCartMsg = "- to remove book from cart"
 )
 
 // views tracker

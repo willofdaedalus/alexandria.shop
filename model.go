@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"slices"
-	"strconv"
 	"strings"
 	"time"
 
@@ -20,6 +19,9 @@ func initialModel(db *sql.DB) model {
 		log.Fatalf("no books found")
 	}
 
+	// cart initialisation
+	c := initialCart()
+
 	m := model{
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
 		loginInputs:  readyInputsFor(2),
@@ -27,6 +29,7 @@ func initialModel(db *sql.DB) model {
 		db:           db,
 		curPage:      1,
 		curBooks:     books, // initialise the books for initial rendering
+		c:            c,
 	}
 
 	return m
@@ -88,6 +91,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, m.prevView)
 			}
 
+		case "+", "-", "_", "=":
+			s := msg.String()
+			if m.view == vBookDetails {
+				if s == "+" || s == "=" {
+					m.c.addToCart(selectedBook)
+				} else if s == "-" || s == "_" {
+					m.c.removeFromCart(selectedBook)
+				}
+			}
+
 		case "enter":
 			switch m.view {
 			case vWelcome:
@@ -141,9 +154,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vBookDetails)
 
 			}
-		// debug purposes only
-		case "0", "1", "2":
-			m.view, _ = strconv.Atoi(msg.String())
+
 		case "tab", "shift+tab", "up", "down":
 			i := msg.String()
 

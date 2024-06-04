@@ -22,6 +22,10 @@ type book struct {
 	Price       float64 `json:"price"`
 }
 
+type cart struct {
+	items map[string]float64
+}
+
 type model struct {
 	// LOGIN/SIGN UP VALUES
 	// login text inputs
@@ -53,4 +57,6 @@ type model struct {
 	curUser user
 	// db handler
 	db *sql.DB
+    // cart system
+    c cart
 }
