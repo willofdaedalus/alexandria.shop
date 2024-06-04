@@ -77,10 +77,11 @@ func (m model) loginScreen() string {
 	)
 }
 
-func (m model) infoScreen(info string) string {
+func (m model) infoScreen(info string, w, h int) string {
 	infoRender := noBorderStyle.
-		PaddingTop(1).
-		Width(50).Height(3).
+		Padding(0, 2, 0, 2).
+		Width(w).Height(h).
+		// Width(50).Height(3).
 		Align(lipgloss.Center).Render(info)
 
 	// footer/help message render
@@ -124,7 +125,7 @@ func (m model) bookDetailsScreen(header1 string) string {
 	longDescRender := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder(), false, false, false, false).
 		Height(4).
-		Render(styleTextWith(selectedBook.LongDesc, cyan.GetForeground(), false))
+		Render(selectedBook.LongDesc)
 
 	fBookRender := lipgloss.JoinVertical(
 		lipgloss.Top,
@@ -171,7 +172,7 @@ func (m model) catalogueScreen(header1 string) string {
 	// render the top, mid, and bot items based on current item
 	var itemsRender []string
 	for i := 0; i < magicNum; i++ {
-		itemsRender = append(itemsRender, renderItemDisplay(renderWidth, offset, isHighlighted(i), m.curBooks[i]))
+		itemsRender = append(itemsRender, m.renderItemDisplay(renderWidth, offset, isHighlighted(i), m.curBooks[i]))
 	}
 
 	catalogueView := lipgloss.NewStyle().
@@ -186,5 +187,25 @@ func (m model) catalogueScreen(header1 string) string {
 	return m.mainScreenFrame(header1, catalogueHelpMsg, catalogueView)
 }
 
-func cartScreenView() {
+func (m model) helpScreen() string {
+	infoRender := noBorderStyle.
+		PaddingTop(1).
+		Width(80).Height(10).
+		Padding(0, 2, 0, 2).
+		Align(lipgloss.Left).Render(helpText)
+
+	// footer/help message render
+	// helpText := "press enter"
+	// helpBox := noBorderStyle.Width(50).Height(1).Align(lipgloss.Bottom).Render(helpText)
+
+	dialog := lipgloss.Place(
+		m.termWidth, m.termHeight,
+		lipgloss.Center, lipgloss.Center,
+		dialogBoxStyle.Width(80).Render(infoRender),
+	)
+
+	return dialog
+}
+
+func (m model) cartScreenView() {
 }

@@ -41,16 +41,14 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
-		cmd    tea.Cmd
-		field  *int              // this determines the field depending on what auth screen we're on
-		inputs []textinput.Model // this determines the input fields also depending on the auth screen
-
-		uName  string // this stores the name the user entered
-		uPwd   string // this stores the password the user entered
-		uRePwd string // this stores the password confirmation the user entered at signup
-
-		wrap      bool // wraps input
-		scrCtxLen int  // this stores the len of all input fields, items and such depending on the screen
+		cmd       tea.Cmd
+		scrCtxLen int               // this stores the len of all input fields, items and such depending on the screen
+		field     *int              // this determines the field depending on what auth screen we're on
+		inputs    []textinput.Model // this determines the input fields also depending on the auth screen
+		uName     string            // this stores the name the user entered
+		uPwd      string            // this stores the password the user entered
+		uRePwd    string            // this stores the password confirmation the user entered at signup
+		wrap      bool              // wraps input so that the selector go back to the start if at the end
 	)
 
 	// update the current inputs' focus based on the view
@@ -85,9 +83,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vLogin)
 			}
 
+		case "?", "/":
+			if !slices.Contains(startingViews, m.view) {
+				transitionView(&m, vHelp)
+			}
+
 		case "esc":
 			// go back from the books view to the main catalogue view
 			if m.view == vBookDetails {
+				// force the transition from book view to catalogue view to fix
+				// the bug that forces the helpView/bookDetail view
+				transitionView(&m, vCatalogue)
+			} else if m.view == vHelp {
 				transitionView(&m, m.prevView)
 			}
 
@@ -108,6 +115,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vLogin)
 				return m, m.scrTimer.Toggle()
 
+				// probably shouldn't be handling auth processing here...
 			case vLogin, vSignUp:
 				// this section could use a refactor if possible
 				uName = inputs[0].Value()
@@ -235,13 +243,15 @@ func (m model) View() string {
 	case vSignUp:
 		v = m.signUpScreen()
 	case vCredErr:
-		v = m.infoScreen(m.authErr.Error())
+		v = m.infoScreen(m.authErr.Error(), 50, 3)
 	case vSuccess:
-		v = m.infoScreen("sign up successful!\n\npress enter to login now")
+		v = m.infoScreen("sign up successful!\n\npress enter to login now", 50, 3)
 	case vCatalogue:
 		v = m.catalogueScreen("alexandria.shop")
 	case vBookDetails:
 		v = m.bookDetailsScreen("esc to go back")
+	case vHelp:
+		v = m.helpScreen()
 	}
 
 	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)

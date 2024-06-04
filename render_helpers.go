@@ -26,10 +26,13 @@ func (m model) renderInputBox(label string, index int, inputs []textinput.Model,
 }
 
 // renders an item in the catalogue view
-func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) string {
+func (m model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) string {
+    var bookInCart = "[in cart]"
+
 	selectProperties := lipgloss.NewStyle().
 		Foreground(faded.GetForeground()).
 		Border(lipgloss.NormalBorder())
+		// Border(lipgloss.HiddenBorder())
 
 	if selected {
 		selectProperties = lipgloss.NewStyle().
@@ -40,14 +43,19 @@ func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) str
 		selectedBook = b
 	}
 
+    if !m.c.bookInCart(b) {
+        bookInCart = " "
+    }
+
 	itemContent := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder(), false, true, true, true).
 		Foreground(selectProperties.GetForeground()).
-		Render(fmt.Sprintf("%s  |  %s  |  $%.2f", b.Title, b.Author, b.Price))
+        Render(fmt.Sprintf("%s  |  %s  |  $%.2f  \t%s", b.Title, b.Author, b.Price, bookInCart))
 
 	itemDesc := lipgloss.NewStyle().
-		Border(lipgloss.HiddenBorder(), true, true, false, true).
+		Inline(true).
 		Foreground(selectProperties.GetForeground()).
+		Border(lipgloss.HiddenBorder(), true, true, false, true).
 		Render(b.Description)
 
 	contentRender := lipgloss.JoinVertical(lipgloss.Top, itemContent, itemDesc)
@@ -55,6 +63,7 @@ func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) str
 	return lipgloss.NewStyle().
 		Border(selectProperties.GetBorder()).
 		BorderForeground(selectProperties.GetForeground()).
+		Padding(0, 1, 0, 1).
 		Width(renderWidth - 5).Height(renderHeight + 3).
 		Render(contentRender)
 }
@@ -122,7 +131,6 @@ func (m model) mainScreenFrame(header1, footerMsg, content string) string {
 	mainHeight := m.termHeight - lipgloss.Height(headerRender) - lipgloss.Height(footer)
 	catalogueViewHeight = mainHeight
 	// offset := (mainHeight - 20) / 3
-
 
 	seperator := "├" + strings.Repeat("─", renderWidth) + "┤"
 
