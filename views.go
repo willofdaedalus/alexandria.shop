@@ -122,6 +122,10 @@ func (m model) bookDetailsScreen(header1 string) string {
 
 	booksDetailsRender := lipgloss.NewStyle().
 		Foreground(yellow.GetForeground()).
+        Width(70).
+		Border(lipgloss.ThickBorder(), false, false, true, true).
+        MarginBottom(1).
+		PaddingLeft(1).
 		Render(fmt.Sprintf("%s %s\n%s %s\n%s %s \n%s %s",
 			styleTextWith(selectedBook.Title, yellow.GetForeground(), true),
 			styleTextWith(fmt.Sprintf("by %s", selectedBook.Author), cyan.GetForeground(), true),
@@ -130,16 +134,16 @@ func (m model) bookDetailsScreen(header1 string) string {
 			styleTextWith(fmt.Sprintf("$%.2f", selectedBook.Price), cyan.GetForeground(), true),
 
 			styleTextWith("YEAR:", magenta.GetForeground(), false),
-			styleTextWith(fmt.Sprintf("by %d", selectedBook.Year), cyan.GetForeground(), true),
+			styleTextWith(fmt.Sprintf(" %d", selectedBook.Year), cyan.GetForeground(), true),
 
 			styleTextWith("TAGS:", magenta.GetForeground(), false),
-			styleTextWith(fmt.Sprintf("by %s", selectedBook.Genre), cyan.GetForeground(), true),
+			styleTextWith(fmt.Sprintf(" %s", selectedBook.Genre), cyan.GetForeground(), true),
 		))
 
 	longDescRender := lipgloss.NewStyle().
-		Border(lipgloss.HiddenBorder(), true, false, false, false).
+		Border(lipgloss.HiddenBorder(), false, false, false, false).
 		Height(4).
-		Render(selectedBook.LongDesc)
+		Render(styleTextWith(selectedBook.LongDesc, cyan.GetForeground(), false))
 
 	fBookRender := lipgloss.JoinVertical(
 		lipgloss.Top,
@@ -147,13 +151,13 @@ func (m model) bookDetailsScreen(header1 string) string {
 		longDescRender,
 	)
 
-	headerRender := m.renderHeaders(header1, "c cart [16]", renderWidth)
+	headerRender := m.renderHeaders(styleTextWith(header1, magenta.GetForeground(), true), "c cart [16]", renderWidth)
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
 		Width(renderWidth).
 		Align(lipgloss.Center).
-		Render(catalogueHelpMsg)
+		Render(bookDetailMsg)
 
 	catalogueView := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
@@ -196,7 +200,7 @@ func (m model) catalogueScreen(header1 string) string {
 		renderWidth = 0
 	}
 
-	headerRender := m.renderHeaders(header1, "c cart [16]", renderWidth)
+	headerRender := m.renderHeaders(styleTextWith(header1, cyan.GetForeground(), true), "c cart [16]", renderWidth)
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		BorderTop(false).
@@ -287,10 +291,10 @@ func renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) str
 func (m model) renderHeaders(header1, cart string, renderWidth int) string {
 	tops := [][]string{
 		{
-			styleTextWith(header1, magenta.GetBackground(), true),
+			header1,
 			styleTextWith(fmt.Sprintf("welcome, %s", m.curUser.username), cyan.GetForeground(), true),
-			styleTextWith("? for help and details", cyan.GetBackground(), true),
-			styleTextWith(cart, cyan.GetBackground(), true),
+			styleTextWith(fmt.Sprint("? for help and details"), cyan.GetForeground(), true),
+			styleTextWith(cart, cyan.GetForeground(), true),
 		}, // actual headers
 	}
 
