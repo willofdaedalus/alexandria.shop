@@ -81,6 +81,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+l":
 			if m.view == vSignUp {
 				transitionView(&m, vLogin)
+			} else if m.view == vCatalogue {
+                // simple logout
+				m.curPage = 1
+				m.curItem = 0
+				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
+				transitionView(&m, vLogin)
 			}
 
 		case "?", "/":

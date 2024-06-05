@@ -9,7 +9,7 @@ import (
 const (
 	magicNum          = 3 // the num of items to display, to query
 	startScrTimeout   = time.Second * 5
-	catalogueHelpMsg  = "ctrl+c to exit  |  tab/shift+tab or arrow keys to move"
+	catalogueHelpMsg  = "ctrl+c to exit  |  ctrl+l to logout  |  tab/shift+tab or arrow keys to move"
 	addToCartMsg      = "+ to add book to cart"
 	removeFromCartMsg = "- to remove book from cart"
 	helpText          = `alexandria.shop Copyright (c) 1996
