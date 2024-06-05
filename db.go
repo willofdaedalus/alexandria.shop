@@ -144,7 +144,7 @@ func readBooksFromJson() ([]book, error) {
 	var books []book = make([]book, 20)
 
 	// Open the JSON file
-	jsonFile, err := os.Open("books.json")
+	jsonFile, err := os.Open("small_list.json")
 	if err != nil {
 		return nil, err
 	}

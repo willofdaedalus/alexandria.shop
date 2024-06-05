@@ -1,0 +1,111 @@
+[
+    {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "description": "A story of love and social standing.",
+        "long_description": "Pride and Prejudice, written by Jane Austen, is a romantic novel that critically examines the British landed gentry at the end of the 18th century. The novel follows the character development of Elizabeth Bennet, the dynamic protagonist who learns about the repercussions of hasty judgments and comes to appreciate the difference between superficial goodness and actual goodness. As Elizabeth interacts with the affluent but aloof Mr. Darcy, the novel explores themes of love, reputation, and class, offering a witty and keen insight into the mores and manners of the era.",
+        "year": 1813,
+        "genre": "classic, romance, fiction",
+        "price": 14.99
+    },
+    {
+        "title": "1984",
+        "author": "George Orwell",
+        "description": "A dystopian novel about totalitarian regime.",
+        "long_description": "1984, a novel by George Orwell, presents a dystopian future where a totalitarian regime uses surveillance, censorship, and propaganda to oppress its citizens. The protagonist, Winston Smith, struggles with his sense of individuality in a society where independent thought is a crime. The novel explores profound themes such as the manipulation of truth, the power of language, and the human spirit's resilience in the face of oppression. Orwell's grim depiction of a world where 'Big Brother' watches every move remains a powerful warning about the dangers of unchecked governmental power.",
+        "year": 1949,
+        "genre": "dystopian, science fiction, political fiction",
+        "price": 15.99
+    },
+    {
+        "title": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "description": "A novel about racial injustice in the Deep South.",
+        "long_description": "To Kill a Mockingbird, by Harper Lee, is a profound and moving novel set in the Deep South during the 1930s. The story is told through the eyes of Scout Finch, a young girl whose father, Atticus Finch, is an attorney defending a black man falsely accused of raping a white woman. The novel addresses serious issues such as racial inequality and moral growth, while also capturing the innocence of childhood. Through its deeply human characters and compelling narrative, it challenges the prejudices of the time and highlights the importance of moral integrity and empathy.",
+        "year": 1960,
+        "genre": "classic, historical fiction, legal drama",
+        "price": 13.49
+    },
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "description": "A novel about the American dream.",
+        "long_description": "The Great Gatsby, written by F. Scott Fitzgerald, is a classic novel set in the Jazz Age that delves into themes of decadence, idealism, resistance to change, social upheaval, and excess. The story revolves around the mysterious millionaire Jay Gatsby and his unrequited love for Daisy Buchanan. Through the eyes of the narrator, Nick Carraway, the novel explores the superficial glamour and moral decay of the era, portraying the American dream's allure and its ultimate hollowness. Fitzgerald's lyrical prose and rich symbolism make it a timeless exploration of ambition and disillusionment.",
+        "year": 1925,
+        "genre": "classic, fiction, drama",
+        "price": 12.99
+    },
+    {
+        "title": "Moby-Dick",
+        "author": "Herman Melville",
+        "description": "A whaling voyage led by Captain Ahab.",
+        "long_description": "Moby-Dick, by Herman Melville, is an epic tale of adventure and obsession. The novel follows Ishmael, a sailor aboard the whaling ship Pequod, commanded by the monomaniacal Captain Ahab. Ahab is consumed by his desire for revenge against Moby Dick, the giant white whale that previously maimed him. The novel is a complex allegory, rich in symbolism, exploring themes of fate, revenge, and humanity's struggle against the natural world. Melville's detailed narrative delves into the intricacies of whaling, the nature of evil, and the existential quest for meaning.",
+        "year": 1851,
+        "genre": "adventure, classic, maritime fiction",
+        "price": 18.75
+    },
+    {
+        "title": "War and Peace",
+        "author": "Leo Tolstoy",
+        "description": "A novel about the French invasion of Russia.",
+        "long_description": "War and Peace, written by Leo Tolstoy, is a monumental novel that intertwines the lives of several families against the backdrop of the Napoleonic Wars. It explores a vast array of themes including history, philosophy, and human nature. Through characters such as Pierre Bezukhov, Prince Andrei Bolkonsky, and Natasha Rostov, Tolstoy delves into the complexities of love, honor, and the search for meaning in a world fraught with conflict. The novel's detailed depiction of the era, combined with Tolstoy's profound insights into the human condition, make it one of literature's greatest achievements.",
+        "year": 1869,
+        "genre": "historical fiction, classic, war",
+        "price": 19.99
+    },
+    {
+        "title": "The Catcher in the Rye",
+        "author": "J.D. Salinger",
+        "description": "A story of teenage angst and alienation.",
+        "long_description": "The Catcher in the Rye, by J.D. Salinger, is a seminal novel that captures the essence of teenage angst and rebellion. The story is narrated by Holden Caulfield, a 16-year-old boy who has just been expelled from his prestigious boarding school. Over the course of a few days in New York City, Holden grapples with issues of identity, belonging, and the phoniness he perceives in the adult world. Salinger's poignant and insightful exploration of adolescence and its discontents has made this novel a touchstone for generations of readers.",
+        "year": 1951,
+        "genre": "classic, coming-of-age, fiction",
+        "price": 11.50
+    },
+    {
+        "title": "Crime and Punishment",
+        "author": "Fyodor Dostoevsky",
+        "description": "A psychological drama of a young student.",
+        "long_description": "Crime and Punishment, by Fyodor Dostoevsky, is a gripping psychological drama that delves into the mind of Rodion Raskolnikov, a destitute student who commits a murder. The novel explores the ramifications of his crime on his conscience and his subsequent interactions with the people around him. Dostoevsky's exploration of guilt, redemption, and the nature of evil is profound and compelling. Through Raskolnikov's internal conflict and the moral dilemmas he faces, the novel addresses themes of justice, morality, and the human soul's capacity for suffering and redemption.",
+        "year": 1866,
+        "genre": "psychological fiction, classic, crime",
+        "price": 17.25
+    },
+    {
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "description": "A scientist creates a monster.",
+        "long_description": "Frankenstein, by Mary Shelley, is a groundbreaking work of science fiction and gothic horror. The novel tells the story of Victor Frankenstein, a scientist who creates a sapient creature through an unorthodox experiment. The creature, rejected by society and his creator, seeks revenge and ultimately destroys Frankenstein's life. Shelley's exploration of ambition, humanity, and the consequences of defying nature is both chilling and thought-provoking. The novel raises profound questions about the limits of scientific exploration and the responsibilities of the creator towards their creation.",
+        "year": 1818,
+        "genre": "gothic, horror, science fiction",
+        "price": 14.99
+    },
+    {
+        "title": "The Odyssey",
+        "author": "Homer",
+        "description": "An epic journey of Odysseus.",
+        "long_description": "The Odyssey, attributed to the ancient Greek poet Homer, is an epic poem that recounts the adventures of Odysseus, king of Ithaca, as he journeys home after the Trojan War. The poem is a rich tapestry of heroism, adventure, and the struggles of human life, with themes of loyalty, perseverance, and the longing for home. Odysseus encounters numerous challenges and mythical creatures, including the Cyclops, the Sirens, and the suitors vying for his wife Penelope's hand. Homer's vivid storytelling and the poem's timeless themes have made it a cornerstone of Western literature.",
+        "year": 800,
+        "genre": "epic, mythology, adventure",
+        "price": 16.50
+    },
+    {
+        "title": "The Divine Comedy",
+        "author": "Dante Alighieri",
+        "description": "A journey through Hell, Purgatory, and Paradise.",
+        "long_description": "The Divine Comedy, written by Dante Alighieri, is an epic poem that describes Dante's journey through the three realms of the dead: Hell (Inferno), Purgatory (Purgatorio), and Heaven (Paradiso). Guided by the Roman poet Virgil and his beloved Beatrice, Dante's journey is both a personal quest for redemption and a profound allegory of the human soul's ascent to God. The poem is notable for its vivid imagery, intricate structure, and deep philosophical and theological insights. It remains one of the greatest works of world literature, exploring themes of sin, salvation, and divine justice.",
+        "year": 1320,
+        "genre": "epic, classic, poetry",
+        "price": 22.99
+    },
+    {
+        "title": "One Thousand and One Nights",
+        "author": "Various Authors",
+        "description": "A collection of Middle Eastern folk tales.",
+        "long_description": "One Thousand and One Nights is a collection of Middle Eastern folk tales compiled in Arabic during the Islamic Golden Age. The tales are framed by the story of Scheherazade, who tells a new story to her husband, King Shahryar, every night to delay her execution. The collection includes famous stories such as Aladdin, Ali Baba and the Forty Thieves, and The Seven Voyages of Sinbad the Sailor. These tales, rich in fantasy and adventure, reflect the cultural and social values of their time and place, offering timeless lessons and entertainment.",
+        "year": 1500,
+        "genre": "folk tales, classic, fantasy",
+        "price": 20.99
+    }
+]
+

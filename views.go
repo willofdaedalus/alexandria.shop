@@ -114,10 +114,11 @@ func (m model) bookDetailsScreen(header1 string) string {
 		MarginBottom(2).
 		Border(lipgloss.NormalBorder(), false, false, true, false).
 		PaddingLeft(1).
-		Render(fmt.Sprintf("%s by %s\n$%.2f\n%s",
+        Render(fmt.Sprintf("%s by %s\nPRICE: $%.2f\nYEAR: %d\n%s",
 			selectedBook.Title,
 			selectedBook.Author,
 			selectedBook.Price,
+			selectedBook.Year,
 			selectedBook.Genre,
 		),
 		)

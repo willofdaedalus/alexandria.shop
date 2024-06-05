@@ -1,4 +1,4 @@
-module tui-play
+module github.com/IamDaedalus/alexandria.shop
 
 go 1.22.3
 
