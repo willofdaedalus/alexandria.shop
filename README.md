@@ -1,8 +1,15 @@
+# alexandria.shop
+## Screenshots 
 ![welcome](./assets/welcome.png)
-![catalogue](./assets/catalogue.png)
-![details](./assets/details.png)
+* welcome to alexandria.shop *
 
-## alexandria.shop
+![catalogue](./assets/catalogue.png)
+* main catalogue view of alexandria.shop *
+
+![details](./assets/details.png)
+* details of a book selected including price and author *
+
+## What's this?
 alexandria.shop is a fictional terminal shop from the mid 90s that sold books of all
 kinds and was served over SSH. Users connected to the service via ssh and had to authenticate
 themselves in order to fully use the service. The name for the service is derived from the
@@ -32,13 +39,13 @@ from simple terminal apps to complex terminal apps either in inline, fullscreen 
 * [lipgloss](https://github.com/charmbracelet/lipgloss) - lipgloss is another TUI framework that provides an expressive and declarative approach to terminal
 programs similar to CSS that allows developers to style anything they want to show on the terminal anyway they
 want it.
-* [mattn sqlite library](https://github.com/mattn/go-sqlite3) - a simple to use but lightning fast sqlite3 driver that conforms to the standard library's
+* [mattn's sqlite library](https://github.com/mattn/go-sqlite3) - a simple to use but lightning fast sqlite3 driver that conforms to the standard library's
 database/sql interface
 
 ## Installation
 To run alexandria.shop, you need the following installed on your system.
 * [Go](https://go.dev/doc/install)
-* git - you need to consult your operating system's instructions on the Git website [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 Once you have everything installed, just run the following commands below
 
