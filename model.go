@@ -92,6 +92,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.curItem = 0
 				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
 				m.resetFields()
+                m.c.items = make(map[string]float64)
 				transitionView(&m, vLogin)
 			}
 
