@@ -64,7 +64,7 @@ Once you have everything installed, just run the following commands below
 
 ```
 git clone https://github.com/IamDaedalus/**alexandria.shop**
-cd **alexandria.shop**
+cd alexandria.shop
 go mod tidy
 go run .
 ```
