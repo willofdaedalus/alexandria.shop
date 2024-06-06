@@ -31,6 +31,19 @@ us of technology we may have forgotten as time has gone by.
 **alexandria.shop** is heavily inspired by terminal.shop, a coffee company that sells its products
 via SSH on the terminal.
 
+## Structure of Repo
+The following list gives a brief summary of each file and where to find what
+
+* ![model.go](./model.go) - contains the implementation for the various Bubbletea model methods including Init, Update and View.
+It also contains some helper functions for checking the user's input and validating it
+* ![helpers.go](./helpers.go) - contains some helper functions for mainly for input field handling and view transitioning
+* ![views.go](./views.go) - contains the logic for each "view" of the application. This includes render logic and
+view updating for various views such as the login/signup screens, catalogue view and more
+* ![render_helpers.go](./render_helpers.go) - additional UI helpers that are common across various views have been consolidated into one file
+* ![types.go](./types.go) - contains all custom types used in the project including the model type that is required by Bubbletea
+* ![db.go](./db.go) - contains logic for interacting with the SQLite3 database base including managing users and books
+* ![cart.go](./cart.go) - contains a very simple set of functions for managing cart logic
+
 
 ## Technology Used
 **alexandria.shop** is only possible because of the awesome technology below. Check each one out!  
@@ -60,7 +73,8 @@ This basically clones and runs the program for you. To actually install **alexan
 need to run the command ```go build && go install```.
 
 If you want to add more books to look at, just edit the "small_list.json" file with any books
-to match the format.
+to match the format.  
+This will change in the future when an admin panel is built into it to allow access to the database.
 
 ## Authors
 * [Manny Quansah](https://www.linkedin.com/in/IamDaedalus)

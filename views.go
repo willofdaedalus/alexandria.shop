@@ -114,7 +114,7 @@ func (m model) bookDetailsScreen(header1 string) string {
 		MarginBottom(2).
 		Border(lipgloss.NormalBorder(), false, false, true, false).
 		PaddingLeft(1).
-        Render(fmt.Sprintf("%s by %s\nPRICE: $%.2f\nYEAR: %d\n%s",
+		Render(fmt.Sprintf("%s by %s\nPRICE: $%.2f\nYEAR: %d\n%s",
 			selectedBook.Title,
 			selectedBook.Author,
 			selectedBook.Price,
@@ -208,5 +208,17 @@ func (m model) helpScreen() string {
 	return dialog
 }
 
-func (m model) cartScreenView() {
+func (m model) cartScreenView() string {
+	var items []string
+
+	for key, value := range m.c.items {
+		// Format the key-value pair as "key - value"
+		pair := key + " - " + fmt.Sprintf("%.2f", value)
+		// Append the formatted string to the slice
+		items = append(items, pair)
+	}
+    
+    itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
+
+    return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
 }

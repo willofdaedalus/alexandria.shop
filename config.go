@@ -35,6 +35,7 @@ const (
 	vCatalogue
 	vBookDetails
 	vHelp
+	vCart
 )
 
 const (
@@ -104,4 +105,5 @@ var (
 	catalogueViewHeight  int   // hack to keep the height the same when displaying the details of a book
 	validNavigationViews []int = []int{vLogin, vSignUp, vCatalogue}
 	startingViews        []int = []int{vLogin, vSignUp, vWelcome, vHelp}
+	mainViews            []int = []int{vCatalogue, vBookDetails}
 )

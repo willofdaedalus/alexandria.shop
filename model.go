@@ -74,6 +74,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "ctrl+d":
 			return m, tea.Quit
 
+        case "c":
+            if m.view != vCart && slices.Contains(mainViews, m.view) {
+                transitionView(&m, vCart)
+            }
+
 		case "ctrl+s":
 			if m.view == vLogin {
 				transitionView(&m, vSignUp)
@@ -82,10 +87,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.view == vSignUp {
 				transitionView(&m, vLogin)
 			} else if m.view == vCatalogue {
-                // simple logout
+				// simple logout
 				m.curPage = 1
 				m.curItem = 0
 				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
+				m.resetFields()
 				transitionView(&m, vLogin)
 			}
 
@@ -258,6 +264,8 @@ func (m model) View() string {
 		v = m.bookDetailsScreen("esc to go back")
 	case vHelp:
 		v = m.helpScreen()
+	case vCart:
+		v = m.cartScreenView()
 	}
 
 	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
