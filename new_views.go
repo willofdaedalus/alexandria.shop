@@ -7,11 +7,11 @@ import (
 )
 
 // func (m model) mainScreen() string {
-//     itemCount := mainRenderContent {
+//     c := mainRenderContent {
 //         footerMsg: "this is the main screen",
 //     }
 //
-//     return m.mainFrameRender(itemCount)
+//     return m.mainFrameRender(c)
 // }
 
 func renderHeader(w int, content string, border bool, margin ...int) string {
@@ -39,7 +39,7 @@ func renderItem(w int, content string) string {
 //		// 	"alexandria.shop",
 //		// 	"welcome, userName",
 //		// 	"? for details/help",
-//		// 	"itemCount cart [10] $100.10",
+//		// 	"c cart [10] $100.10",
 //		// }
 //
 //		var customMargins = [][]int{
@@ -118,7 +118,7 @@ func (m model) mainBorderRender() string {
 			"alexandria.shop",
 			"welcome, userName",
 			"? for details/help",
-			"itemCount cart [10] $100.10",
+			"c cart [10] $100.10",
 		}
 
 		customMargins = [][]int{
@@ -147,13 +147,15 @@ func (m model) mainBorderRender() string {
 		Render(finalHeaders)
 
 	innerW := actualRenderW - 5
-    innerH := (actualRenderH / 4) + (actualRenderH / 2)
+	innerH := (actualRenderH / 4) + (actualRenderH / 2)
+    listSectionW := innerW / 3
+    bookDeetW :=(innerW / 3) + (innerW / 4) + (innerW / 13) 
 
-    itemCount := innerH / 3
+	c := innerH / 3
 	items := make([]string, 0)
 
-	for i := 0; i < itemCount; i++ {
-		items = append(items, renderItem(10, fmt.Sprint(innerH, " ", itemCount)))
+	for i := 0; i < c; i++ {
+		items = append(items, renderItem(listSectionW - 4, fmt.Sprint(innerH, " ", c)))
 	}
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
@@ -162,15 +164,15 @@ func (m model) mainBorderRender() string {
 		Border(lipgloss.NormalBorder()).
 		Margin(1, 1, 0, 1).
 		Padding(0, 1).
-		Width(innerW / 3).
-		Height(innerH - (innerH % itemCount)).
+		Width(listSectionW).
+		Height(innerH - (innerH % c)).
 		Render(itemsRender)
 
 	bookSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
-		Width((innerW / 3) + (innerW / 4) + (innerW / 13)).
-		Height(innerH - (innerH % itemCount)).
-		Render(fmt.Sprint("books section ", (innerW/3)+(innerW/4)+(innerW/13)))
+		Width(bookDeetW).
+		Height(innerH - (innerH % c)).
+		Render(fmt.Sprint("books section ", bookDeetW))
 		// bookList
 
 	midSectionJoin := lipgloss.JoinHorizontal(lipgloss.Center, listSection, bookSection)
@@ -190,7 +192,7 @@ func (m model) mainBorderRender() string {
 	mainBorder := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Width(actualRenderW).
-		Height(h).
+		Height(h - (innerH % c)).
 		Render(header, midSectionJoin, footer)
 
 	finalRender := lipgloss.Place(
