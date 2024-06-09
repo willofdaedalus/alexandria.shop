@@ -57,6 +57,13 @@ type model struct {
 	curUser user
 	// db handler
 	db *sql.DB
-    // cart system
-    c cart
+	// cart system
+	c cart
+}
+
+type mainRenderContent struct {
+	listSection string
+	bookDetails string
+	footerMsg   string
+	headerMsgs  []string
 }

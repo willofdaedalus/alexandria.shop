@@ -6,6 +6,14 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+// func (m model) mainScreen() string {
+//     itemCount := mainRenderContent {
+//         footerMsg: "this is the main screen",
+//     }
+//
+//     return m.mainFrameRender(itemCount)
+// }
+
 func renderHeader(w int, content string, border bool, margin ...int) string {
 	border = !border
 	return lipgloss.NewStyle().
@@ -16,21 +24,110 @@ func renderHeader(w int, content string, border bool, margin ...int) string {
 		Render(content)
 }
 
-func (m model) mainBorderRender() string {
-	var headers []string = make([]string, 4)
-	var headerContent = [...]string{
-		"alexandria.shop",
-		"welcome, userName",
-		"? for details/help",
-		"c cart [10] $100.10",
-	}
+func renderItem(w int, content string) string {
+	return lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		Padding(0, 1).
+		Width(w).
+		Align(lipgloss.Left).
+		Render(content)
+}
 
-	var customMargin = [][]int{
-		{0, 2, 0, 0},
-		{0, 2, 0, 2},
-		{0, 2, 0, 2},
-		{0, 0, 0, 2},
-	}
+//	func (m model) mainFrameRender(content mainRenderContent) string {
+//		var headers []string = make([]string, 4)
+//		// var headerContent = [...]string{
+//		// 	"alexandria.shop",
+//		// 	"welcome, userName",
+//		// 	"? for details/help",
+//		// 	"itemCount cart [10] $100.10",
+//		// }
+//
+//		var customMargins = [][]int{
+//			{0, 2, 0, 0},
+//			{0, 2, 0, 2},
+//			{0, 2, 0, 2},
+//			{0, 0, 0, 2},
+//		}
+//
+//		dynRenderWidth := m.termWidth - (m.termWidth / 6)
+//		dynRenderHeight := m.termHeight - (m.termHeight / 4)
+//		actualRenderW := dynRenderWidth - 21
+//		actualRenderH := dynRenderHeight + 5
+//
+//		for i := 0; i < 4; i++ {
+//			headers[i] = renderHeader((actualRenderW-4)/5, content.headerMsgs[i], false, customMargins[i]...)
+//		}
+//
+//		finalHeaders := lipgloss.JoinHorizontal(lipgloss.Left, headers...)
+//		header := lipgloss.NewStyle().
+//			Border(lipgloss.NormalBorder()).
+//			Margin(0, 1, 0, 1).
+//			Width(actualRenderW - 4).
+//			Align(lipgloss.Center).
+//			Render(finalHeaders)
+//
+//		innerW := actualRenderW - 5
+//
+//		listSection := lipgloss.NewStyle().
+//			Border(lipgloss.NormalBorder()).
+//			Margin(1, 1, 0, 1).
+//			Width(innerW / 3).
+//			Height((actualRenderH / 4) + (actualRenderH / 2)).
+//			Render(content.listSection)
+//
+//		bookSection := lipgloss.NewStyle().
+//			Border(lipgloss.NormalBorder()).
+//			Width((innerW / 3) + (innerW / 4) + (innerW / 13)).
+//			Height((actualRenderH / 4) + (actualRenderH / 2)).
+//			Render(content.bookDetails)
+//			// bookList
+//
+//		midSectionJoin := lipgloss.JoinHorizontal(lipgloss.Center, listSection, bookSection)
+//
+//		footer := lipgloss.NewStyle().
+//			Border(lipgloss.NormalBorder()).
+//			Margin(1, 0, 0, 1).
+//			Width(actualRenderW - 4).
+//			Render(fmt.Sprint(actualRenderH))
+//
+//		// this was the best render height across 5 different terminal emulators!
+//		h := 30
+//		if actualRenderH > 33 {
+//			h = 33
+//		}
+//
+//		mainBorder := lipgloss.NewStyle().
+//			Border(lipgloss.NormalBorder()).
+//			Width(actualRenderW).
+//			Height(h).
+//			Render(header, midSectionJoin, footer)
+//
+//		finalRender := lipgloss.Place(
+//			m.termWidth, m.termHeight,
+//			lipgloss.Center, lipgloss.Center,
+//			mainBorder,
+//		)
+//
+//		return finalRender
+//	}
+func (m model) mainBorderRender() string {
+	var (
+		headers []string = make([]string, 4)
+
+		headerContent = [...]string{
+			"alexandria.shop",
+			"welcome, userName",
+			"? for details/help",
+			"itemCount cart [10] $100.10",
+		}
+
+		customMargins = [][]int{
+			{0, 2, 0, 0},
+			{0, 2, 0, 2},
+			{0, 2, 0, 2},
+			{0, 0, 0, 2},
+		}
+	)
 
 	dynRenderWidth := m.termWidth - (m.termWidth / 6)
 	dynRenderHeight := m.termHeight - (m.termHeight / 4)
@@ -38,10 +135,10 @@ func (m model) mainBorderRender() string {
 	actualRenderH := dynRenderHeight + 5
 
 	for i := 0; i < 4; i++ {
-		headers[i] = renderHeader((actualRenderW-4)/5, headerContent[i], false, customMargin[i]...)
+		headers[i] = renderHeader((actualRenderW-4)/5, headerContent[i], false, customMargins[i]...)
 	}
-
 	finalHeaders := lipgloss.JoinHorizontal(lipgloss.Left, headers...)
+
 	header := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Margin(0, 1, 0, 1).
@@ -49,25 +146,31 @@ func (m model) mainBorderRender() string {
 		Align(lipgloss.Center).
 		Render(finalHeaders)
 
-	innerRender := actualRenderW - 5
+	innerW := actualRenderW - 5
+    innerH := (actualRenderH / 4) + (actualRenderH / 2)
+
+    itemCount := innerH / 3
+	items := make([]string, 0)
+
+	for i := 0; i < itemCount; i++ {
+		items = append(items, renderItem(10, fmt.Sprint(innerH, " ", itemCount)))
+	}
+
+	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
 
 	listSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Margin(1, 1, 0, 1).
-		Width(innerRender / 3).
-		Height((actualRenderH / 4) + (actualRenderH / 2)).
-		Render("book list display")
-	//
-	// var h = actualRenderW/2 - 5
-	// if h != 66 {
-	// 	h += 1
-	// }
+		Padding(0, 1).
+		Width(innerW / 3).
+		Height(innerH - (innerH % itemCount)).
+		Render(itemsRender)
 
 	bookSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
-		Width((innerRender / 3) + (innerRender / 4) + (innerRender / 13)).
-		Height((actualRenderH / 4) + (actualRenderH / 2)).
-		Render(fmt.Sprint("books section ", (innerRender/3)+(innerRender/4)+(innerRender/13)))
+		Width((innerW / 3) + (innerW / 4) + (innerW / 13)).
+		Height(innerH - (innerH % itemCount)).
+		Render(fmt.Sprint("books section ", (innerW/3)+(innerW/4)+(innerW/13)))
 		// bookList
 
 	midSectionJoin := lipgloss.JoinHorizontal(lipgloss.Center, listSection, bookSection)
