@@ -74,10 +74,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "ctrl+d":
 			return m, tea.Quit
 
-        case "c":
-            if m.view != vCart && slices.Contains(mainViews, m.view) {
-                transitionView(&m, vCart)
-            }
+		case "c":
+			if m.view != vCart && slices.Contains(mainViews, m.view) {
+				transitionView(&m, vCart)
+			}
 
 		case "ctrl+s":
 			if m.view == vLogin {
@@ -92,7 +92,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.curItem = 0
 				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
 				m.resetFields()
-                m.c.items = make(map[string]float64)
+				m.c.items = make(map[string]float64)
 				transitionView(&m, vLogin)
 			}
 
@@ -247,27 +247,28 @@ func (m model) View() string {
 	// v +=  "├" + strings.Repeat("─", renderWidth) + "┤"
 
 	// v = m.catalogueScreen("daedalus")
+	v = m.mainBorderRender()
 
-	switch m.view {
-	case vWelcome:
-		v = m.initialScreen()
-	case vLogin:
-		v = m.loginScreen()
-	case vSignUp:
-		v = m.signUpScreen()
-	case vCredErr:
-		v = m.infoScreen(m.authErr.Error(), 50, 3)
-	case vSuccess:
-		v = m.infoScreen("sign up successful!\n\npress enter to login now", 50, 3)
-	case vCatalogue:
-		v = m.catalogueScreen("alexandria.shop")
-	case vBookDetails:
-		v = m.bookDetailsScreen("esc to go back")
-	case vHelp:
-		v = m.helpScreen()
-	case vCart:
-		v = m.cartScreenView()
-	}
+	// switch m.view {
+	// case vWelcome:
+	// 	v = m.initialScreen()
+	// case vLogin:
+	// 	v = m.loginScreen()
+	// case vSignUp:
+	// 	v = m.signUpScreen()
+	// case vCredErr:
+	// 	v = m.infoScreen(m.authErr.Error(), 50, 3)
+	// case vSuccess:
+	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now", 50, 3)
+	// case vCatalogue:
+	// 	v = m.catalogueScreen("alexandria.shop")
+	// case vBookDetails:
+	// 	v = m.bookDetailsScreen("esc to go back")
+	// case vHelp:
+	// 	v = m.helpScreen()
+	// case vCart:
+	// 	v = m.cartScreenView()
+	// }
 
 	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
 	return v
