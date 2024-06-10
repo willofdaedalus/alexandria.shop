@@ -114,13 +114,17 @@ func addBook(db *sql.DB, b book) error {
 	return err
 }
 
-func getBooksForPage(db *sql.DB, pageNum, pageItems int) ([]book, error) {
+func getBooksForPage(db *sql.DB, pageItems, offset int) ([]book, error) {
 	var (
 		books []book
 		b     book
 	)
 
-	offset := (pageNum - 1) * pageItems // three being the number of items on display in the catalogue
+	// WRITE TEST FOR THIS
+	// 7 items on a page
+	// SELECT title, author, longDesc, year, genre, price FROM books LIMIT ? OFFSET 1
+
+	// offset := (pageNum - 1) * pageItems
 	query := `SELECT title, author, description, longDesc, year, genre, price FROM books LIMIT ? OFFSET ?`
 	rows, err := db.Query(query, pageItems, offset)
 	if err != nil {

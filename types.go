@@ -50,8 +50,9 @@ type model struct {
 	termWidth  int
 	termHeight int
 
-	itemsOnDisplay []string
-	curItem        int
+	itemsCount int
+	curItem    int
+	prevOffset int
 
 	// current session user
 	curUser user
@@ -62,8 +63,8 @@ type model struct {
 }
 
 type mainRenderContent struct {
-	listSection string
-	bookDetails string
-	footerMsg   string
-	headerMsgs  []string
+	headerContents []string
+	bookItems      []string
+	bookDetails    string
+	footerMessage  string
 }

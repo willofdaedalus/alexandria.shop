@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	magicNum          = 3 // the num of items to display, to query
+	magicNum          = 5 // the num of items to display, to query
 	startScrTimeout   = time.Second * 5
 	catalogueHelpMsg  = "ctrl+c to exit  |  ctrl+l to logout  |  tab/shift+tab or arrow keys to move"
 	addToCartMsg      = "+ to add book to cart"
@@ -101,9 +101,9 @@ var (
 )
 
 var (
-	selectedBook         book  // this is updated in the function that handles the selection of the book items
-	catalogueViewHeight  int   // hack to keep the height the same when displaying the details of a book
-	validNavigationViews []int = []int{vLogin, vSignUp, vCatalogue}
-	startingViews        []int = []int{vLogin, vSignUp, vWelcome, vHelp}
-	mainViews            []int = []int{vCatalogue, vBookDetails}
+	selectedBook         book // this is updated in the function that handles the selection of the book items
+	catalogueViewHeight  int  // hack to keep the height the same when displaying the details of a book
+	validNavigationViews = []int{vLogin, vSignUp, vCatalogue}
+	startingViews        = []int{vLogin, vSignUp, vWelcome, vHelp}
+	mainViews            = []int{vCatalogue, vBookDetails}
 )

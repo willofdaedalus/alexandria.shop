@@ -1,25 +1,9 @@
-* function to check the various input fields
-
-# database layout
-user = {
-    userID (int),
-    name (text),
-    passwordHash (text),
-    lastLogin (date),
-}
-
-orderHistory = {
-    userID (int),
-    bookTitle (text),
-    receipt (text),
-    datePurchased (date)
-}
-
-cartItems = {
-    userID (int),
-    bookTitle (text),
-    dateAdded (date),
-}
-
 if we're at the bottom and hit still hit tab, query the database for the next 
 page and if we get something back, we can reset that selector and render the new books. then update the page counter
+
+header content -> slice of string
+book item list content -> slice of string
+book details -> string
+footer message -> string
+
+contents to put into items = []string

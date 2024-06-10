@@ -14,11 +14,6 @@ import (
 )
 
 func initialModel(db *sql.DB) model {
-	books, _ := getBooksForPage(db, 1, 4)
-	if books == nil {
-		log.Fatalf("no books found")
-	}
-
 	// cart initialisation
 	c := initialCart()
 
@@ -26,11 +21,18 @@ func initialModel(db *sql.DB) model {
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
 		loginInputs:  readyInputsFor(2),
 		signupInputs: readyInputsFor(3),
-		db:           db,
-		curPage:      1,
-		curBooks:     books, // initialise the books for initial rendering
-		c:            c,
+		db:           db, curPage: 1,
+		c:          c,
+		itemsCount: magicNum,
+		prevOffset: 0,
 	}
+
+	books, _ := getBooksForPage(db, 7, m.prevOffset)
+	if books == nil {
+		log.Fatalf("no books found")
+	}
+
+	m.curBooks = books
 
 	return m
 }
@@ -65,7 +67,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	} else if m.view == vCatalogue {
 		field = &m.curItem
 		wrap = false
-		scrCtxLen = 3
+		scrCtxLen = m.itemsCount
 	}
 
 	switch msg := msg.(type) {
@@ -187,14 +189,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atEnd && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.curPage+1, 3)
+						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
 						if err != nil || books == nil {
 							return m, nil
 						}
 
 						m.curBooks = books
 						m.curItem = 0
-						m.curPage++
+						m.prevOffset++
 					}
 				} else {
 					atStart := prevInput(field, scrCtxLen, wrap)
@@ -202,7 +204,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atStart && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.curPage-1, 3)
+						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
+						// books, err := getBooksForPage(m.db, m.curPage-1, 3)
 
 						// make check to determine the incoming books are the same as the rendered
 						// ones before moving the selector up to the next page
@@ -213,7 +216,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						// assign the new books to render and then display their length
 						m.curBooks = books
 						m.curItem = len(m.curBooks) - 1 // put the selector on the last entry on the page
-						m.curPage--
+						m.prevOffset--
 					}
 				}
 			}
@@ -247,28 +250,26 @@ func (m model) View() string {
 	// v +=  "├" + strings.Repeat("─", renderWidth) + "┤"
 
 	// v = m.catalogueScreen("daedalus")
-	v = m.mainBorderRender()
+	// v = m.mainScreen()
 
-	// switch m.view {
-	// case vWelcome:
-	// 	v = m.initialScreen()
-	// case vLogin:
-	// 	v = m.loginScreen()
-	// case vSignUp:
-	// 	v = m.signUpScreen()
-	// case vCredErr:
-	// 	v = m.infoScreen(m.authErr.Error(), 50, 3)
-	// case vSuccess:
-	// 	v = m.infoScreen("sign up successful!\n\npress enter to login now", 50, 3)
-	// case vCatalogue:
-	// 	v = m.catalogueScreen("alexandria.shop")
-	// case vBookDetails:
-	// 	v = m.bookDetailsScreen("esc to go back")
-	// case vHelp:
-	// 	v = m.helpScreen()
-	// case vCart:
-	// 	v = m.cartScreenView()
-	// }
+	switch m.view {
+	case vWelcome:
+		v = m.initialScreen()
+	case vLogin:
+		v = m.loginScreen()
+	case vSignUp:
+		v = m.signUpScreen()
+	case vCredErr:
+		v = m.infoScreen(m.authErr.Error(), 50, 3)
+	case vSuccess:
+		v = m.infoScreen("sign up successful!\n\npress enter to login now", 50, 3)
+	case vCatalogue:
+		v = m.mainScreen()
+	case vHelp:
+		v = m.helpScreen()
+	case vCart:
+		v = m.cartScreenView()
+	}
 
 	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
 	return v
