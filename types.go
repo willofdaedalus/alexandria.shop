@@ -60,6 +60,7 @@ type model struct {
 	db *sql.DB
 	// cart system
 	c cart
+    content mainRenderContent
 }
 
 type mainRenderContent struct {

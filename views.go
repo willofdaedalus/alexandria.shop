@@ -172,7 +172,7 @@ func (m model) catalogueScreen(header1 string) string {
 
 	// render the top, mid, and bot items based on current item
 	var itemsRender []string
-	for i := 0; i < magicNum; i++ {
+	for i := 0; i < m.itemsCount; i++ {
 		itemsRender = append(itemsRender, m.renderItemDisplay(renderWidth, offset, isHighlighted(i), m.curBooks[i]))
 	}
 

@@ -67,7 +67,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	} else if m.view == vCatalogue {
 		field = &m.curItem
 		wrap = false
-		scrCtxLen = m.itemsCount
+		scrCtxLen = calculateItemsCount(m.termHeight)
 	}
 
 	switch msg := msg.(type) {
@@ -173,9 +173,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// m.resetFields()
 				transitionView(&m, m.prevView)
 
-			case vCatalogue:
-				transitionView(&m, vBookDetails)
-
 			}
 
 		case "tab", "shift+tab", "up", "down":
@@ -194,8 +191,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							return m, nil
 						}
 
+						if len(books) == len(m.content.bookItems) {
+							return m, nil
+						}
+
 						m.curBooks = books
-						m.curItem = 0
 						m.prevOffset++
 					}
 				} else {
@@ -215,7 +215,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 						// assign the new books to render and then display their length
 						m.curBooks = books
-						m.curItem = len(m.curBooks) - 1 // put the selector on the last entry on the page
 						m.prevOffset--
 					}
 				}

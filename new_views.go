@@ -7,9 +7,12 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func (m model) mainScreen() string {
+func (m *model) mainScreen() string {
+	// Calculate itemsCount before rendering
+	m.itemsCount = calculateItemsCount(m.termHeight)
+
 	headers := []string{
-		"alexandria.shop",
+		fmt.Sprint(m.itemsCount),
 		fmt.Sprint("welcome, ", m.curUser.username),
 		"? for details/help",
 		fmt.Sprintf("c cart [%d] %.2f", len(m.c.items), m.c.booksTotal()),
@@ -24,7 +27,6 @@ func (m model) mainScreen() string {
 
 	titles := extractTitles(m.curBooks)
 
-	// note for if the item is already in the cart don't use a + use a -
 	footerMsg := "ctrl+l to logout  |  / to search  |  up/down to navigate  "
 	c := mainRenderContent{
 		headerContents: headers,
@@ -32,7 +34,16 @@ func (m model) mainScreen() string {
 		footerMessage:  footerMsg,
 	}
 
-	return m.mainBorderRender(c)
+    m.content = c
+
+	return m.mainBorderRender(m.content)
+}
+
+func calculateItemsCount(termHeight int) int {
+	dynRenderHeight := termHeight - (termHeight / 4)
+	actualRenderH := dynRenderHeight + 5
+	innerH := (actualRenderH / 4) + (actualRenderH / 2)
+	return innerH / 3
 }
 
 func renderHeader(w int, content string, border bool, margin ...int) string {
@@ -46,14 +57,15 @@ func renderHeader(w int, content string, border bool, margin ...int) string {
 }
 
 func renderItem(w int, content string, selected bool) string {
-	s := lipgloss.NewStyle().Foreground(faded.GetForeground())
+	s := lipgloss.NewStyle().Foreground(faded.GetForeground()).Border(lipgloss.NormalBorder())
+
 	if selected {
-		s.Foreground(magenta.GetForeground())
+		s = lipgloss.NewStyle().Foreground(magenta.GetForeground()).Border(lipgloss.ThickBorder())
 	}
 
 	return lipgloss.NewStyle().
-		Border(lipgloss.NormalBorder()).
-		Foreground(s.GetForeground()).
+		Border(s.GetBorder()).
+		BorderForeground(s.GetForeground()).
 		Padding(0, 1).
 		Width(w).
 		Align(lipgloss.Left).
@@ -94,9 +106,6 @@ func (m model) mainBorderRender(content mainRenderContent) string {
 		Width(actualRenderW - 4).
 		Align(lipgloss.Center).
 		Render(innerHeaderRender)
-
-	// do something illegal here and update the itemsCount
-	m.itemsCount = innerH / 3
 
 	isHighlighted := func(index int) bool {
 		return m.curItem == index

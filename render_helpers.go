@@ -27,7 +27,7 @@ func (m model) renderInputBox(label string, index int, inputs []textinput.Model,
 
 // renders an item in the catalogue view
 func (m model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) string {
-    var bookInCart = "[in cart]"
+	var bookInCart = "[in cart]"
 
 	selectProperties := lipgloss.NewStyle().
 		Foreground(faded.GetForeground()).
@@ -43,14 +43,14 @@ func (m model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b
 		selectedBook = b
 	}
 
-    if !m.c.bookInCart(b) {
-        bookInCart = " "
-    }
+	if !m.c.bookInCart(b) {
+		bookInCart = " "
+	}
 
 	itemContent := lipgloss.NewStyle().
 		Border(lipgloss.HiddenBorder(), false, true, true, true).
 		Foreground(selectProperties.GetForeground()).
-        Render(fmt.Sprintf("%s  |  %s  |  $%.2f  \t%s", b.Title, b.Author, b.Price, bookInCart))
+		Render(fmt.Sprintf("%s  |  %s  |  $%.2f  \t%s", b.Title, b.Author, b.Price, bookInCart))
 
 	itemDesc := lipgloss.NewStyle().
 		Inline(true).
