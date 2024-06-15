@@ -9,7 +9,7 @@ import (
 
 func (m *model) mainScreen() string {
 	headers := []string{
-        "alexandria.shop",
+		"alexandria.shop",
 		fmt.Sprint("welcome, ", m.curUser.username),
 		"? for details/help",
 		fmt.Sprintf("c cart [%d] %.2f", len(m.c.items), m.c.booksTotal()),
@@ -22,16 +22,14 @@ func (m *model) mainScreen() string {
 		}
 	}
 
-	titles := extractTitles(m.curBooks)
+	// titles := extractTitles(m.curBooks)
 
 	footerMsg := "ctrl+l to logout  |  / to search  |  up/down to navigate  "
-	c := mainRenderContent{
+	m.content = mainRenderContent{
 		headerContents: headers,
-		bookItems:      titles,
-		footerMessage:  footerMsg,
+		// bookItems:      titles,
+		footerMessage: footerMsg,
 	}
-
-    m.content = c
 
 	return m.mainBorderRender()
 }
@@ -54,7 +52,7 @@ func renderHeader(w int, content string, border bool, margin ...int) string {
 }
 
 func renderItem(w int, content string, selected bool) string {
-	s := lipgloss.NewStyle().Foreground(faded.GetForeground()).Border(lipgloss.NormalBorder())
+	s := lipgloss.NewStyle().Foreground(white.GetBackground()).Border(lipgloss.NormalBorder())
 
 	if selected {
 		s = lipgloss.NewStyle().Foreground(magenta.GetForeground()).Border(lipgloss.ThickBorder())
@@ -63,10 +61,19 @@ func renderItem(w int, content string, selected bool) string {
 	return lipgloss.NewStyle().
 		Border(s.GetBorder()).
 		BorderForeground(s.GetForeground()).
+		Foreground(s.GetForeground()).
 		Padding(0, 1).
 		Width(w).
 		Align(lipgloss.Left).
 		Render(content)
+}
+
+func styleBookDeets() string {
+	return lipgloss.NewStyle().
+		Render(fmt.Sprintf(
+			"%s by %s\nPrice: %.2f\nTags: %s\n\n\n%s",
+			selectedBook.Title, selectedBook.Author, selectedBook.Price,
+			selectedBook.Genre, selectedBook.LongDesc))
 }
 
 func (m model) mainBorderRender() string {
@@ -108,13 +115,16 @@ func (m model) mainBorderRender() string {
 		return m.curItem == index
 	}
 	items := make([]string, 0)
-	for i := 0; i < len(m.content.bookItems); i++ {
-		items = append(items, renderItem(listSectionW-4, m.content.bookItems[i], isHighlighted(i)))
+	for i := 0; i < len(m.curBooks); i++ {
+		items = append(items, renderItem(listSectionW-4, m.curBooks[i].Title, isHighlighted(i)))
+		if isHighlighted(i) {
+			selectedBook = m.curBooks[i]
+		}
 	}
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
 
-	midSectionJoin := renderMidSections(listSectionW, innerH, m.itemsCount, bookDeetW, itemsRender, "book deets")
+	midSectionJoin := renderMidSections(listSectionW, innerH, m.itemsCount, bookDeetW, itemsRender, styleBookDeets())
 
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
@@ -155,6 +165,7 @@ func renderMidSections(listSectionW, innerH, itemCount, bookDeetW int, listConte
 
 	bookSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		Padding(0, 1, 0, 1).
 		Width(bookDeetW).
 		Height(innerH - (innerH % itemCount)).
 		Render(deetContent)

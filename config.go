@@ -78,6 +78,7 @@ var (
 	cyan    = lipgloss.NewStyle().Foreground(lipgloss.Color("#00ffff"))
 	magenta = lipgloss.NewStyle().Foreground(lipgloss.Color("#ff00ff"))
 	yellow  = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffff00"))
+	white  = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffffff"))
 
 	// style = lipgloss.NewStyle().Foreground(lipgloss.Color("#7D56F4")).Align(lipgloss.Center, lipgloss.Center)
 	faded = lipgloss.NewStyle().Foreground(lipgloss.Color("#808080"))

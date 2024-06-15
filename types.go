@@ -66,7 +66,7 @@ type model struct {
 
 type mainRenderContent struct {
 	headerContents []string
-	bookItems      []string
+	bookItems      []book
 	bookDetails    string
 	footerMessage  string
 }

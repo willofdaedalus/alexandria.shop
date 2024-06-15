@@ -44,11 +44,6 @@ func main() {
 		}
 	}
 
-	// for i := 0; i < 7; i++ {
-	// 	books, _ := getBooksForPage(db, 7, i)
- //        fmt.Printf("len of books is %d\n", len(books))
-	// }
-
 	m := initialModel(db)
 
 	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
