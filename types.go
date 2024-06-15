@@ -50,17 +50,18 @@ type model struct {
 	termWidth  int
 	termHeight int
 
-	itemsCount int
-	curItem    int
-	prevOffset int
+	itemsCount    int
+	itemsIterated int
+	curItem       int
+	prevOffset    int
 
 	// current session user
 	curUser user
 	// db handler
 	db *sql.DB
 	// cart system
-	c cart
-    content mainRenderContent
+	c       cart
+	content mainRenderContent
 }
 
 type mainRenderContent struct {

@@ -1,9 +1,11 @@
 package main
 
 import (
+    "log"
+    "os"
+
 	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-)
+	tea "github.com/charmbracelet/bubbletea")
 
 // go back to the next field
 func nextInput(field *int, size int, wrap bool) bool {
@@ -105,4 +107,22 @@ func slicesEqual(a, b []book) bool {
 		}
 	}
 	return true
+}
+
+// logToFile logs a message to the specified log file
+func logToFile(message string) error {
+	// Open the log file in append mode, create it if it doesn't exist, and set the correct permissions
+	file, err := os.OpenFile("logs", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Create a new logger that writes to the file
+	logger := log.New(file, "", log.LstdFlags)
+
+	// Log the message
+	logger.Println(message)
+
+	return nil
 }

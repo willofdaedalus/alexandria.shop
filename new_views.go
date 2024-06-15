@@ -8,11 +8,8 @@ import (
 )
 
 func (m *model) mainScreen() string {
-	// Calculate itemsCount before rendering
-	m.itemsCount = calculateItemsCount(m.termHeight)
-
 	headers := []string{
-		fmt.Sprint(m.itemsCount),
+        "alexandria.shop",
 		fmt.Sprint("welcome, ", m.curUser.username),
 		"? for details/help",
 		fmt.Sprintf("c cart [%d] %.2f", len(m.c.items), m.c.booksTotal()),
@@ -36,7 +33,7 @@ func (m *model) mainScreen() string {
 
     m.content = c
 
-	return m.mainBorderRender(m.content)
+	return m.mainBorderRender()
 }
 
 func calculateItemsCount(termHeight int) int {
@@ -72,7 +69,7 @@ func renderItem(w int, content string, selected bool) string {
 		Render(content)
 }
 
-func (m model) mainBorderRender(content mainRenderContent) string {
+func (m model) mainBorderRender() string {
 	var (
 		headers       []string = make([]string, 0)
 		customMargins          = [][]int{
@@ -94,7 +91,7 @@ func (m model) mainBorderRender(content mainRenderContent) string {
 
 	// renders headers
 	for i := 0; i < 4; i++ {
-		headers = append(headers, renderHeader((actualRenderW-4)/5, content.headerContents[i], false, customMargins[i]...))
+		headers = append(headers, renderHeader((actualRenderW-4)/5, m.content.headerContents[i], false, customMargins[i]...))
 	}
 	// joins all header related text
 	innerHeaderRender := lipgloss.JoinHorizontal(lipgloss.Left, headers...)
@@ -111,8 +108,8 @@ func (m model) mainBorderRender(content mainRenderContent) string {
 		return m.curItem == index
 	}
 	items := make([]string, 0)
-	for i := 0; i < m.itemsCount; i++ {
-		items = append(items, renderItem(listSectionW-4, content.bookItems[i], isHighlighted(i)))
+	for i := 0; i < len(m.content.bookItems); i++ {
+		items = append(items, renderItem(listSectionW-4, m.content.bookItems[i], isHighlighted(i)))
 	}
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
@@ -124,7 +121,7 @@ func (m model) mainBorderRender(content mainRenderContent) string {
 		Align(lipgloss.Center).
 		Margin(1, 0, 0, 1).
 		Width(actualRenderW - 4).
-		Render(content.footerMessage)
+		Render(m.content.footerMessage)
 
 	// this was the best render height across 5 different terminal emulators!
 	h := 30

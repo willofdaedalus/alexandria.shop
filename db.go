@@ -114,6 +114,18 @@ func addBook(db *sql.DB, b book) error {
 	return err
 }
 
+func countBooks(db *sql.DB) (int, error) {
+	var count int
+
+	query := `SELECT COUNT(*) FROM books`
+	err := db.QueryRow(query).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func getBooksForPage(db *sql.DB, pageItems, offset int) ([]book, error) {
 	var (
 		books []book

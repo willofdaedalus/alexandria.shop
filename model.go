@@ -53,6 +53,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		wrap      bool              // wraps input so that the selector go back to the start if at the end
 	)
 
+	// Calculate itemsCount before rendering
+	m.itemsCount = calculateItemsCount(m.termHeight)
+	count, err := countBooks(m.db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// update the current inputs' focus based on the view
 	if m.view == vLogin {
 		field = &m.loginCurField
@@ -180,8 +187,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			// check that the current view can be navigated
 			if slices.Contains(validNavigationViews, m.view) {
-				if i == "tab" || i == "down" {
+				if (i == "tab" || i == "down") && m.itemsIterated < count {
 					atEnd := nextInput(field, scrCtxLen, wrap)
+					m.itemsIterated++
 
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
@@ -191,15 +199,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							return m, nil
 						}
 
-						if len(books) == len(m.content.bookItems) {
-							return m, nil
-						}
-
 						m.curBooks = books
 						m.prevOffset++
 					}
-				} else {
+				} else if (i == "shift+tab" || i == "up") && m.itemsIterated > 0 {
 					atStart := prevInput(field, scrCtxLen, wrap)
+					m.itemsIterated--
 
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
@@ -209,7 +214,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 						// make check to determine the incoming books are the same as the rendered
 						// ones before moving the selector up to the next page
-						if err != nil || slicesEqual(books, m.curBooks) {
+						if err != nil {
 							return m, nil
 						}
 
