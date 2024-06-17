@@ -7,6 +7,23 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+func (m *model) cartScreen() string {
+	headers := []string{
+		"esc to go back",
+		fmt.Sprint("welcome, ", m.curUser.username),
+		"? for details/help",
+		"c to checkout",
+	}
+
+	footerMsg := "ctrl+l to logout  |  up/down to navigate  "
+	m.content = mainRenderContent{
+		headerContents: headers,
+		footerMessage:  footerMsg,
+	}
+
+	return m.mainBorderRender()
+}
+
 func (m *model) mainScreen() string {
 	headers := []string{
 		"alexandria.shop",
@@ -34,6 +51,8 @@ func (m *model) mainScreen() string {
 	return m.mainBorderRender()
 }
 
+// function to dynamically calculate the number of items to display based on
+// the height of the terminal window
 func calculateItemsCount(termHeight int) int {
 	dynRenderHeight := termHeight - (termHeight / 4)
 	actualRenderH := dynRenderHeight + 5
@@ -76,10 +95,10 @@ func styleBookDeets() string {
 			selectedBook.Genre, selectedBook.LongDesc))
 }
 
-func (m model) mainBorderRender() string {
+func (m *model) mainBorderRender() string {
 	var (
-		headers       []string = make([]string, 0)
-		customMargins          = [][]int{
+		headers       = make([]string, 0)
+		customMargins = [][]int{
 			{0, 2, 0, 0},
 			{0, 2, 0, 2},
 			{0, 2, 0, 2},
@@ -87,8 +106,9 @@ func (m model) mainBorderRender() string {
 		}
 	)
 
+	// in order to achieve a common ground for dynamic responsiveness, set a maximum size
 	dynRenderWidth := m.termWidth - (m.termWidth / 6)        // calculates the best width
-	dynRenderHeight := m.termHeight - (m.termHeight / 4)     // calculates the best width
+	dynRenderHeight := m.termHeight - (m.termHeight / 4)     // calculates the best height
 	actualRenderW := dynRenderWidth - 21                     // that's the width of the main border
 	actualRenderH := dynRenderHeight + 5                     // that's the height of the main border
 	innerW := actualRenderW - 5                              // fake padding subtracted from th main border width
@@ -114,9 +134,19 @@ func (m model) mainBorderRender() string {
 	isHighlighted := func(index int) bool {
 		return m.curItem == index
 	}
+
+	// section to render the items in the list
 	items := make([]string, 0)
 	for i := 0; i < len(m.curBooks); i++ {
-		items = append(items, renderItem(listSectionW-4, m.curBooks[i].Title, isHighlighted(i)))
+		text := m.curBooks[i].Title
+		if m.c.bookInCart(m.curBooks[i]) {
+			text = fmt.Sprintf("* %s", m.curBooks[i].Title)
+		}
+
+		text = truncateText(text, listSectionW-4)
+
+		items = append(items, renderItem(listSectionW-4, text, isHighlighted(i)))
+		// set the selectedBook global var when an option is highlighted
 		if isHighlighted(i) {
 			selectedBook = m.curBooks[i]
 		}
@@ -133,7 +163,7 @@ func (m model) mainBorderRender() string {
 		Width(actualRenderW - 4).
 		Render(m.content.footerMessage)
 
-	// this was the best render height across 5 different terminal emulators!
+	// this is the best render height across 5 different terminal emulators!
 	h := 30
 	if actualRenderH > 33 {
 		h = 33

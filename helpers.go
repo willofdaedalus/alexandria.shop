@@ -1,11 +1,12 @@
 package main
 
 import (
-    "log"
-    "os"
+	"log"
+	"os"
 
 	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea")
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 // go back to the next field
 func nextInput(field *int, size int, wrap bool) bool {
@@ -125,4 +126,12 @@ func logToFile(message string) error {
 	logger.Println(message)
 
 	return nil
+}
+
+func truncateText(s string, max int) string {
+	if max > len(s) {
+		return s
+	}
+
+	return s[:len(s)-6] + "..."
 }

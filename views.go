@@ -9,7 +9,7 @@ import (
 )
 
 // the initial screen to display when the program first runs
-func (m model) initialScreen() string {
+func (m *model) initialScreen() string {
 	// center the ascii art within the terminal window
 	return lipgloss.Place(
 		m.termWidth, m.termHeight,
@@ -18,7 +18,7 @@ func (m model) initialScreen() string {
 	)
 }
 
-func (m model) renderAuthScreen(title, helpText string, inputs []textinput.Model, curField int) string {
+func (m *model) renderAuthScreen(title, helpText string, inputs []textinput.Model, curField int) string {
 	var layout strings.Builder
 
 	// render the title at the top
@@ -59,7 +59,7 @@ func (m model) renderAuthScreen(title, helpText string, inputs []textinput.Model
 	return layout.String()
 }
 
-func (m model) signUpScreen() string {
+func (m *model) signUpScreen() string {
 	return m.renderAuthScreen(
 		signUpText,
 		"press ctrl+l to log in | press ctrl+c to quit",
@@ -68,7 +68,7 @@ func (m model) signUpScreen() string {
 	)
 }
 
-func (m model) loginScreen() string {
+func (m *model) loginScreen() string {
 	return m.renderAuthScreen(
 		loginText,
 		"press ctrl+s to sign up | press ctrl+c to quit",
@@ -77,7 +77,7 @@ func (m model) loginScreen() string {
 	)
 }
 
-func (m model) infoScreen(info string, w, h int) string {
+func (m *model) infoScreen(info string, w, h int) string {
 	infoRender := noBorderStyle.
 		Padding(0, 2, 0, 2).
 		Width(w).Height(h).
@@ -97,7 +97,7 @@ func (m model) infoScreen(info string, w, h int) string {
 	return dialog
 }
 
-func (m model) bookDetailsScreen(header1 string) string {
+func (m *model) bookDetailsScreen(header1 string) string {
 	var (
 		footerMsg string
 	)
@@ -155,7 +155,7 @@ func (m model) bookDetailsScreen(header1 string) string {
 
 // this renders the entire catalogue view
 // big thanks to @its_gaurav on the Charm CLI Discord!
-func (m model) catalogueScreen(header1 string) string {
+func (m *model) catalogueScreen(header1 string) string {
 	// Initialize variables
 	renderWidth := (m.termWidth / 2) + 10
 	if renderWidth < 0 {
@@ -188,7 +188,7 @@ func (m model) catalogueScreen(header1 string) string {
 	return m.mainScreenFrame(header1, catalogueHelpMsg, catalogueView)
 }
 
-func (m model) helpScreen() string {
+func (m *model) helpScreen() string {
 	infoRender := noBorderStyle.
 		PaddingTop(1).
 		Width(80).Height(10).
@@ -208,7 +208,7 @@ func (m model) helpScreen() string {
 	return dialog
 }
 
-func (m model) cartScreenView() string {
+func (m *model) cartScreenView() string {
 	var items []string
 
 	for key, value := range m.c.items {
@@ -217,8 +217,8 @@ func (m model) cartScreenView() string {
 		// Append the formatted string to the slice
 		items = append(items, pair)
 	}
-    
-    itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
 
-    return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
+	itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
+
+	return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
 }

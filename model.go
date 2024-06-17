@@ -122,7 +122,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "+", "-", "_", "=":
 			s := msg.String()
-			if m.view == vBookDetails {
+			if m.view == vCatalogue {
 				if s == "+" || s == "=" {
 					m.c.addToCart(selectedBook)
 				} else if s == "-" || s == "_" {
@@ -272,7 +272,7 @@ func (m model) View() string {
 	case vHelp:
 		v = m.helpScreen()
 	case vCart:
-		v = m.cartScreenView()
+		v = m.cartScreen()
 	}
 
 	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
@@ -280,7 +280,7 @@ func (m model) View() string {
 }
 
 // validates the input fields before sending to the db for authentication
-func (m model) validateCreds(creds ...string) error {
+func (m *model) validateCreds(creds ...string) error {
 	// probably a better way to structure this function
 	var (
 		result      string = ""
@@ -351,7 +351,7 @@ func (m model) validateCreds(creds ...string) error {
 }
 
 // actual db authentication handler
-func (m model) authUser(creds ...string) error {
+func (m *model) authUser(creds ...string) error {
 	u := user{
 		username: creds[0],
 		password: creds[1],
@@ -368,7 +368,7 @@ func (m model) authUser(creds ...string) error {
 	return nil
 }
 
-func (m model) resetFields() {
+func (m *model) resetFields() {
 	for i := range m.loginInputs {
 		m.loginInputs[i].Reset()
 	}

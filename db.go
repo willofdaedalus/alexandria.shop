@@ -152,7 +152,7 @@ func getBooksForPage(db *sql.DB, pageItems, offset int) ([]book, error) {
 
 func readBooksFromJson() ([]book, error) {
 	// slices get resized by golang but this is a good start
-	var books []book = make([]book, 20)
+	var books = make([]book, 20)
 
 	// Open the JSON file
 	jsonFile, err := os.Open("small_list.json")

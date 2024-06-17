@@ -17,7 +17,7 @@ func styleTextWith(t string, col lipgloss.TerminalColor, bold bool) string {
 		Render(t)
 }
 
-func (m model) renderInputBox(label string, index int, inputs []textinput.Model, focused bool) string {
+func (m *model) renderInputBox(label string, index int, inputs []textinput.Model, focused bool) string {
 	render := renderBoxDesc(label, index, focused, inputs)
 	if focused {
 		return magenta.PaddingLeft(8).Align(lipgloss.Left).Render(render)
@@ -26,7 +26,7 @@ func (m model) renderInputBox(label string, index int, inputs []textinput.Model,
 }
 
 // renders an item in the catalogue view
-func (m model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) string {
+func (m *model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b book) string {
 	var bookInCart = "[in cart]"
 
 	selectProperties := lipgloss.NewStyle().
@@ -69,7 +69,7 @@ func (m model) renderItemDisplay(renderWidth, renderHeight int, selected bool, b
 }
 
 // render the headers at the top of the catalogue page
-func (m model) renderHeaders(header1, cart string, renderWidth int) string {
+func (m *model) renderHeaders(header1, cart string, renderWidth int) string {
 	tops := [][]string{
 		{
 			header1,
@@ -108,7 +108,7 @@ func renderBoxDesc(s string, idx int, focused bool, inputs []textinput.Model) st
 	return finalRender
 }
 
-func (m model) mainScreenFrame(header1, footerMsg, content string) string {
+func (m *model) mainScreenFrame(header1, footerMsg, content string) string {
 	// Initialize variables
 	renderWidth := (m.termWidth / 2) + 10
 	if renderWidth < 0 {
