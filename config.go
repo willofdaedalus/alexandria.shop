@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	magicNum          = 5 // the num of items to display, to query
+	magicNum          = 5 // the num of items to display, to query; imma be real with you I can't change this
 	startScrTimeout   = time.Second * 5
 	catalogueHelpMsg  = "ctrl+c to exit  |  ctrl+l to logout  |  tab/shift+tab or arrow keys to move"
 	addToCartMsg      = "+ to add book to cart"

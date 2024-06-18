@@ -24,10 +24,9 @@ func initialModel(db *sql.DB) model {
 		db:           db, curPage: 1,
 		c:              c,
 		itemsDispCount: magicNum,
-		prevOffset:     0,
 	}
 
-	books, _ := getBooksForPage(db, 7, m.prevOffset)
+	books, _ := getBooksForPage(db, 7, m.mainOffset)
 	if books == nil {
 		log.Fatalf("no books found")
 	}
@@ -111,6 +110,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.view == vLogin {
 				transitionView(&m, vSignUp)
 			}
+
 		case "ctrl+l":
 			if m.view == vSignUp {
 				transitionView(&m, vLogin)
@@ -151,6 +151,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// reset the iterators and iterated to keep the selector in check
 				m.cartItemIter = 0
 				m.cartItemsIterated = 0
+			} else if m.view == vCart {
+				if len(m.c.items) > 0 {
+					if s == "-" || s == "_" {
+						curBook := m.c.allTitles()[*itemTracker]
+						delete(m.c.items, curBook)
+
+						// move the selector to the previous book in cart
+						if m.cartItemIter > 0 {
+							m.cartItemIter--
+							*itemTracker = m.cartItemIter
+						} else {
+							return m, nil
+						}
+					}
+				}
 			}
 
 		case "enter":
@@ -220,14 +235,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
-					if atBot && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
-						if err != nil || books == nil {
-							return m, nil
-						}
+					if atBot {
+						if m.view == vCatalogue {
+							books, err := getBooksForPage(m.db, m.itemsDispCount, m.mainOffset)
+							if err != nil || books == nil {
+								return m, nil
+							}
 
-						m.curBooks = books
-						m.prevOffset++
+							m.curBooks = books
+							m.mainOffset++
+						} else if m.view == vCart {
+							m.cartOffset++
+						}
 					}
 				} else if i == "shift+tab" || i == "up" {
 					if m.view == vCatalogue && *itemTracker == 0 {
@@ -238,19 +257,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
-					if atTop && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
-						// books, err := getBooksForPage(m.db, m.curPage-1, 3)
+					if atTop {
+						if m.view == vCatalogue {
+							books, err := getBooksForPage(m.db, m.itemsDispCount, m.mainOffset)
+							// books, err := getBooksForPage(m.db, m.curPage-1, 3)
 
-						// make check to determine the incoming books are the same as the rendered
-						// ones before moving the selector up to the next page
-						if err != nil {
-							return m, nil
+							// make check to determine the incoming books are the same as the rendered
+							// ones before moving the selector up to the next page
+							if err != nil {
+								return m, nil
+							}
+
+							// assign the new books to render and then display their length
+							m.curBooks = books
+							m.mainOffset--
+						} else if m.view == vCart {
+							m.cartOffset--
 						}
-
-						// assign the new books to render and then display their length
-						m.curBooks = books
-						m.prevOffset--
 					}
 				}
 			}

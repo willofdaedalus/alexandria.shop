@@ -10,15 +10,15 @@ func initialCart() cart {
 	}
 }
 
-func (c cart) addToCart(b book) {
+func (c *cart) addToCart(b book) {
 	c.items[b.Title] = b.Price
 }
 
-func (c cart) removeFromCart(b book) {
+func (c *cart) removeFromCart(b book) {
 	delete(c.items, b.Title)
 }
 
-func (c cart) allTitles() []string {
+func (c *cart) allTitles() []string {
 	// Extract keys
 	keys := make([]string, 0, len(c.items))
 	for k := range c.items {
@@ -31,16 +31,31 @@ func (c cart) allTitles() []string {
 	return keys
 }
 
-func (c cart) allBooksInCart() map[string]float64 {
-	return c.items
+func (c *cart) cartItemsToDisp(top int, spatials dimensions) []string {
+    itemCount := spatials.innerH / 3
+	// extract keys
+	keys := make([]string, 0, len(c.items))
+	for k := range c.items {
+		keys = append(keys, k)
+	}
+
+	// sort keys
+	sort.Strings(keys)
+
+	// ensure top and bot are within the valid range
+	if top < 0 {
+		top = 0
+	}
+
+	return keys[top:len(keys) % itemCount]
 }
 
-func (c cart) bookInCart(b book) bool {
+func (c *cart) bookInCart(b book) bool {
 	_, ok := c.items[b.Title]
 	return ok
 }
 
-func (c cart) booksTotal() float64 {
+func (c *cart) booksTotal() float64 {
 	var price float64
 	for _, p := range c.items {
 		price += p

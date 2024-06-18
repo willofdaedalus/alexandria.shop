@@ -26,20 +26,17 @@ func (m *model) cartScreen() string {
 	isHighlighted := func(index int) bool {
 		return m.cartItemIter == index
 	}
-	// section to render the items in the list
-	items := make([]string, 0)
-	for i := 0; i < len(m.c.items); i++ {
-		items = append(items, renderItem(m.spatials.listSectionW-4, m.c.allTitles()[i], isHighlighted(i)))
+    items := make([]string, 0)
+	if len(m.c.items) > 0 {
+		// section to render the items in the list
+		for i := 0; i < len(m.c.items); i++ {
+			items = append(items, renderItem(m.spatials.listSectionW-4, m.c.allTitles()[i], isHighlighted(i)))
+		}
 	}
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
 
 	if len(m.c.items) == 0 {
-		// details = fmt.Sprintf("%s %s %s",
-		// 	styleTextWith("there are no items in your cart right now! you can add items by pressing", magenta.GetForeground(), true),
-		// 	styleTextWith("+ or =", cyan.GetForeground(), true),
-		// 	styleTextWith("on a selected book!", magenta.GetForeground(), true),
-		// )
 		details = "\nthere are no items in your cart right now!\nyou can add items by pressing + or = on a selected book!"
 	} else {
 		details = "\nyou can scroll through the books in cart and remove books you don't need with -"
@@ -59,7 +56,7 @@ func (m *model) mainScreen() string {
 	}
 
 	if m.itemsDispCount > magicNum {
-		m.curBooks, _ = getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
+		m.curBooks, _ = getBooksForPage(m.db, m.itemsDispCount, m.mainOffset)
 		if m.curBooks == nil {
 			log.Fatalf("no books found")
 		}

@@ -54,7 +54,8 @@ type model struct {
 	mainItemsIter     int
 	cartItemsIterated int
 	cartItemIter      int
-	prevOffset        int
+	mainOffset        int
+	cartOffset        int
 
 	curBooks []book            // books that are being displayed
 	curUser  user              // information about the current user
