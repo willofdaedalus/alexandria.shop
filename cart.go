@@ -16,6 +16,16 @@ func (c cart) removeFromCart(b book) {
 	delete(c.items, b.Title)
 }
 
+func (c cart) allTitles() []string {
+	var titles = make([]string, 0)
+
+	for k := range c.items {
+		titles = append(titles, k)
+	}
+
+	return titles
+}
+
 func (c cart) allBooksInCart() map[string]float64 {
 	return c.items
 }

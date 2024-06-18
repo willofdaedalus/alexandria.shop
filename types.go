@@ -43,8 +43,7 @@ type model struct {
 	view     int
 	prevView int
 
-	curBooks []book
-	curPage  int
+	curPage int
 
 	// get the current terminal's width and height
 	termWidth  int
@@ -53,15 +52,26 @@ type model struct {
 	itemsCount    int
 	itemsIterated int
 	curItem       int
+	cartItem       int
 	prevOffset    int
 
-	// current session user
-	curUser user
-	// db handler
-	db *sql.DB
-	// cart system
-	c       cart
-	content mainRenderContent
+	curBooks []book            // books that are being displayed
+	curUser  user              // information about the current user
+	db       *sql.DB           //db handler
+	c        cart              // cart system
+	content  mainRenderContent // things to pass to the main frame to render
+	spatials dimensions        // essential variables needed to ease responsiveness
+}
+
+type dimensions struct {
+	dynRenderWidth  int // calculates the best width
+	dynRenderHeight int // calculates the best height
+	actualRenderW   int // that's the width of the main border
+	actualRenderH   int // that's the height of the main border
+	innerW          int // padding subtracted from the main width
+	innerH          int // padding subtracted from the main height
+	listSectionW    int // list section width
+	bookDeetsW      int // book details width
 }
 
 type mainRenderContent struct {

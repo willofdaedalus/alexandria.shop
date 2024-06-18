@@ -8,6 +8,8 @@ import (
 )
 
 func (m *model) cartScreen() string {
+	var details string
+
 	headers := []string{
 		"esc to go back",
 		fmt.Sprint("welcome, ", m.curUser.username),
@@ -21,7 +23,27 @@ func (m *model) cartScreen() string {
 		footerMessage:  footerMsg,
 	}
 
-	return m.mainBorderRender()
+	isHighlighted := func(index int) bool {
+		return m.cartItem == index
+	}
+	// section to render the items in the list
+	items := make([]string, 0)
+	for i := 0; i < len(m.c.allTitles()); i++ {
+		items = append(items, renderItem(m.spatials.listSectionW-4, m.c.allTitles()[i], isHighlighted(i)))
+	}
+
+	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
+
+	if len(m.c.items) == 0 {
+		// details = fmt.Sprintf("%s %s %s",
+		// 	styleTextWith("there are no items in your cart right now! you can add items by pressing", magenta.GetForeground(), true),
+		// 	styleTextWith("+ or =", cyan.GetForeground(), true),
+		// 	styleTextWith("on a selected book!", magenta.GetForeground(), true),
+		// )
+		details = "there are no items in your cart right now!\nyou can add items by pressing + or = on a selected book!"
+	}
+
+	return m.mainBorderRender(itemsRender, details)
 }
 
 func (m *model) mainScreen() string {
@@ -48,16 +70,32 @@ func (m *model) mainScreen() string {
 		footerMessage: footerMsg,
 	}
 
-	return m.mainBorderRender()
-}
+	isHighlighted := func(index int) bool {
+		return m.curItem == index
+	}
+	// section to render the items in the list
+	items := make([]string, 0)
+	for i := 0; i < len(m.curBooks); i++ {
+		text := m.curBooks[i].Title
+		// purpose of the asterisk is to indicate the item is already in the cart
+		// previously it was a big "[in cart]" text but we need to save space with
+		// the new UI
+		if m.c.bookInCart(m.curBooks[i]) {
+			text = fmt.Sprintf("* %s", m.curBooks[i].Title)
+		}
 
-// function to dynamically calculate the number of items to display based on
-// the height of the terminal window
-func calculateItemsCount(termHeight int) int {
-	dynRenderHeight := termHeight - (termHeight / 4)
-	actualRenderH := dynRenderHeight + 5
-	innerH := (actualRenderH / 4) + (actualRenderH / 2)
-	return innerH / 3
+		text = truncateText(text, m.spatials.listSectionW-4)
+
+		items = append(items, renderItem(m.spatials.listSectionW-4, text, isHighlighted(i)))
+		// set the selectedBook global var when an option is highlighted
+		if isHighlighted(i) {
+			selectedBook = m.curBooks[i]
+		}
+	}
+
+	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
+
+	return m.mainBorderRender(itemsRender, styleBookDeets())
 }
 
 func renderHeader(w int, content string, border bool, margin ...int) string {
@@ -87,15 +125,38 @@ func renderItem(w int, content string, selected bool) string {
 		Render(content)
 }
 
+func setupDimensions(termHeight, termWidth int) dimensions {
+	// in order to achieve a common ground for dynamic responsiveness, set a maximum size
+	dynRenderWidth := termWidth - (termWidth / 6)            // calculates the best width
+	dynRenderHeight := termHeight - (termHeight / 4)         // calculates the best height
+	actualRenderW := dynRenderWidth - 21                     // that's the width of the main border
+	actualRenderH := dynRenderHeight + 5                     // that's the height of the main border
+	innerW := actualRenderW - 5                              // fake padding subtracted from th main border width
+	innerH := (actualRenderH / 4) + (actualRenderH / 2)      // fake padding subtracted from th main border height
+	listSectionW := innerW / 3                               // listsection width
+	bookDeetW := (innerW / 3) + (innerW / 4) + (innerW / 13) // bookdetails width
+
+	return dimensions{
+		dynRenderWidth,
+		dynRenderHeight,
+		actualRenderW,
+		actualRenderH,
+		innerW,
+		innerH,
+		listSectionW,
+		bookDeetW,
+	}
+}
+
 func styleBookDeets() string {
 	return lipgloss.NewStyle().
 		Render(fmt.Sprintf(
-			"%s by %s\nPrice: %.2f\nTags: %s\n\n\n%s",
+			"%s by %s\nPrice: $%.2f\nTags: %s\n\n\n%s",
 			selectedBook.Title, selectedBook.Author, selectedBook.Price,
 			selectedBook.Genre, selectedBook.LongDesc))
 }
 
-func (m *model) mainBorderRender() string {
+func (m *model) mainBorderRender(itemsRender, bigSection string) string {
 	var (
 		headers       = make([]string, 0)
 		customMargins = [][]int{
@@ -106,19 +167,9 @@ func (m *model) mainBorderRender() string {
 		}
 	)
 
-	// in order to achieve a common ground for dynamic responsiveness, set a maximum size
-	dynRenderWidth := m.termWidth - (m.termWidth / 6)        // calculates the best width
-	dynRenderHeight := m.termHeight - (m.termHeight / 4)     // calculates the best height
-	actualRenderW := dynRenderWidth - 21                     // that's the width of the main border
-	actualRenderH := dynRenderHeight + 5                     // that's the height of the main border
-	innerW := actualRenderW - 5                              // fake padding subtracted from th main border width
-	innerH := (actualRenderH / 4) + (actualRenderH / 2)      // fake padding subtracted from th main border height
-	listSectionW := innerW / 3                               // listsection width
-	bookDeetW := (innerW / 3) + (innerW / 4) + (innerW / 13) // bookdetails width
-
 	// renders headers
 	for i := 0; i < 4; i++ {
-		headers = append(headers, renderHeader((actualRenderW-4)/5, m.content.headerContents[i], false, customMargins[i]...))
+		headers = append(headers, renderHeader((m.spatials.actualRenderW-4)/5, m.content.headerContents[i], false, customMargins[i]...))
 	}
 	// joins all header related text
 	innerHeaderRender := lipgloss.JoinHorizontal(lipgloss.Left, headers...)
@@ -127,52 +178,36 @@ func (m *model) mainBorderRender() string {
 	header := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Margin(0, 1, 0, 1).
-		Width(actualRenderW - 4).
+		Width(m.spatials.actualRenderW - 4).
 		Align(lipgloss.Center).
 		Render(innerHeaderRender)
 
-	isHighlighted := func(index int) bool {
-		return m.curItem == index
-	}
-
-	// section to render the items in the list
-	items := make([]string, 0)
-	for i := 0; i < len(m.curBooks); i++ {
-		text := m.curBooks[i].Title
-		if m.c.bookInCart(m.curBooks[i]) {
-			text = fmt.Sprintf("* %s", m.curBooks[i].Title)
-		}
-
-		text = truncateText(text, listSectionW-4)
-
-		items = append(items, renderItem(listSectionW-4, text, isHighlighted(i)))
-		// set the selectedBook global var when an option is highlighted
-		if isHighlighted(i) {
-			selectedBook = m.curBooks[i]
-		}
-	}
-
-	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
-
-	midSectionJoin := renderMidSections(listSectionW, innerH, m.itemsCount, bookDeetW, itemsRender, styleBookDeets())
+	midSectionJoin := renderMidSections(
+		m.spatials.listSectionW,
+		m.spatials.innerH,
+		m.itemsCount,
+		m.spatials.bookDeetsW,
+		itemsRender,
+		bigSection,
+	)
 
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Align(lipgloss.Center).
 		Margin(1, 0, 0, 1).
-		Width(actualRenderW - 4).
+		Width(m.spatials.actualRenderW - 4).
 		Render(m.content.footerMessage)
 
 	// this is the best render height across 5 different terminal emulators!
 	h := 30
-	if actualRenderH > 33 {
+	if m.spatials.actualRenderH > 33 {
 		h = 33
 	}
 
 	mainBorder := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
-		Width(actualRenderW).
-		Height(h-(innerH%m.itemsCount)).
+		Width(m.spatials.actualRenderW).
+		Height(h-(m.spatials.innerH%m.itemsCount)).
 		Render(header, midSectionJoin, footer)
 
 	finalRender := lipgloss.Place(
@@ -201,13 +236,4 @@ func renderMidSections(listSectionW, innerH, itemCount, bookDeetW int, listConte
 		Render(deetContent)
 
 	return lipgloss.JoinHorizontal(lipgloss.Center, listSection, bookSection)
-}
-
-func extractTitles(bs []book) []string {
-	retval := make([]string, 0)
-	for _, b := range bs {
-		retval = append(retval, fmt.Sprintf("%s", b.Title))
-	}
-
-	return retval
 }

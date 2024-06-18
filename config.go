@@ -104,7 +104,7 @@ var (
 var (
 	selectedBook         book // this is updated in the function that handles the selection of the book items
 	catalogueViewHeight  int  // hack to keep the height the same when displaying the details of a book
-	validNavigationViews = []int{vLogin, vSignUp, vCatalogue}
+	validNavigationViews = []int{vLogin, vSignUp, vCatalogue, vCart}
 	startingViews        = []int{vLogin, vSignUp, vWelcome, vHelp}
 	mainViews            = []int{vCatalogue, vBookDetails}
 )

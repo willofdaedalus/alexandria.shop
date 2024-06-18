@@ -11,6 +11,9 @@ import (
 
 // renders a text in a particular way with colours and styling
 func styleTextWith(t string, col lipgloss.TerminalColor, bold bool) string {
+	if len(t) == 0 {
+		return t
+	}
 	return lipgloss.NewStyle().
 		Bold(bold).
 		Foreground(col).

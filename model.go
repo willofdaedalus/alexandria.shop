@@ -44,7 +44,9 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd       tea.Cmd
+		err       error
 		scrCtxLen int               // this stores the len of all input fields, items and such depending on the screen
+		count     int               // this stores the number of items that can be iterated on the screen
 		field     *int              // this determines the field depending on what auth screen we're on
 		inputs    []textinput.Model // this determines the input fields also depending on the auth screen
 		uName     string            // this stores the name the user entered
@@ -53,11 +55,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		wrap      bool              // wraps input so that the selector go back to the start if at the end
 	)
 
+	// setup the dimensions stuff here
+	m.spatials = setupDimensions(m.termHeight, m.termWidth)
 	// Calculate itemsCount before rendering
-	m.itemsCount = calculateItemsCount(m.termHeight)
-	count, err := countBooks(m.db)
+	m.itemsCount = m.spatials.innerH / 3
+
+	count, err = countBooks(m.db)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if m.view == vCart {
+		count = len(m.c.items)
 	}
 
 	// update the current inputs' focus based on the view
@@ -74,7 +82,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	} else if m.view == vCatalogue {
 		field = &m.curItem
 		wrap = false
-		scrCtxLen = calculateItemsCount(m.termHeight)
+		scrCtxLen = m.itemsCount
+	} else if m.view == vCart {
+		field = &m.cartItem
+		wrap = false
+		scrCtxLen = len(m.c.items)
 	}
 
 	switch msg := msg.(type) {
@@ -112,7 +124,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "esc":
 			// go back from the books view to the main catalogue view
-			if m.view == vBookDetails {
+			if m.view == vCart {
 				// force the transition from book view to catalogue view to fix
 				// the bug that forces the helpView/bookDetail view
 				transitionView(&m, vCatalogue)
@@ -188,12 +200,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// check that the current view can be navigated
 			if slices.Contains(validNavigationViews, m.view) {
 				if (i == "tab" || i == "down") && m.itemsIterated < count {
-					atEnd := nextInput(field, scrCtxLen, wrap)
+					atBot := nextInput(field, scrCtxLen, wrap)
 					m.itemsIterated++
 
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
-					if atEnd && m.view == vCatalogue {
+					if atBot && m.view == vCatalogue {
 						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
 						if err != nil || books == nil {
 							return m, nil
@@ -203,12 +215,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.prevOffset++
 					}
 				} else if (i == "shift+tab" || i == "up") && m.itemsIterated > 0 {
-					atStart := prevInput(field, scrCtxLen, wrap)
+					atTop := prevInput(field, scrCtxLen, wrap)
 					m.itemsIterated--
 
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
-					if atStart && m.view == vCatalogue {
+					if atTop && m.view == vCatalogue {
 						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
 						// books, err := getBooksForPage(m.db, m.curPage-1, 3)
 
@@ -225,6 +237,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 
+            logToFile(fmt.Sprint(m.itemsIterated))
+
+            // this is the controller for the input fields at login, signup
 			cmds := focusFields(field, inputs)
 			return m, tea.Batch(cmds...)
 		}
