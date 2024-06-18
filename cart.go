@@ -2,6 +2,8 @@
 // seperation of concerns here man
 package main
 
+import "sort"
+
 func initialCart() cart {
 	return cart{
 		make(map[string]float64),
@@ -17,13 +19,16 @@ func (c cart) removeFromCart(b book) {
 }
 
 func (c cart) allTitles() []string {
-	var titles = make([]string, 0)
-
+	// Extract keys
+	keys := make([]string, 0, len(c.items))
 	for k := range c.items {
-		titles = append(titles, k)
+		keys = append(keys, k)
 	}
 
-	return titles
+	// Sort keys
+	sort.Strings(keys)
+
+	return keys
 }
 
 func (c cart) allBooksInCart() map[string]float64 {

@@ -24,11 +24,11 @@ func (m *model) cartScreen() string {
 	}
 
 	isHighlighted := func(index int) bool {
-		return m.cartItem == index
+		return m.cartItemIter == index
 	}
 	// section to render the items in the list
 	items := make([]string, 0)
-	for i := 0; i < len(m.c.allTitles()); i++ {
+	for i := 0; i < len(m.c.items); i++ {
 		items = append(items, renderItem(m.spatials.listSectionW-4, m.c.allTitles()[i], isHighlighted(i)))
 	}
 
@@ -40,7 +40,11 @@ func (m *model) cartScreen() string {
 		// 	styleTextWith("+ or =", cyan.GetForeground(), true),
 		// 	styleTextWith("on a selected book!", magenta.GetForeground(), true),
 		// )
-		details = "there are no items in your cart right now!\nyou can add items by pressing + or = on a selected book!"
+		details = "\nthere are no items in your cart right now!\nyou can add items by pressing + or = on a selected book!"
+	} else {
+		details = "\nyou can scroll through the books in cart and remove books you don't need with -"
+		details += "\nonce you're ready to complete your purchase, press c to go to the checkout"
+		details += fmt.Sprintf("\n\nTOTAL: $%.2f", m.c.booksTotal())
 	}
 
 	return m.mainBorderRender(itemsRender, details)
@@ -54,8 +58,8 @@ func (m *model) mainScreen() string {
 		fmt.Sprintf("c cart [%d] %.2f", len(m.c.items), m.c.booksTotal()),
 	}
 
-	if m.itemsCount > magicNum {
-		m.curBooks, _ = getBooksForPage(m.db, m.itemsCount, m.prevOffset)
+	if m.itemsDispCount > magicNum {
+		m.curBooks, _ = getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
 		if m.curBooks == nil {
 			log.Fatalf("no books found")
 		}
@@ -71,7 +75,7 @@ func (m *model) mainScreen() string {
 	}
 
 	isHighlighted := func(index int) bool {
-		return m.curItem == index
+		return m.mainItemsIter == index
 	}
 	// section to render the items in the list
 	items := make([]string, 0)
@@ -185,7 +189,7 @@ func (m *model) mainBorderRender(itemsRender, bigSection string) string {
 	midSectionJoin := renderMidSections(
 		m.spatials.listSectionW,
 		m.spatials.innerH,
-		m.itemsCount,
+		m.itemsDispCount,
 		m.spatials.bookDeetsW,
 		itemsRender,
 		bigSection,
@@ -207,7 +211,7 @@ func (m *model) mainBorderRender(itemsRender, bigSection string) string {
 	mainBorder := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Width(m.spatials.actualRenderW).
-		Height(h-(m.spatials.innerH%m.itemsCount)).
+		Height(h-(m.spatials.innerH%m.itemsDispCount)).
 		Render(header, midSectionJoin, footer)
 
 	finalRender := lipgloss.Place(

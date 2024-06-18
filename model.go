@@ -22,9 +22,9 @@ func initialModel(db *sql.DB) model {
 		loginInputs:  readyInputsFor(2),
 		signupInputs: readyInputsFor(3),
 		db:           db, curPage: 1,
-		c:          c,
-		itemsCount: magicNum,
-		prevOffset: 0,
+		c:              c,
+		itemsDispCount: magicNum,
+		prevOffset:     0,
 	}
 
 	books, _ := getBooksForPage(db, 7, m.prevOffset)
@@ -43,30 +43,35 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
-		cmd       tea.Cmd
-		err       error
-		scrCtxLen int               // this stores the len of all input fields, items and such depending on the screen
-		count     int               // this stores the number of items that can be iterated on the screen
-		field     *int              // this determines the field depending on what auth screen we're on
-		inputs    []textinput.Model // this determines the input fields also depending on the auth screen
-		uName     string            // this stores the name the user entered
-		uPwd      string            // this stores the password the user entered
-		uRePwd    string            // this stores the password confirmation the user entered at signup
-		wrap      bool              // wraps input so that the selector go back to the start if at the end
+		cmd         tea.Cmd
+		err         error
+		scrCtxLen   int               // this stores the len of all input fields, items and such depending on the screen
+		count       int               // this stores the number of items that can be iterated on the screen
+		field       *int              // this determines the field depending on what auth screen we're on
+		itemTracker *int              // this keeps items that checks out of bounds errors from happening
+		uName       string            // this stores the name the user entered
+		uPwd        string            // this stores the password the user entered
+		uRePwd      string            // this stores the password confirmation the user entered at signup
+		wrap        bool              // wraps input so that the selector go back to the start if at the end
+		inputs      []textinput.Model // this determines the input fields also depending on the auth screen
 	)
 
 	// setup the dimensions stuff here
 	m.spatials = setupDimensions(m.termHeight, m.termWidth)
 	// Calculate itemsCount before rendering
-	m.itemsCount = m.spatials.innerH / 3
+	m.itemsDispCount = m.spatials.innerH / 3
 
-	count, err = countBooks(m.db)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if m.view == vCart {
+	if m.view == vCatalogue {
+		count, err = countBooks(m.db)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if m.view == vCart {
 		count = len(m.c.items)
 	}
+
+	// ready the item tracker to be the mainItemsIterated
+	itemTracker = &m.mainItemsIterated
 
 	// update the current inputs' focus based on the view
 	if m.view == vLogin {
@@ -80,13 +85,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		wrap = true
 		scrCtxLen = len(m.signupInputs)
 	} else if m.view == vCatalogue {
-		field = &m.curItem
+		field = &m.mainItemsIter
 		wrap = false
-		scrCtxLen = m.itemsCount
+		scrCtxLen = m.itemsDispCount
+		itemTracker = &m.mainItemsIterated
 	} else if m.view == vCart {
-		field = &m.cartItem
+		field = &m.cartItemIter
 		wrap = false
 		scrCtxLen = len(m.c.items)
+		itemTracker = &m.cartItemsIterated
 	}
 
 	switch msg := msg.(type) {
@@ -110,10 +117,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.view == vCatalogue {
 				// simple logout
 				m.curPage = 1
-				m.curItem = 0
+				m.mainItemsIter = 0
 				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
 				m.resetFields()
 				m.c.items = make(map[string]float64)
+				*itemTracker = 0
 				transitionView(&m, vLogin)
 			}
 
@@ -140,6 +148,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else if s == "-" || s == "_" {
 					m.c.removeFromCart(selectedBook)
 				}
+				// reset the iterators and iterated to keep the selector in check
+				m.cartItemIter = 0
+				m.cartItemsIterated = 0
 			}
 
 		case "enter":
@@ -199,14 +210,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			// check that the current view can be navigated
 			if slices.Contains(validNavigationViews, m.view) {
-				if (i == "tab" || i == "down") && m.itemsIterated < count {
+				if i == "tab" || i == "down" {
+					// we're at the end of the list
+					if m.view == vCatalogue && *itemTracker >= count {
+						return m, nil
+					}
 					atBot := nextInput(field, scrCtxLen, wrap)
-					m.itemsIterated++
+					*itemTracker++
 
 					// check if we're at the end of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atBot && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
+						books, err := getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
 						if err != nil || books == nil {
 							return m, nil
 						}
@@ -214,14 +229,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.curBooks = books
 						m.prevOffset++
 					}
-				} else if (i == "shift+tab" || i == "up") && m.itemsIterated > 0 {
+				} else if i == "shift+tab" || i == "up" {
+					if m.view == vCatalogue && *itemTracker == 0 {
+						return m, nil
+					}
 					atTop := prevInput(field, scrCtxLen, wrap)
-					m.itemsIterated--
+					*itemTracker--
 
 					// check if we're at the start of the list and if we're, simply request
 					// the next set of pages needed to render
 					if atTop && m.view == vCatalogue {
-						books, err := getBooksForPage(m.db, m.itemsCount, m.prevOffset)
+						books, err := getBooksForPage(m.db, m.itemsDispCount, m.prevOffset)
 						// books, err := getBooksForPage(m.db, m.curPage-1, 3)
 
 						// make check to determine the incoming books are the same as the rendered
@@ -237,9 +255,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 
-            logToFile(fmt.Sprint(m.itemsIterated))
-
-            // this is the controller for the input fields at login, signup
+			// this is the controller for the input fields at login, signup
 			cmds := focusFields(field, inputs)
 			return m, tea.Batch(cmds...)
 		}

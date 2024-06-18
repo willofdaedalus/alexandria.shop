@@ -167,12 +167,12 @@ func (m *model) catalogueScreen(header1 string) string {
 
 	// function to determine if an item is highlighted
 	isHighlighted := func(index int) bool {
-		return m.curItem == index
+		return m.mainItemsIter == index
 	}
 
 	// render the top, mid, and bot items based on current item
 	var itemsRender []string
-	for i := 0; i < m.itemsCount; i++ {
+	for i := 0; i < m.itemsDispCount; i++ {
 		itemsRender = append(itemsRender, m.renderItemDisplay(renderWidth, offset, isHighlighted(i), m.curBooks[i]))
 	}
 

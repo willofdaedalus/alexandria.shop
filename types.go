@@ -49,11 +49,12 @@ type model struct {
 	termWidth  int
 	termHeight int
 
-	itemsCount    int
-	itemsIterated int
-	curItem       int
-	cartItem       int
-	prevOffset    int
+	itemsDispCount    int
+	mainItemsIterated int
+	mainItemsIter     int
+	cartItemsIterated int
+	cartItemIter      int
+	prevOffset        int
 
 	curBooks []book            // books that are being displayed
 	curUser  user              // information about the current user
