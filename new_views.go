@@ -26,11 +26,12 @@ func (m *model) cartScreen() string {
 	isHighlighted := func(index int) bool {
 		return m.cartItemIter == index
 	}
-    items := make([]string, 0)
-	if len(m.c.items) > 0 {
+	items := make([]string, 0)
+	cartItems := m.c.cartItemsToDisp(m.cartOffset, m.spatials)
+	if len(cartItems) > 0 {
 		// section to render the items in the list
-		for i := 0; i < len(m.c.items); i++ {
-			items = append(items, renderItem(m.spatials.listSectionW-4, m.c.allTitles()[i], isHighlighted(i)))
+		for i := 0; i < len(cartItems); i++ {
+			items = append(items, renderItem(m.spatials.listSectionW-4, cartItems[i], isHighlighted(i)))
 		}
 	}
 

@@ -2,63 +2,87 @@
 // seperation of concerns here man
 package main
 
-import "sort"
+import (
+	"fmt"
+	"slices"
+)
 
 func initialCart() cart {
 	return cart{
-		make(map[string]float64),
+		make([]cartItem, 0),
 	}
 }
 
 func (c *cart) addToCart(b book) {
-	c.items[b.Title] = b.Price
+	item := cartItem{b.Title, b.Price}
+	if slices.Contains(c.items, item) {
+		return
+	}
+	c.items = append(c.items, item)
+}
+
+func (c *cart) removeFromCartStr(t string) {
+	idx := -1
+	for i, ci := range c.items {
+		if ci.title == t {
+			idx = i
+			break
+		}
+	}
+	if idx == -1 {
+		return
+	}
+	c.items = append(c.items[:idx], c.items[idx+1:]...)
 }
 
 func (c *cart) removeFromCart(b book) {
-	delete(c.items, b.Title)
-}
-
-func (c *cart) allTitles() []string {
-	// Extract keys
-	keys := make([]string, 0, len(c.items))
-	for k := range c.items {
-		keys = append(keys, k)
+	item := cartItem{b.Title, b.Price}
+	itemIdx := slices.Index(c.items, item)
+	// https://pkg.go.dev/slices#Index
+	if itemIdx == -1 {
+		return
 	}
-
-	// Sort keys
-	sort.Strings(keys)
-
-	return keys
+	c.items = append(c.items[:itemIdx], c.items[itemIdx+1:]...)
 }
 
 func (c *cart) cartItemsToDisp(top int, spatials dimensions) []string {
-    itemCount := spatials.innerH / 3
+	// var limit int
+	itemCount := spatials.innerH / 3
 	// extract keys
 	keys := make([]string, 0, len(c.items))
-	for k := range c.items {
-		keys = append(keys, k)
+	for _, k := range c.items {
+		keys = append(keys, k.title)
 	}
-
-	// sort keys
-	sort.Strings(keys)
 
 	// ensure top and bot are within the valid range
 	if top < 0 {
 		top = 0
 	}
 
-	return keys[top:len(keys) % itemCount]
+	limit := len(keys)
+	if limit > itemCount {
+		limit = top + (itemCount - 1)
+		if limit > len(keys) {
+			limit = len(keys)
+		}
+	}
+	logToFile(fmt.Sprintf("limit is: %d", limit))
+
+	retval := make([]string, limit)
+	copy(retval, keys[top:limit])
+
+	return retval
 }
 
 func (c *cart) bookInCart(b book) bool {
-	_, ok := c.items[b.Title]
-	return ok
+	item := cartItem{b.Title, b.Price}
+	return slices.Contains(c.items, item)
 }
 
 func (c *cart) booksTotal() float64 {
 	var price float64
 	for _, p := range c.items {
-		price += p
+		price += p.price
 	}
 
 	return price

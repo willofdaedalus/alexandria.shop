@@ -22,8 +22,13 @@ type book struct {
 	Price       float64 `json:"price"`
 }
 
+type cartItem struct {
+    title string
+    price float64
+}
+
 type cart struct {
-	items map[string]float64
+	items []cartItem
 }
 
 type model struct {

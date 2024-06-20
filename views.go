@@ -208,17 +208,17 @@ func (m *model) helpScreen() string {
 	return dialog
 }
 
-func (m *model) cartScreenView() string {
-	var items []string
-
-	for key, value := range m.c.items {
-		// Format the key-value pair as "key - value"
-		pair := key + " - " + fmt.Sprintf("%.2f", value)
-		// Append the formatted string to the slice
-		items = append(items, pair)
-	}
-
-	itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
-
-	return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
-}
+// func (m *model) cartScreenView() string {
+// 	var items []string
+//
+// 	for key, value := range m.c.items {
+// 		// Format the key-value pair as "key - value"
+// 		pair := key + " - " + fmt.Sprintf("%.2f", value)
+// 		// Append the formatted string to the slice
+// 		items = append(items, pair)
+// 	}
+//
+// 	itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
+//
+// 	return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
+// }

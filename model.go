@@ -66,7 +66,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			log.Fatal(err)
 		}
 	} else if m.view == vCart {
-		count = len(m.c.items)
+		count = len(m.c.items) - 1
 	}
 
 	// ready the item tracker to be the mainItemsIterated
@@ -118,9 +118,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// simple logout
 				m.curPage = 1
 				m.mainItemsIter = 0
-				m.curBooks, _ = getBooksForPage(m.db, 1, 4)
+				m.curBooks, _ = getBooksForPage(m.db, 1, 4) // this could be an error
 				m.resetFields()
-				m.c.items = make(map[string]float64)
+				m.c.items = make([]cartItem, 0)
 				*itemTracker = 0
 				transitionView(&m, vLogin)
 			}
@@ -154,16 +154,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.view == vCart {
 				if len(m.c.items) > 0 {
 					if s == "-" || s == "_" {
-						curBook := m.c.allTitles()[*itemTracker]
-						delete(m.c.items, curBook)
+						// curBook := m.c.allTitles()[*itemTracker]
+						curBook := m.c.cartItemsToDisp(m.cartOffset, m.spatials)[*itemTracker]
+                        m.c.removeFromCartStr(curBook)
 
-						// move the selector to the previous book in cart
-						if m.cartItemIter > 0 {
-							m.cartItemIter--
-							*itemTracker = m.cartItemIter
-						} else {
+						if m.cartItemIter == 0 {
 							return m, nil
 						}
+						// move the selector to the previous book in cart
+						m.cartItemIter--
+						*itemTracker = m.cartItemIter
 					}
 				}
 			}
@@ -227,7 +227,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if slices.Contains(validNavigationViews, m.view) {
 				if i == "tab" || i == "down" {
 					// we're at the end of the list
-					if m.view == vCatalogue && *itemTracker >= count {
+					if (m.view == vCatalogue || m.view == vCart) && *itemTracker >= count {
 						return m, nil
 					}
 					atBot := nextInput(field, scrCtxLen, wrap)
@@ -249,7 +249,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 					}
 				} else if i == "shift+tab" || i == "up" {
-					if m.view == vCatalogue && *itemTracker == 0 {
+					if (m.view == vCatalogue || m.view == vCart) && *itemTracker == 0 {
 						return m, nil
 					}
 					atTop := prevInput(field, scrCtxLen, wrap)
