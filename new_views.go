@@ -43,7 +43,8 @@ func (m *model) cartScreen() string {
 	if len(m.c.items) == 0 {
 		details = "\nthere are no items in your cart right now!\nyou can add items by pressing + or = on a selected book!"
 	} else {
-		details = "\nyou can scroll through the books in cart and remove books you don't need with -"
+		details = "here you'll find a list of all your books in the cart. you can scroll through and remove those you don't"
+		details += " need in the catalogue section."
 		details += "\nonce you're ready to complete your purchase, press c to go to the checkout"
 		details += fmt.Sprintf("\n\nTOTAL: $%.2f", m.c.booksTotal())
 	}

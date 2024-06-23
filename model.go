@@ -159,27 +159,29 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// reset the iterators and iterated to keep the selector in check
 				m.cartItemIter = 0
 				m.cartItemsIterated = 0
-			} else if m.view == vCart {
-				if len(m.c.items) > 0 {
-					if s == "-" || s == "_" {
-						curBook := m.curCartItems[*itemTracker]
-						m.c.removeFromCartStr(curBook)
-						m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
-
-						// don't remove what you don't have
-						if m.cartItemIter == 0 {
-							return m, nil
-						} else if m.cartItemsIterated > m.itemsDispCount {
-							m.cartOffset--
-							m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
-							logToFile(strings.Join(m.curCartItems, " * "))
-						}
-						// move the selector to the previous book in cart
-						m.cartItemIter--
-						*itemTracker = m.cartItemIter
-					}
-				}
 			}
+            // CODE BELOW DOESN'T WORK WELL AND UNTIL A BETTER SOLUTION IS FOUND IT STAYS COMMENTED
+			//          else if m.view == vCart {
+			// 	if len(m.c.items) > 0 {
+			// 		if s == "-" || s == "_" {
+			// 			curBook := m.curCartItems[*itemTracker]
+			// 			m.c.removeFromCartStr(curBook)
+			// 			m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+			//
+			// 			// don't remove what you don't have
+			// 			if m.cartItemIter == 0 {
+			// 				return m, nil
+			// 			} else if m.cartItemsIterated > m.itemsDispCount {
+			// 				m.cartOffset--
+			// 				m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+			// 				logToFile(strings.Join(m.curCartItems, " * "))
+			// 			}
+			// 			// move the selector to the previous book in cart
+			// 			m.cartItemIter--
+			// 			*itemTracker = m.cartItemIter
+			// 		}
+			// 	}
+			// }
 
 		case "enter":
 			switch m.view {
@@ -224,11 +226,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vCatalogue)
 
 			case vSuccess:
-				// m.resetFields()
+				m.resetFields()
 				transitionView(&m, vLogin)
 
 			case vCredErr:
-				// m.resetFields()
+				m.resetFields()
 				transitionView(&m, m.prevView)
 
 			}
@@ -448,25 +450,21 @@ func (m *model) resetFields() {
 		m.signupInputs[i].Reset()
 	}
 
-	for i := range m.loginInputs {
-		if i > 0 {
-			m.loginInputs[i].Blur()
-		} else {
-			m.loginInputs[i].Focus()
-		}
-	}
+	m.loginInputs = resetInputs(m.loginInputs)
+	m.signupInputs = resetInputs(m.signupInputs)
 
-	for i := range m.signupInputs {
-		if i > 0 {
-			m.signupInputs[i].Blur()
-		} else {
-			m.signupInputs[i].Focus()
-		}
-	}
-
-	// code below doesn't work some reason
-	// find out why!
 	m.loginCurField = 0
 	m.signupCurField = 0
+}
 
+func resetInputs(inputs []textinput.Model) []textinput.Model {
+	for i := range inputs {
+		if i > 0 {
+			inputs[i].Blur()
+		} else {
+			inputs[i].Focus()
+		}
+	}
+
+	return inputs
 }
