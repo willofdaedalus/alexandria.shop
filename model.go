@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/timer"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 func initialModel(db *sql.DB) model {
@@ -104,6 +105,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "c":
 			if m.view != vCart && slices.Contains(mainViews, m.view) {
 				transitionView(&m, vCart)
+			} else if m.view == vCart {
+				if len(m.curCartItems) > 0 {
+					transitionView(&m, vCheckout)
+				} else {
+					m.authErr = fmt.Errorf(noItemsInCart)
+					transitionView(&m, vCredErr)
+				}
 			}
 
 		case "ctrl+s":
@@ -140,7 +148,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// the bug that forces the helpView/bookDetail view
 				transitionView(&m, vCatalogue)
 				m.cartItemIter = 0 // reset the selector for the cart view
-			} else if m.view == vHelp {
+			} else if m.view == vHelp || slices.Contains(infoViews, m.view){
 				transitionView(&m, m.prevView)
 			}
 
@@ -160,7 +168,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cartItemIter = 0
 				m.cartItemsIterated = 0
 			}
-            // CODE BELOW DOESN'T WORK WELL AND UNTIL A BETTER SOLUTION IS FOUND IT STAYS COMMENTED
+			// CODE BELOW DOESN'T WORK WELL AND UNTIL A BETTER SOLUTION IS FOUND IT STAYS COMMENTED
 			//          else if m.view == vCart {
 			// 	if len(m.c.items) > 0 {
 			// 		if s == "-" || s == "_" {
@@ -230,9 +238,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vLogin)
 
 			case vCredErr:
-				m.resetFields()
+				if slices.Contains(infoViews, m.view) {
+					m.resetFields()
+				}
 				transitionView(&m, m.prevView)
-
 			}
 
 		case "tab", "shift+tab", "up", "down":
@@ -343,7 +352,7 @@ func (m model) View() string {
 	case vCatalogue:
 		v = m.mainScreen()
 	case vHelp:
-		v = m.helpScreen()
+		v = m.helpScreen(helpText, 80, 10, lipgloss.Left)
 	case vCart:
 		v = m.cartScreen()
 	}

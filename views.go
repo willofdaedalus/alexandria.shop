@@ -82,7 +82,7 @@ func (m *model) infoScreen(info string, w, h int) string {
 		Padding(0, 2, 0, 2).
 		Width(w).Height(h).
 		// Width(50).Height(3).
-		Align(lipgloss.Center).Render(info)
+		Align(lipgloss.Left).Render(info)
 
 	// footer/help message render
 	// helpText := "press enter"
@@ -188,12 +188,15 @@ func (m *model) catalogueScreen(header1 string) string {
 	return m.mainScreenFrame(header1, catalogueHelpMsg, catalogueView)
 }
 
-func (m *model) helpScreen() string {
+func (m *model) helpScreen(msg string, w, h int, pos lipgloss.Position) string {
 	infoRender := noBorderStyle.
 		PaddingTop(1).
-		Width(80).Height(10).
+		Width(w).Height(h).
 		Padding(0, 2, 0, 2).
-		Align(lipgloss.Left).Render(helpText)
+		Align(pos).Render(msg)
+	// Width(80).Height(10).
+	// Padding(0, 2, 0, 2).
+	// Align(lipgloss.Left).Render(helpText)
 
 	// footer/help message render
 	// helpText := "press enter"

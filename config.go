@@ -12,7 +12,13 @@ const (
 	catalogueHelpMsg  = "ctrl+c to exit  |  ctrl+l to logout  |  tab/shift+tab or arrow keys to move"
 	addToCartMsg      = "+ to add book to cart"
 	removeFromCartMsg = "- to remove book from cart"
-	helpText          = `alexandria.shop Copyright (c) 1996
+	noItemsInCart     = `you have no books in your cart. you can start by adding books in the catalogue view by press
++ on your keyboard.
+you can remove books from your cart with - as well.
+
+press esc/enter to go back to the previous screen
+`
+	helpText = `alexandria.shop Copyright (c) 1996
 
 Did this ever exist?
 If you want it to then yes, yes it did
@@ -36,6 +42,8 @@ const (
 	vBookDetails
 	vHelp
 	vCart
+	vCheckoutErr
+	vCheckout
 )
 
 const (
@@ -78,7 +86,7 @@ var (
 	cyan    = lipgloss.NewStyle().Foreground(lipgloss.Color("#00ffff"))
 	magenta = lipgloss.NewStyle().Foreground(lipgloss.Color("#ff00ff"))
 	yellow  = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffff00"))
-	white  = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffffff"))
+	white   = lipgloss.NewStyle().Foreground(lipgloss.Color("#ffffff"))
 
 	// style = lipgloss.NewStyle().Foreground(lipgloss.Color("#7D56F4")).Align(lipgloss.Center, lipgloss.Center)
 	faded = lipgloss.NewStyle().Foreground(lipgloss.Color("#808080"))
@@ -105,6 +113,7 @@ var (
 	selectedBook         book // this is updated in the function that handles the selection of the book items
 	catalogueViewHeight  int  // hack to keep the height the same when displaying the details of a book
 	validNavigationViews = []int{vLogin, vSignUp, vCatalogue, vCart}
-	startingViews        = []int{vLogin, vSignUp, vWelcome, vHelp}
+	startingViews        = []int{vLogin, vSignUp, vWelcome, vHelp, vCredErr}
 	mainViews            = []int{vCatalogue, vBookDetails}
+	infoViews            = []int{vHelp, vCredErr}
 )
