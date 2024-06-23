@@ -27,11 +27,14 @@ func (m *model) cartScreen() string {
 		return m.cartItemIter == index
 	}
 	items := make([]string, 0)
-	cartItems := m.c.cartItemsToDisp(m.cartOffset, m.spatials)
-	if len(cartItems) > 0 {
+	count := m.itemsDispCount
+	if len(m.curCartItems) > 0 {
 		// section to render the items in the list
-		for i := 0; i < len(cartItems); i++ {
-			items = append(items, renderItem(m.spatials.listSectionW-4, cartItems[i], isHighlighted(i)))
+		if count > len(m.curCartItems) {
+			count = len(m.curCartItems)
+		}
+		for i := 0; i < count; i++ {
+			items = append(items, renderItem(m.spatials.listSectionW-4, m.curCartItems[i], isHighlighted(i)))
 		}
 	}
 

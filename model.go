@@ -69,7 +69,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		count = len(m.c.items) - 1
 	}
 
-	// ready the item tracker to be the mainItemsIterated
+	// ready the item tracker to be the mainItemsIterated by default
 	itemTracker = &m.mainItemsIterated
 
 	// update the current inputs' focus based on the view
@@ -91,7 +91,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	} else if m.view == vCart {
 		field = &m.cartItemIter
 		wrap = false
-		scrCtxLen = len(m.c.items)
+		scrCtxLen = m.itemsDispCount
 		itemTracker = &m.cartItemsIterated
 	}
 
@@ -121,6 +121,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.curBooks, _ = getBooksForPage(m.db, 1, 4) // this could be an error
 				m.resetFields()
 				m.c.items = make([]cartItem, 0)
+				m.curCartItems = make([]string, 0)
+				m.cartOffset = 0
+				m.mainOffset = 0
 				*itemTracker = 0
 				transitionView(&m, vLogin)
 			}
@@ -136,6 +139,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// force the transition from book view to catalogue view to fix
 				// the bug that forces the helpView/bookDetail view
 				transitionView(&m, vCatalogue)
+				m.cartItemIter = 0 // reset the selector for the cart view
 			} else if m.view == vHelp {
 				transitionView(&m, m.prevView)
 			}
@@ -145,8 +149,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.view == vCatalogue {
 				if s == "+" || s == "=" {
 					m.c.addToCart(selectedBook)
+					m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
 				} else if s == "-" || s == "_" {
 					m.c.removeFromCart(selectedBook)
+					m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+					// subtracting needs to sync with cartOffset
+					logToFile(fmt.Sprint(strings.Join(m.curCartItems, " * ")))
 				}
 				// reset the iterators and iterated to keep the selector in check
 				m.cartItemIter = 0
@@ -154,12 +162,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.view == vCart {
 				if len(m.c.items) > 0 {
 					if s == "-" || s == "_" {
-						// curBook := m.c.allTitles()[*itemTracker]
-						curBook := m.c.cartItemsToDisp(m.cartOffset, m.spatials)[*itemTracker]
-                        m.c.removeFromCartStr(curBook)
+						curBook := m.curCartItems[*itemTracker]
+						m.c.removeFromCartStr(curBook)
+						m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
 
+						// don't remove what you don't have
 						if m.cartItemIter == 0 {
 							return m, nil
+						} else if m.cartItemsIterated > m.itemsDispCount {
+							m.cartOffset--
+							m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+							logToFile(strings.Join(m.curCartItems, " * "))
 						}
 						// move the selector to the previous book in cart
 						m.cartItemIter--
@@ -246,6 +259,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							m.mainOffset++
 						} else if m.view == vCart {
 							m.cartOffset++
+							m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+							logToFile(fmt.Sprint(m.cartOffset))
 						}
 					}
 				} else if i == "shift+tab" || i == "up" {
@@ -273,6 +288,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							m.mainOffset--
 						} else if m.view == vCart {
 							m.cartOffset--
+							m.curCartItems = m.c.cartItemsToDisp(m.cartOffset, m.itemsDispCount)
+							logToFile(fmt.Sprint(m.cartOffset))
 						}
 					}
 				}
@@ -429,6 +446,22 @@ func (m *model) resetFields() {
 
 	for i := range m.signupInputs {
 		m.signupInputs[i].Reset()
+	}
+
+	for i := range m.loginInputs {
+		if i > 0 {
+			m.loginInputs[i].Blur()
+		} else {
+			m.loginInputs[i].Focus()
+		}
+	}
+
+	for i := range m.signupInputs {
+		if i > 0 {
+			m.signupInputs[i].Blur()
+		} else {
+			m.signupInputs[i].Focus()
+		}
 	}
 
 	// code below doesn't work some reason

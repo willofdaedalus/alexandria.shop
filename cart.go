@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 )
 
@@ -45,9 +44,7 @@ func (c *cart) removeFromCart(b book) {
 	c.items = append(c.items[:itemIdx], c.items[itemIdx+1:]...)
 }
 
-func (c *cart) cartItemsToDisp(top int, spatials dimensions) []string {
-	// var limit int
-	itemCount := spatials.innerH / 3
+func (c *cart) cartItemsToDisp(top int, itemCount int) []string {
 	// extract keys
 	keys := make([]string, 0, len(c.items))
 	for _, k := range c.items {
@@ -61,12 +58,11 @@ func (c *cart) cartItemsToDisp(top int, spatials dimensions) []string {
 
 	limit := len(keys)
 	if limit > itemCount {
-		limit = top + (itemCount - 1)
+		limit = top + (itemCount)
 		if limit > len(keys) {
 			limit = len(keys)
 		}
 	}
-	logToFile(fmt.Sprintf("limit is: %d", limit))
 
 	retval := make([]string, limit)
 	copy(retval, keys[top:limit])

@@ -23,8 +23,8 @@ type book struct {
 }
 
 type cartItem struct {
-    title string
-    price float64
+	title string
+	price float64
 }
 
 type cart struct {
@@ -62,12 +62,13 @@ type model struct {
 	mainOffset        int
 	cartOffset        int
 
-	curBooks []book            // books that are being displayed
-	curUser  user              // information about the current user
-	db       *sql.DB           //db handler
-	c        cart              // cart system
-	content  mainRenderContent // things to pass to the main frame to render
-	spatials dimensions        // essential variables needed to ease responsiveness
+	curBooks     []book            // books that are being displayed
+	curCartItems []string          // all items that can be displayed from the cart
+	curUser      user              // information about the current user
+	db           *sql.DB           //db handler
+	c            cart              // cart system
+	content      mainRenderContent // things to pass to the main frame to render
+	spatials     dimensions        // essential variables needed to ease responsiveness
 }
 
 type dimensions struct {
