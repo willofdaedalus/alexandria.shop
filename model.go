@@ -136,7 +136,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				transitionView(&m, vLogin)
 			}
 
-		case "?", "/":
+		case "?":
 			if !slices.Contains(startingViews, m.view) {
 				transitionView(&m, vHelp)
 			}
@@ -148,8 +148,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// the bug that forces the helpView/bookDetail view
 				transitionView(&m, vCatalogue)
 				m.cartItemIter = 0 // reset the selector for the cart view
-			} else if m.view == vHelp || slices.Contains(infoViews, m.view){
+			} else if m.view == vHelp || slices.Contains(infoViews, m.view) {
 				transitionView(&m, m.prevView)
+			} else if m.view == vCheckout {
+				transitionView(&m, vCatalogue)
 			}
 
 		case "+", "-", "_", "=":
@@ -330,13 +332,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	v := ""
-	// renderWidth := m.termWidth/2
-	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
-	// v +=  "├" + strings.Repeat("─", renderWidth) + "┤"
-
-	// v = m.catalogueScreen("daedalus")
-	// v = m.mainScreen()
+	var v string
 
 	switch m.view {
 	case vWelcome:
@@ -355,9 +351,10 @@ func (m model) View() string {
 		v = m.helpScreen(helpText, 80, 10, lipgloss.Left)
 	case vCart:
 		v = m.cartScreen()
+	case vCheckout:
+		v = m.checkoutScreen()
 	}
 
-	//    v := fmt.Sprintf("w: %d h: %d\n", m.termWidth, m.termHeight)
 	return v
 }
 

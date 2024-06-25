@@ -7,6 +7,31 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+func (m *model) checkoutScreen() string {
+	headers := []string{
+		"esc to go back",
+		fmt.Sprint("welcome, ", m.curUser.username),
+		"? for details/help",
+		"",
+	}
+
+	footerMsg := "ctrl+l to logout  |  up/down to navigate  "
+	m.content = mainRenderContent{
+		headerContents: headers,
+		footerMessage:  footerMsg,
+	}
+
+	render := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		Margin(1, 1, 0, 1).
+		Padding(0, 1).
+		Height(m.spatials.innerH - (m.spatials.innerH % m.itemsDispCount)).
+		Width(m.spatials.bookDeetsW + m.spatials.listSectionW + 3).
+		Render("hello world")
+
+	return m.mainBorderRender(render)
+}
+
 func (m *model) cartScreen() string {
 	var details string
 
@@ -49,7 +74,14 @@ func (m *model) cartScreen() string {
 		details += fmt.Sprintf("\n\nTOTAL: $%.2f", m.c.booksTotal())
 	}
 
-	return m.mainBorderRender(itemsRender, details)
+	midSectionJoin := renderMidSections(
+		m.spatials,
+		m.itemsDispCount,
+		itemsRender,
+		details,
+	)
+
+	return m.mainBorderRender(midSectionJoin)
 }
 
 func (m *model) mainScreen() string {
@@ -101,7 +133,14 @@ func (m *model) mainScreen() string {
 
 	itemsRender := lipgloss.JoinVertical(lipgloss.Center, items...)
 
-	return m.mainBorderRender(itemsRender, styleBookDeets())
+	midSectionJoin := renderMidSections(
+		m.spatials,
+		m.itemsDispCount,
+		itemsRender,
+		styleBookDeets(),
+	)
+
+	return m.mainBorderRender(midSectionJoin)
 }
 
 func renderHeader(w int, content string, border bool, margin ...int) string {
@@ -162,7 +201,7 @@ func styleBookDeets() string {
 			selectedBook.Genre, selectedBook.LongDesc))
 }
 
-func (m *model) mainBorderRender(itemsRender, bigSection string) string {
+func (m *model) mainBorderRender(midSectionJoin string) string {
 	var (
 		headers       = make([]string, 0)
 		customMargins = [][]int{
@@ -187,15 +226,6 @@ func (m *model) mainBorderRender(itemsRender, bigSection string) string {
 		Width(m.spatials.actualRenderW - 4).
 		Align(lipgloss.Center).
 		Render(innerHeaderRender)
-
-	midSectionJoin := renderMidSections(
-		m.spatials.listSectionW,
-		m.spatials.innerH,
-		m.itemsDispCount,
-		m.spatials.bookDeetsW,
-		itemsRender,
-		bigSection,
-	)
 
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
@@ -225,20 +255,20 @@ func (m *model) mainBorderRender(itemsRender, bigSection string) string {
 	return finalRender
 }
 
-func renderMidSections(listSectionW, innerH, itemCount, bookDeetW int, listContent, deetContent string) string {
+func renderMidSections(spatials dimensions, itemCount int, listContent, deetContent string) string {
 	listSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Margin(1, 1, 0, 1).
 		Padding(0, 1).
-		Width(listSectionW).
-		Height(innerH - (innerH % itemCount)).
+		Width(spatials.listSectionW).
+		Height(spatials.innerH - (spatials.innerH % itemCount)).
 		Render(listContent)
 
 	bookSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
 		Padding(0, 1, 0, 1).
-		Width(bookDeetW).
-		Height(innerH - (innerH % itemCount)).
+		Width(spatials.bookDeetsW).
+		Height(spatials.innerH - (spatials.innerH % itemCount)).
 		Render(deetContent)
 
 	return lipgloss.JoinHorizontal(lipgloss.Center, listSection, bookSection)
