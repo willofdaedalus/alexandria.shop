@@ -23,11 +23,13 @@ func (m *model) checkoutScreen() string {
 
 	render := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Margin(1, 1, 0, 1).
-		Padding(0, 1).
+		Padding(5).
 		Height(m.spatials.innerH - (m.spatials.innerH % m.itemsDispCount)).
 		Width(m.spatials.bookDeetsW + m.spatials.listSectionW + 3).
-		Render("hello world")
+		Render(checkoutMsg)
+		// Render(checkoutMsg, "\n\n", m.renderInputBox("email", 0, charLimitEmail+2, m.checkoutInputs, true))
 
 	return m.mainBorderRender(render)
 }
@@ -101,7 +103,7 @@ func (m *model) mainScreen() string {
 
 	// titles := extractTitles(m.curBooks)
 
-	footerMsg := "ctrl+l to logout  |  / to search  |  up/down to navigate  "
+	footerMsg := "ctrl+l to logout  |  up/down to navigate  "
 	m.content = mainRenderContent{
 		headerContents: headers,
 		// bookItems:      titles,
@@ -154,16 +156,24 @@ func renderHeader(w int, content string, border bool, margin ...int) string {
 }
 
 func renderItem(w int, content string, selected bool) string {
-	s := lipgloss.NewStyle().Foreground(white.GetBackground()).Border(lipgloss.NormalBorder())
+	selectedCol := cyan.GetForeground()
+
+	s := lipgloss.NewStyle().
+		Foreground(white.GetBackground()).
+		Border(lipgloss.NormalBorder())
 
 	if selected {
-		s = lipgloss.NewStyle().Foreground(magenta.GetForeground()).Border(lipgloss.ThickBorder())
+		s = lipgloss.NewStyle().
+			Foreground(magenta.GetForeground()).
+			Border(lipgloss.ThickBorder())
+
+		selectedCol = magenta.GetForeground()
 	}
 
 	return lipgloss.NewStyle().
 		Border(s.GetBorder()).
-		BorderForeground(s.GetForeground()).
-		Foreground(s.GetForeground()).
+		BorderForeground(selectedCol).
+		Foreground(selectedCol).
 		Padding(0, 1).
 		Width(w).
 		Align(lipgloss.Left).
@@ -172,6 +182,7 @@ func renderItem(w int, content string, selected bool) string {
 
 func setupDimensions(termHeight, termWidth int) dimensions {
 	// in order to achieve a common ground for dynamic responsiveness, set a maximum size
+	// this is barely a scratch though
 	dynRenderWidth := termWidth - (termWidth / 6)            // calculates the best width
 	dynRenderHeight := termHeight - (termHeight / 4)         // calculates the best height
 	actualRenderW := dynRenderWidth - 21                     // that's the width of the main border
@@ -222,6 +233,7 @@ func (m *model) mainBorderRender(midSectionJoin string) string {
 	// renders the header section complete with header text
 	header := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Margin(0, 1, 0, 1).
 		Width(m.spatials.actualRenderW - 4).
 		Align(lipgloss.Center).
@@ -229,6 +241,7 @@ func (m *model) mainBorderRender(midSectionJoin string) string {
 
 	footer := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Align(lipgloss.Center).
 		Margin(1, 0, 0, 1).
 		Width(m.spatials.actualRenderW - 4).
@@ -242,6 +255,7 @@ func (m *model) mainBorderRender(midSectionJoin string) string {
 
 	mainBorder := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Width(m.spatials.actualRenderW).
 		Height(h-(m.spatials.innerH%m.itemsDispCount)).
 		Render(header, midSectionJoin, footer)
@@ -258,6 +272,7 @@ func (m *model) mainBorderRender(midSectionJoin string) string {
 func renderMidSections(spatials dimensions, itemCount int, listContent, deetContent string) string {
 	listSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Margin(1, 1, 0, 1).
 		Padding(0, 1).
 		Width(spatials.listSectionW).
@@ -266,6 +281,7 @@ func renderMidSections(spatials dimensions, itemCount int, listContent, deetCont
 
 	bookSection := lipgloss.NewStyle().
 		Border(lipgloss.NormalBorder()).
+		BorderForeground(cyan.GetForeground()).
 		Padding(0, 1, 0, 1).
 		Width(spatials.bookDeetsW).
 		Height(spatials.innerH - (spatials.innerH % itemCount)).

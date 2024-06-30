@@ -31,10 +31,11 @@ func (m *model) renderAuthScreen(title, helpText string, inputs []textinput.Mode
 	// render input boxes
 	var inputRenders []string
 	for i, label := range []string{"username", "password", "password"} {
+		// check for the iterator not to overlap in the case of login screen
 		if i >= len(inputs) {
 			break
 		}
-		inputRenders = append(inputRenders, m.renderInputBox(label, i, inputs, curField == i))
+		inputRenders = append(inputRenders, m.renderInputBox(label, i, charLimitAuth+5, inputs, curField == i))
 	}
 
 	// render the help text at the bottom

@@ -33,27 +33,18 @@ type cart struct {
 
 type model struct {
 	// LOGIN/SIGN UP VALUES
-	// login text inputs
-	loginInputs   []textinput.Model
-	loginCurField int
-	// sign up text inputs
-	signupInputs   []textinput.Model
-	signupCurField int
-	authErr        error
-
-	// scrTimer to transition to login
-	scrTimer timer.Model
-
-	// used to transition between different views
-	view     int
-	prevView int
-
-	curPage int
-
-	// get the current terminal's width and height
-	termWidth  int
-	termHeight int
-
+	authErr           error
+	loginInputs       []textinput.Model
+	signupInputs      []textinput.Model
+	checkoutInputs    []textinput.Model
+	loginCurField     int
+	signupCurField    int
+	checkoutCurField  int
+	view              int
+	prevView          int
+	curPage           int
+	termWidth         int
+	termHeight        int
 	itemsDispCount    int
 	mainItemsIterated int
 	mainItemsIter     int
@@ -61,14 +52,14 @@ type model struct {
 	cartItemIter      int
 	mainOffset        int
 	cartOffset        int
-
-	curBooks     []book            // books that are being displayed
-	curCartItems []string          // all items that can be displayed from the cart
-	curUser      user              // information about the current user
-	db           *sql.DB           //db handler
-	c            cart              // cart system
-	content      mainRenderContent // things to pass to the main frame to render
-	spatials     dimensions        // essential variables needed to ease responsiveness
+	scrTimer          timer.Model
+	curBooks          []book            // books that are being displayed
+	curCartItems      []string          // all items that can be displayed from the cart
+	curUser           user              // information about the current user
+	db                *sql.DB           //db handler
+	c                 cart              // cart system
+	content           mainRenderContent // things to pass to the main frame to render
+	spatials          dimensions        // essential variables needed to ease responsiveness
 }
 
 type dimensions struct {

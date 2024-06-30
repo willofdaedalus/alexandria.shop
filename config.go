@@ -7,12 +7,19 @@ import (
 )
 
 const (
+	charLimitEmail    = 35
+	charLimitAuth     = 16
 	magicNum          = 5 // the num of items to display, to query; imma be real with you I can't change this
 	startScrTimeout   = time.Second * 5
 	catalogueHelpMsg  = "ctrl+c to exit  |  ctrl+l to logout  |  tab/shift+tab or arrow keys to move"
 	addToCartMsg      = "+ to add book to cart"
 	removeFromCartMsg = "- to remove book from cart"
-	noItemsInCart     = `you have no books in your cart. you can start by adding books in the catalogue view by press
+	checkoutMsg       = "well you reached the end of the application. this is where the card details and" +
+		"things should come but honestly this is just a demonstration and learning experience so I skipped" +
+		"that and left this message here instead. maybe I'll put an email section here to send a list of all" +
+		"the books in your cart but until then this is where the application ends." +
+		"\nthanks for checking it out!"
+	noItemsInCart = `you have no books in your cart. you can start by adding books in the catalogue view by press
 + on your keyboard.
 you can remove books from your cart with - as well.
 

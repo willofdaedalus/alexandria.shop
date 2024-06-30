@@ -20,8 +20,8 @@ func styleTextWith(t string, col lipgloss.TerminalColor, bold bool) string {
 		Render(t)
 }
 
-func (m *model) renderInputBox(label string, index int, inputs []textinput.Model, focused bool) string {
-	render := renderBoxDesc(label, index, focused, inputs)
+func (m *model) renderInputBox(label string, index, width int, inputs []textinput.Model, focused bool) string {
+	render := renderBoxDesc(label, index, width, focused, inputs)
 	if focused {
 		return magenta.PaddingLeft(8).Align(lipgloss.Left).Render(render)
 	}
@@ -101,11 +101,11 @@ func renderHeaderBox(s string) string {
 }
 
 // function to return a nicely formatted description and input box
-func renderBoxDesc(s string, idx int, focused bool, inputs []textinput.Model) string {
+func renderBoxDesc(s string, idx, w int, focused bool, inputs []textinput.Model) string {
 	desc := noBorderStyle.Bold(focused).Render(s)
 	// this is the content from the input box as we type
 	// side not find a way to render the textbox thicker
-	inputBox := textBoxStyle.Render(inputs[idx].View())
+	inputBox := textBoxStyle.Width(w).Render(inputs[idx].View())
 	finalRender := lipgloss.JoinHorizontal(lipgloss.Left, desc, inputBox)
 
 	return finalRender

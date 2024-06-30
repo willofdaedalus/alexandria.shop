@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	// i might get cooked for this
 	db, err := sql.Open("sqlite3", "./alexandria.db")
 	if err != nil {
 		log.Fatalf("open err: %s", err.Error())

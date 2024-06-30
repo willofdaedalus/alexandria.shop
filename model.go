@@ -20,8 +20,9 @@ func initialModel(db *sql.DB) model {
 
 	m := model{
 		scrTimer:     timer.NewWithInterval(startScrTimeout, time.Second),
-		loginInputs:  readyInputsFor(2),
-		signupInputs: readyInputsFor(3),
+		loginInputs:  readyInputsFor(2, charLimitAuth),
+		signupInputs: readyInputsFor(3, charLimitAuth),
+		checkoutInputs: readyInputsFor(1, charLimitEmail),
 		db:           db, curPage: 1,
 		c:              c,
 		itemsDispCount: magicNum,
@@ -94,6 +95,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		wrap = false
 		scrCtxLen = m.itemsDispCount
 		itemTracker = &m.cartItemsIterated
+	} else if m.view == vCheckout {
+		field = &m.checkoutCurField
+		inputs = m.checkoutInputs
 	}
 
 	switch msg := msg.(type) {
@@ -234,6 +238,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// at this point user has been authenticated so we can safely do this
 				m.curUser.username = m.loginInputs[0].Value()
 				transitionView(&m, vCatalogue)
+
+			case vCheckout:
+				userEmail := m.checkoutInputs[0].Value()
+				m.authErr = validEmail(userEmail)
+				if m.authErr != nil {
+					m.authErr = fmt.Errorf("your email %s is not a valid address\n\npress enter to continue", userEmail)
+					transitionView(&m, vCredErr)
+					return m, nil
+				}
 
 			case vSuccess:
 				m.resetFields()

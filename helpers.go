@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/mail"
 	"os"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -66,13 +67,13 @@ func (m *model) updateInputs(msg tea.Msg, inputs []textinput.Model) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func readyInputsFor(size int) []textinput.Model {
+func readyInputsFor(size, charLimit int) []textinput.Model {
 	ret := make([]textinput.Model, size)
 
 	var t textinput.Model
 	for i := 0; i < size; i++ {
 		t = textinput.New()
-		t.CharLimit = 16
+		t.CharLimit = charLimit
 		t.Prompt = "" // added prompt here but renders no input
 
 		switch i {
@@ -134,4 +135,9 @@ func truncateText(s string, max int) string {
 	}
 
 	return s[:len(s)-6] + "..."
+}
+
+func validEmail(email string) error {
+	_, err := mail.ParseAddress(email)
+	return err
 }
