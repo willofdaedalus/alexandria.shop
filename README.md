@@ -3,11 +3,11 @@
 ![welcome](./assets/welcome.png)
 * welcome to **alexandria.shop**
 
-![catalogue](./assets/catalogue.png)
-* main catalogue view of **alexandria.shop**
-
 ![details](./assets/details.png)
 * details of a book selected including price and author
+
+![demo](./assets/demo.gif)
+* demo of alexandria.shop
 
 ## What's this?
 **alexandria.shop** is a fictional terminal shop from the mid 90s that sold books of all

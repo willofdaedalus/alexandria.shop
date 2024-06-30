@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -98,97 +97,6 @@ func (m *model) infoScreen(info string, w, h int) string {
 	return dialog
 }
 
-func (m *model) bookDetailsScreen(header1 string) string {
-	var (
-		footerMsg string
-	)
-
-	// Initialize variables
-	renderWidth := (m.termWidth / 2) + 10
-	if renderWidth < 0 {
-		renderWidth = 0
-	}
-
-	booksDetailsRender := lipgloss.NewStyle().
-		Foreground(yellow.GetForeground()).
-		Width(50).
-		MarginBottom(2).
-		Border(lipgloss.NormalBorder(), false, false, true, false).
-		PaddingLeft(1).
-		Render(fmt.Sprintf("%s by %s\nPRICE: $%.2f\nYEAR: %d\n%s",
-			selectedBook.Title,
-			selectedBook.Author,
-			selectedBook.Price,
-			selectedBook.Year,
-			selectedBook.Genre,
-		),
-		)
-
-	longDescRender := lipgloss.NewStyle().
-		Border(lipgloss.HiddenBorder(), false, false, false, false).
-		Height(4).
-		Render(selectedBook.LongDesc)
-
-	fBookRender := lipgloss.JoinVertical(
-		lipgloss.Top,
-		booksDetailsRender,
-		longDescRender,
-	)
-
-	if m.c.bookInCart(selectedBook) {
-		footerMsg = removeFromCartMsg
-	} else {
-		footerMsg = addToCartMsg
-	}
-
-	catalogueView := lipgloss.NewStyle().
-		Border(lipgloss.NormalBorder()).
-		BorderTop(false).
-		Padding(3, 5, 0, 5).
-		BorderBottom(false).
-		Width(renderWidth).
-		Height(catalogueViewHeight - 8).
-		Align(lipgloss.Left).
-		Render(fBookRender)
-
-	return m.mainScreenFrame(header1, footerMsg, catalogueView)
-}
-
-// this renders the entire catalogue view
-// big thanks to @its_gaurav on the Charm CLI Discord!
-func (m *model) catalogueScreen(header1 string) string {
-	// Initialize variables
-	renderWidth := (m.termWidth / 2) + 10
-	if renderWidth < 0 {
-		renderWidth = 0
-	}
-
-	mainHeight := m.termHeight - 2
-	offset := (mainHeight - 20) / 3
-
-	// function to determine if an item is highlighted
-	isHighlighted := func(index int) bool {
-		return m.mainItemsIter == index
-	}
-
-	// render the top, mid, and bot items based on current item
-	var itemsRender []string
-	for i := 0; i < m.itemsDispCount; i++ {
-		itemsRender = append(itemsRender, m.renderItemDisplay(renderWidth, offset, isHighlighted(i), m.curBooks[i]))
-	}
-
-	catalogueView := lipgloss.NewStyle().
-		Border(lipgloss.NormalBorder()).
-		BorderTop(false).
-		BorderBottom(false).
-		Width(renderWidth).
-		Height(mainHeight - 20).
-		Align(lipgloss.Center).
-		Render(lipgloss.JoinVertical(lipgloss.Center, itemsRender...))
-
-	return m.mainScreenFrame(header1, catalogueHelpMsg, catalogueView)
-}
-
 func (m *model) helpScreen(msg string, w, h int, pos lipgloss.Position) string {
 	infoRender := noBorderStyle.
 		PaddingTop(1).
@@ -211,18 +119,3 @@ func (m *model) helpScreen(msg string, w, h int, pos lipgloss.Position) string {
 
 	return dialog
 }
-
-// func (m *model) cartScreenView() string {
-// 	var items []string
-//
-// 	for key, value := range m.c.items {
-// 		// Format the key-value pair as "key - value"
-// 		pair := key + " - " + fmt.Sprintf("%.2f", value)
-// 		// Append the formatted string to the slice
-// 		items = append(items, pair)
-// 	}
-//
-// 	itemsRender := lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Width(40).Render(strings.Join(items, "\n"))
-//
-// 	return m.mainScreenFrame("esc to go back", "esc to go back", itemsRender)
-// }
