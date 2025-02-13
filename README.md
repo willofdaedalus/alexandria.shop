@@ -63,7 +63,7 @@ To run **alexandria.shop**, you need the following installed on your system.
 Once you have everything installed, just run the following commands below
 
 ```
-git clone https://github.com/IamDaedalus/alexandria.shop
+git clone https://github.com/willofdaedalus/alexandria.shop
 cd alexandria.shop
 go mod tidy
 go run .
